@@ -1,11 +1,13 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterController extends GetxController {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  var name = ''.obs;
+  var email = ''.obs;
+  var password = ''.obs;
+  var confirmPassword = ''.obs;
 
   var isPasswordHidden = true.obs;
   var isConfirmPasswordHidden = true.obs;
@@ -26,34 +28,33 @@ class RegisterController extends GetxController {
   bool validateForm() {
     bool isValid = true;
 
-    // Reset error
     nameError.value = null;
     emailError.value = null;
     passwordError.value = null;
     confirmPasswordError.value = null;
 
-    if (nameController.text.isEmpty) {
+    if (name.value.isEmpty) {
       nameError.value = 'Nama tidak boleh kosong';
       isValid = false;
     }
-    if (emailController.text.isEmpty) {
+    if (email.value.isEmpty) {
       emailError.value = 'Email tidak boleh kosong';
       isValid = false;
-    } else if (!GetUtils.isEmail(emailController.text)) {
+    } else if (!GetUtils.isEmail(email.value)) {
       emailError.value = 'Format email tidak valid';
       isValid = false;
     }
-    if (passwordController.text.isEmpty) {
+    if (password.value.isEmpty) {
       passwordError.value = 'Password tidak boleh kosong';
       isValid = false;
-    } else if (passwordController.text.length < 8) {
+    } else if (password.value.length < 8) {
       passwordError.value = 'Password minimal 8 karakter';
       isValid = false;
     }
-    if (confirmPasswordController.text.isEmpty) {
+    if (confirmPassword.value.isEmpty) {
       confirmPasswordError.value = 'Konfirmasi password tidak boleh kosong';
       isValid = false;
-    } else if (confirmPasswordController.text != passwordController.text) {
+    } else if (confirmPassword.value != password.value) {
       confirmPasswordError.value = 'Password tidak sama';
       isValid = false;
     }
@@ -67,14 +68,5 @@ class RegisterController extends GetxController {
       Get.snackbar('Sukses', 'Registrasi berhasil!');
       Get.offAllNamed('/home');
     }
-  }
-
-  @override
-  void onClose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.onClose();
   }
 }

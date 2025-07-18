@@ -1,46 +1,74 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
   RegisterView({super.key});
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding:  EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding:  EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Obx(() => TextFormField(
-                    controller: controller.nameController,
+              Center(
+                child: Image.asset(
+                  'assets/icons/SMK MQ.png', 
+                  height: 120,
+                ),
+              ),
+               SizedBox(height: 24),
+              Text(
+                'Register',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+               SizedBox(height: 4),
+              Text(
+                'Welcome Back to MySaku!',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+               SizedBox(height: 32),
+              Obx(() => TextField(
+                    onChanged: (val) => controller.name.value = val,
                     decoration: InputDecoration(
+                      hintText: 'Enter Your Name',
                       labelText: 'Nama',
                       errorText: controller.nameError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   )),
-              Obx(() => TextFormField(
-                    controller: controller.emailController,
+               SizedBox(height: 16),
+              Obx(() => TextField(
+                    onChanged: (val) => controller.email.value = val,
                     decoration: InputDecoration(
+                      hintText: 'Enter Your Email',
                       labelText: 'Email',
                       errorText: controller.emailError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                    keyboardType: TextInputType.emailAddress,
                   )),
-              Obx(() => TextFormField(
-                    controller: controller.passwordController,
+               SizedBox(height: 16),
+              Obx(() => TextField(
+                    onChanged: (val) => controller.password.value = val,
                     obscureText: controller.isPasswordHidden.value,
                     decoration: InputDecoration(
+                      hintText: 'Enter Your Password',
                       labelText: 'Password',
                       errorText: controller.passwordError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       suffixIcon: IconButton(
                         icon: Icon(controller.isPasswordHidden.value
                             ? Icons.visibility_off
@@ -49,13 +77,18 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                     ),
                   )),
-
-              Obx(() => TextFormField(
-                    controller: controller.confirmPasswordController,
+               SizedBox(height: 16),
+              Obx(() => TextField(
+                    onChanged: (val) =>
+                        controller.confirmPassword.value = val,
                     obscureText: controller.isConfirmPasswordHidden.value,
                     decoration: InputDecoration(
-                      labelText: 'Konfirmasi Password',
+                      hintText: 'Enter Your Password',
+                      labelText: 'Confirm Password',
                       errorText: controller.confirmPasswordError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       suffixIcon: IconButton(
                         icon: Icon(controller.isConfirmPasswordHidden.value
                             ? Icons.visibility_off
@@ -65,13 +98,50 @@ class RegisterView extends GetView<RegisterController> {
                     ),
                   )),
                SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  if (controller.validateForm()) {
-                    controller.register();
-                  }
-                },
-                child:  Text('Daftar'),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:  Color(0xFF2ECC71), // Hijau
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (controller.validateForm()) {
+                      controller.register();
+                    }
+                  },
+                  child:  Text(
+                    'register',
+                    style: TextStyle(
+                      fontSize: 16,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+               SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Text("Already have account? "),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/login');
+                    },
+                    child:  Text(
+                      "Sign In",
+                      style: TextStyle(
+                        color: Color(0xFF2ECC71),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

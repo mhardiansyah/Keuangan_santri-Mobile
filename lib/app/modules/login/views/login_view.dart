@@ -9,108 +9,108 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 70),
-        child: Center(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding:  EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/icons/SMK MQ.png', width: 100, height: 100),
-              const SizedBox(height: 20),
+              Image.asset(
+                'assets/icons/SMK MQ.png',
+                width: 120,
+                height: 120,
+              ),
+               SizedBox(height: 24),
               Text(
                 'Log In',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 11),
+               SizedBox(height: 6),
               Text(
                 "Welcome Back to MySaku!",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
-              const SizedBox(height: 40),
-              Obx(
-                () => TextField(
-                  onChanged: (value) => controller.email.value = value,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF949494)),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    labelText: 'Email',
-                    hintText: "Enter your email",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    errorText: controller.emailError.value,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Obx(
-                () => TextField(
-                  onChanged: (value) => controller.password.value = value,
-                  obscureText: controller.isPasswordHidden.value,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF949494)),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    labelText: 'Password',
-                    hintText: "Enter your password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    errorText: controller.passwordError.value,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        controller.isPasswordHidden.value
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+               SizedBox(height: 32),
+              Obx(() => TextField(
+                    onChanged: (value) => controller.email.value = value,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: "Enter your email",
+                      errorText: controller.emailError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onPressed: controller.togglePasswordVisibility,
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
+                    keyboardType: TextInputType.emailAddress,
+                  )),
+               SizedBox(height: 20),
+              Obx(() => TextField(
+                    onChanged: (value) => controller.password.value = value,
+                    obscureText: controller.isPasswordHidden.value,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: "Enter your password",
+                      errorText: controller.passwordError.value,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.isPasswordHidden.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: controller.togglePasswordVisibility,
+                      ),
+                    ),
+                  )),
+               SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: null,
+                  onPressed: () {
+                  },
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: controller.login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+               SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: controller.login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:  Color(0xFF2ECC71), // Hijau
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child:  Text(
+                    "Log In",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-                child: Text(
-                  "Log In",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? "),
-                  InkWell(
+                   Text("Don't have an account? "),
+                  GestureDetector(
                     onTap: () => Get.toNamed(Routes.REGISTER),
-                    child: Text(
+                    child:  Text(
                       "Sign Up",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
