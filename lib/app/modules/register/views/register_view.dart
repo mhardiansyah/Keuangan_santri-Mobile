@@ -19,11 +19,11 @@ class RegisterView extends GetView<RegisterController> {
             children: [
               Center(
                 child: Image.asset(
-                  'assets/icons/SMK MQ.png', 
-                  height: 120,
+                  'assets/icons/logomysaku.png', 
+                  height: 60,
                 ),
               ),
-               SizedBox(height: 24),
+               SizedBox(height: 32),
               Text(
                 'Register',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
