@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/splash/controllers/splash_controller.dart';
 
