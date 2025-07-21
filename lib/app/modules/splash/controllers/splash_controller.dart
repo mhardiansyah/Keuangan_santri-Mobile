@@ -9,7 +9,7 @@ class SplashController extends GetxController {
   void onInit() {
     super.onInit();
     Future.delayed(Duration(seconds: 2), () {
-      Get.offAllNamed(Routes.LOGIN); // Navigate to login after splash
+      Get.offNamed('/home'); // Navigate to login after splash
     });
   }
 

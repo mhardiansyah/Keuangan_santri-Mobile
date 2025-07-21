@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:sakusantri/app/modules/splash/controllers/splash_controller.dart';
 
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
@@ -38,7 +39,9 @@ class AppPages {
     GetPage(
       name: _Paths.SPLASH,
       page: () => const SplashView(),
-      binding: SplashBinding(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SplashController>(() => SplashController());
+      }),
     ),
   ];
 }
