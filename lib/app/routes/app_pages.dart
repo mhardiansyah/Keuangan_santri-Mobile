@@ -33,7 +33,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FORGOTPASSWORD,
-      page: () => const ForgotpasswordView(),
+      page: () => ForgotpasswordView(),
       binding: ForgotpasswordBinding(),
     ),
     GetPage(
