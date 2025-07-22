@@ -1,8 +1,7 @@
-// ignore_for_file: unused_import
-
 import 'package:get/get.dart';
-import 'package:sakusantri/app/modules/splash/controllers/splash_controller.dart';
 
+import '../modules/Product/bindings/product_binding.dart';
+import '../modules/Product/views/product_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -12,7 +11,10 @@ import '../modules/login/views/login_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
+import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
+
+// ignore_for_file: unused_import
 
 part 'app_routes.dart';
 
@@ -44,6 +46,11 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<SplashController>(() => SplashController());
       }),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT,
+      page: () => const ProductView(),
+      binding: ProductBinding(),
     ),
   ];
 }
