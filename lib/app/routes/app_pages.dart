@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/splash/controllers/splash_controller.dart';
 
@@ -33,7 +35,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FORGOTPASSWORD,
-      page: () => const ForgotpasswordView(),
+      page: () => ForgotpasswordView(),
       binding: ForgotpasswordBinding(),
     ),
     GetPage(

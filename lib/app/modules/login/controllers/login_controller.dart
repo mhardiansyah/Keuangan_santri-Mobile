@@ -55,11 +55,11 @@ class LoginController extends GetxController {
   void login() {
     if (validateForm()) {
       // Perform login logic here
-      Get.snackbar('Login', 'Login successful');
+      Get.snackbar('Login', 'Login berhasil!');
       Get.toNamed(Routes.HOME);
       clearForm();
     } else {
-      Get.snackbar('Error', 'Please fix the errors in the form');
+      Get.snackbar('Error', 'Silakan perbaiki kesalahan di login');
     }
   }
 

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class RegisterController extends GetxController {
   var name = ''.obs;
@@ -62,11 +63,25 @@ class RegisterController extends GetxController {
     return isValid;
   }
 
+  void clearForm() {
+    name.value = '';
+    email.value = '';
+    password.value = '';
+    emailError.value = null;
+    passwordError.value = null;
+  }
+
   void register() {
     if (validateForm()) {
       // Proses register di sini
-      Get.snackbar('Sukses', 'Registrasi berhasil!');
-      Get.offAllNamed('/home');
+      Get.snackbar('Register', 'Registrasi berhasil!');
+      Get.offAllNamed(Routes.HOME);
+      clearForm();
+    }
+    else {
+      Get.snackbar('Error', 'Silakan perbaiki kesalahan di formulir');
     }
   }
+
+  
 }
