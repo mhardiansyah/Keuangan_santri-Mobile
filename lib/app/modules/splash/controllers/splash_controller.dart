@@ -7,10 +7,7 @@ class SplashController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
-    super.onInit();
-    Future.delayed(Duration(seconds: 2), () {
-      Get.offNamed('/home'); // Navigate to login after splash
-    });
+    super.onInit();   
   }
 
   @override
