@@ -10,6 +10,8 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const PRODUCT = _Paths.PRODUCT;
   static const CART = _Paths.CART;
+  static const ISI_DATA = _Paths.ISI_DATA;
+  static const RIWAYAT_TRANSAKSI = _Paths.RIWAYAT_TRANSAKSI;
 }
 
 abstract class _Paths {
@@ -21,4 +23,6 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const PRODUCT = '/product';
   static const CART = '/cart';
+  static const ISI_DATA = '/isi-data';
+  static const RIWAYAT_TRANSAKSI = '/riwayat-transaksi';
 }

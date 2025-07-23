@@ -8,10 +8,14 @@ import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/isi_data/bindings/isi_data_binding.dart';
+import '../modules/isi_data/views/isi_data_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/riwayat_transaksi/bindings/riwayat_transaksi_binding.dart';
+import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
@@ -56,8 +60,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CART,
-      page: () => const CartView(),
+      page: () =>  CartView(),
       binding: CartBinding(),
+    ),
+    GetPage(
+      name: _Paths.ISI_DATA,
+      page: () =>  IsiDataView(),
+      binding: IsiDataBinding(),
+    ),
+    GetPage(
+      name: _Paths.RIWAYAT_TRANSAKSI,
+      page: () =>  RiwayatTransaksiView(),
+      binding: RiwayatTransaksiBinding(),
     ),
   ];
 }
