@@ -173,63 +173,118 @@ class ProductView extends GetView<ProductController> {
 
                   final products = controller.filteredProducts;
                   return GridView.builder(
+                    padding: EdgeInsets.all(12),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.55, // Lebih panjang ke bawah
+                      childAspectRatio: 0.60,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 280, // Tinggi box ungu diperpanjang
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurple[100],
-                                  borderRadius: BorderRadius.circular(16),
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 6,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Gambar Produk di bagian atas (ungu)
+                            Container(
+                              height: 180,
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple[100],
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16),
                                 ),
                               ),
-                              Positioned(
-                                top: 8,
-                                left: 8,
-                                child: InkWell(
-                                  onTap: () {
-                                    // Navigasi ke halaman cart
-                                    Get.toNamed('/cart');
-                                  },
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                                // child: Image.network(
+                                //   product.imageUrl, // Ambil dari database
+                                //   fit: BoxFit.cover,
+                                //   width: double.infinity,
+                                //   errorBuilder:
+                                //       (context, error, stackTrace) => Center(
+                                //         child: Icon(Icons.broken_image),
+                                //       ),
+                                // ),
+                              ),
+                            ),
+
+                            // Konten teks dan tombol
+                            Padding(
+                              padding:  EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
-                                    child: Icon(Icons.add, color: Colors.green),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Rp. ${product.price}',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                  Text(
+                                    'Stock: ${product.stock}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Get.toNamed('/cart');
+                                      },
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Container(
+                                        padding: EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.1,
+                                              ),
+                                              blurRadius: 4,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            product.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text('Rp. ${product.price}'),
-                          Text('Stock: ${product.stock}'),
-                        ],
+                            ),
+                          ],
+                        ),
                       );
                     },
                   );
