@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
@@ -120,7 +121,54 @@ class ProductView extends GetView<ProductController> {
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return Center(child: CircularProgressIndicator());
+                    // return Center(child: CircularProgressIndicator());
+                    if (controller.isLoading.value) {
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.55,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                        itemCount: 6,
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 280,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  height: 16,
+                                  width: double.infinity,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  height: 14,
+                                  width: 100,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  height: 14,
+                                  width: 60,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
 
                   final products = controller.filteredProducts;

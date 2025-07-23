@@ -33,20 +33,38 @@ class MainNavigationView extends GetView<MainNavigationController> {
           shape: CircularNotchedRectangle(),
           notchMargin: 8,
           child: Container(
-            height: 90,
+            height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   children: [
                     _buildNavItem(Icons.home, 'Home', 0),
+                    const SizedBox(width: 30),
                     _buildNavItem(Icons.store, 'Toko', 1),
                   ],
                 ),
+                const SizedBox(width: 40),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Top up",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 30),
                 Row(
                   children: [
                     _buildNavItem(Icons.history, 'History', 3),
+                    const SizedBox(width: 30),
                     _buildNavItem(Icons.person, 'Profile', 4),
                   ],
                 ),
@@ -60,7 +78,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
 
   Widget _buildNavItem(IconData icon, String label, int index) {
     final isSelected = controller.selectedIndex.value == index;
-    final color = isSelected ? Colors.orange : Colors.grey;
+    final color = isSelected ? Colors.green : Colors.grey;
 
     return GestureDetector(
       onTap: () => controller.changeTabIndex(index),
