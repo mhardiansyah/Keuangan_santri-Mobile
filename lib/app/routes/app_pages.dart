@@ -66,11 +66,11 @@ class AppPages {
       binding: CartBinding(),
     ),
     GetPage(
-<<<<<<< HEAD
       name: _Paths.MAIN_NAVIGATION,
       page: () => MainNavigationView(),
       binding: MainNavigationBinding(),
-=======
+    ),
+    GetPage(
       name: _Paths.ISI_DATA,
       page: () =>  IsiDataView(),
       binding: IsiDataBinding(),
@@ -79,7 +79,7 @@ class AppPages {
       name: _Paths.RIWAYAT_TRANSAKSI,
       page: () =>  RiwayatTransaksiView(),
       binding: RiwayatTransaksiBinding(),
->>>>>>> 5aeeb73d220c6ad16769b8c2f89eabd49f8b3af0
+
     ),
   ];
 }
