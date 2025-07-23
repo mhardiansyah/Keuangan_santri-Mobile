@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 import '../controllers/splash_controller.dart';
 
@@ -9,7 +10,7 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 2), () {
-      Get.offNamed('/home'); // Navigate to login after splash
+      Get.toNamed(Routes.MAIN_NAVIGATION); // Navigate to login after splash
     });
     return Scaffold(
       body: Center(
