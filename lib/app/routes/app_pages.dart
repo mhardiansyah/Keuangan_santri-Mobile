@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/Product/bindings/product_binding.dart';
 import '../modules/Product/views/product_view.dart';
+import '../modules/Top-up/bindings/top_up_binding.dart';
+import '../modules/Top-up/views/top_up_view.dart';
 import '../modules/cart/bindings/cart_binding.dart';
 import '../modules/cart/views/cart_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
@@ -62,7 +64,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CART,
-      page: () =>  CartView(),
+      page: () => CartView(),
       binding: CartBinding(),
     ),
     GetPage(
@@ -72,14 +74,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ISI_DATA,
-      page: () =>  IsiDataView(),
+      page: () => IsiDataView(),
       binding: IsiDataBinding(),
     ),
     GetPage(
       name: _Paths.RIWAYAT_TRANSAKSI,
-      page: () =>  RiwayatTransaksiView(),
+      page: () => RiwayatTransaksiView(),
       binding: RiwayatTransaksiBinding(),
-
+    ),
+    GetPage(
+      name: _Paths.TOP_UP,
+      page: () => const TopUpView(),
+      binding: TopUpBinding(),
     ),
   ];
 }

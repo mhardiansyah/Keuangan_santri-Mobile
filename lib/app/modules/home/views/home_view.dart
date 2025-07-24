@@ -198,11 +198,12 @@ class HomeView extends GetView<HomeController> {
     String updateText,
     String changeText,
     Color changeColor,
-    Color circleColor, // Tambahan
+    Color circleColor, 
   ) {
     return Container(
-      width: 160, // <- Ukuran disesuaikan
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(left: 15, right: 18, top: 18, bottom: 7),
+      width: 120,
+      
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -224,7 +225,7 @@ class HomeView extends GetView<HomeController> {
                 height: 35,
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: circleColor, // Gunakan warna dari parameter
+                  color: circleColor,
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(iconPath, fit: BoxFit.contain),
@@ -253,7 +254,7 @@ class HomeView extends GetView<HomeController> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 8),
+              Spacer(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -271,9 +272,9 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-          SizedBox(height: 40), // Lebih lega sebelum Divider
-          Divider(color: Colors.grey.shade300, thickness: 1),
           SizedBox(height: 12),
+          Divider(color: Colors.grey.shade300, thickness: 1),
+          SizedBox(height: 7),
           Text(
             updateText,
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),

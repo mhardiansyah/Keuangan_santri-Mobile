@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
   ProductView({super.key});
+  get controllercart => Get.put(CartController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class ProductView extends GetView<ProductController> {
                   InkWell(
                     onTap: () {
                       // TODO: Implement keranjang/cart action
+                      Get.toNamed('/cart');
                     },
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
@@ -76,14 +79,15 @@ class ProductView extends GetView<ProductController> {
                 () => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:
-                      ['Food', 'ATK', 'Sabun'].map((category) {
+                      ['Semua', 'makanan', 'ATK', 'Sabun'].map((kategori) {
                         final isSelected =
-                            controller.selectedCategory.value == category;
+                            controller.selectedCategory.value ==
+                            (kategori == 'Semua' ? '' : kategori);
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(25),
-                            onTap: () => controller.setCategory(category),
+                            onTap: () => controller.setCategory(kategori),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -101,7 +105,7 @@ class ProductView extends GetView<ProductController> {
                                 ),
                               ),
                               child: Text(
-                                category,
+                                kategori,
                                 style: TextStyle(
                                   color:
                                       isSelected ? Colors.green : Colors.black,
@@ -121,57 +125,63 @@ class ProductView extends GetView<ProductController> {
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    // return Center(child: CircularProgressIndicator());
-                    if (controller.isLoading.value) {
-                      return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.55,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: 6,
-                        itemBuilder: (context, index) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey.shade300,
-                            highlightColor: Colors.grey.shade100,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 280,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  height: 16,
-                                  width: double.infinity,
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.55,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 280,
+                                decoration: BoxDecoration(
                                   color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  height: 14,
-                                  width: 100,
-                                  color: Colors.white,
-                                ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  height: 14,
-                                  width: 60,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                height: 16,
+                                width: double.infinity,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                height: 14,
+                                width: 100,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                height: 14,
+                                width: 60,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   }
 
-                  final products = controller.filteredProducts;
+                  final products =
+                      controller.itemsList
+                          .where(
+                            (product) =>
+                                controller.selectedCategory.value.isEmpty ||
+                                product.kategori.toLowerCase() ==
+                                    controller.selectedCategory.value
+                                        .toLowerCase(),
+                          )
+                          .toList();
                   return GridView.builder(
                     padding: EdgeInsets.all(12),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -211,26 +221,26 @@ class ProductView extends GetView<ProductController> {
                                 borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(16),
                                 ),
-                                // child: Image.network(
-                                //   product.imageUrl, // Ambil dari database
-                                //   fit: BoxFit.cover,
-                                //   width: double.infinity,
-                                //   errorBuilder:
-                                //       (context, error, stackTrace) => Center(
-                                //         child: Icon(Icons.broken_image),
-                                //       ),
-                                // ),
+                                child: Image.network(
+                                  product.gambar ??
+                                      'assets/images/default_image.png',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  errorBuilder:
+                                      (context, error, stackTrace) => Center(
+                                        child: Icon(Icons.broken_image),
+                                      ),
+                                ),
                               ),
                             ),
 
-                            // Konten teks dan tombol
                             Padding(
-                              padding:  EdgeInsets.all(12.0),
+                              padding: EdgeInsets.all(12.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    product.name,
+                                    product.nama,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -240,11 +250,11 @@ class ProductView extends GetView<ProductController> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'Rp. ${product.price}',
+                                    'Rp. ${product.harga}',
                                     style: TextStyle(color: Colors.green),
                                   ),
                                   Text(
-                                    'Stock: ${product.stock}',
+                                    'Stock: ${product.jumlah}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[600],
@@ -255,6 +265,7 @@ class ProductView extends GetView<ProductController> {
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
                                       onTap: () {
+                                        controllercart.addCart(product);
                                         Get.toNamed('/cart');
                                       },
                                       borderRadius: BorderRadius.circular(20),

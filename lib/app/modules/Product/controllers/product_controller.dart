@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/core/models/items_model.dart';
+import 'package:http/http.dart' as http;
 
 class Product {
   final String name;
@@ -16,48 +21,69 @@ class Product {
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
-  var allProducts = <Product>[].obs;
-  var filteredProducts = <Product>[].obs;
-  var selectedCategory = 'Food'.obs;
+  var selectedCategory = ''.obs;
+  var searchKeyword = ''.obs;
+  var itemsList = <Items>[].obs;
+  List<Items> allItems = [];
 
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
+    fetchProduct();
   }
 
-  void fetchProducts() async {
-    await Future.delayed(const Duration(seconds: 1)); // Simulasi loading
-    final products = [
-      Product(name: 'Roti aoka rasa strawberry', price: 3000, stock: 9, category: 'Food'),
-      Product(name: 'Sosis Kimbo', price: 6000, stock: 9, category: 'Food'),
-      Product(name: 'Roti aoka rasa Mangga', price: 3000, stock: 9, category: 'Food'),
-      Product(name: 'Sosis So nice', price: 1000, stock: 9, category: 'Food'),
-      Product(name: 'Pulpen Faster', price: 2500, stock: 12, category: 'ATK'),
-      Product(name: 'Sabun Lifebuoy', price: 5000, stock: 15, category: 'Sabun'),
-    ];
+  void fetchProduct() async {
+    isLoading.value = true;
 
-    allProducts.assignAll(products);
-    filterProducts(); // Initial filtering
-    isLoading.value = false;
+    try {
+      var urlItems = Uri.parse("http://172.16.40.128:5000/items");
+      final response = await http.get(urlItems);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonresponse = json.decode(response.body);
+        print(json.decode(response.body));
+
+        final List<dynamic> data = jsonresponse['data'];
+        print(data);
+
+        allItems = data.map((item) => Items.fromJson(item)).toList();
+        filterProducts();
+      } else {
+        print("Failed with status code: ${response.statusCode}");
+        Get.snackbar('Error', 'Failed to fetch products');
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Error",
+        "Failed to fetch products $e",
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  void setCategory(String category) {
-    selectedCategory.value = category;
-    filterProducts(); // Re-filter saat ganti kategori
+  void filterProducts() {
+    final keyword = searchKeyword.value.toLowerCase();
+    final kategori = selectedCategory.value.toLowerCase();
+
+    itemsList.assignAll(
+      allItems.where((item) {
+        final machtkeyword = item.nama.toLowerCase().contains(keyword);
+        final matchkategori =
+            kategori.isEmpty || item.kategori.toLowerCase().contains(kategori);
+        return machtkeyword && matchkategori;
+      }),
+    );
+  }
+
+  void setCategory(String kategori) {
+    selectedCategory.value = kategori == 'Semua' ? '' : kategori;
+    filterProducts();
   }
 
   void searchProduct(String keyword) {
-    filterProducts(keyword: keyword);
-  }
-
-  void filterProducts({String keyword = ''}) {
-    final results = allProducts.where((product) {
-      final matchCategory = product.category == selectedCategory.value;
-      final matchSearch = product.name.toLowerCase().contains(keyword.toLowerCase());
-      return matchCategory && matchSearch;
-    }).toList();
-
-    filteredProducts.assignAll(results);
+    searchKeyword.value = keyword;
+    filterProducts();
   }
 }
