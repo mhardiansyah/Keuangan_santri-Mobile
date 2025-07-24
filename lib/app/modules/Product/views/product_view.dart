@@ -222,8 +222,7 @@ class ProductView extends GetView<ProductController> {
                                   top: Radius.circular(16),
                                 ),
                                 child: Image.network(
-                                  product.gambar ??
-                                      'assets/images/default_image.png',
+                                  product.gambar,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   errorBuilder:
