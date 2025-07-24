@@ -16,6 +16,7 @@ abstract class Routes {
   static const ISI_DATA = _Paths.ISI_DATA;
   static const RIWAYAT_TRANSAKSI = _Paths.RIWAYAT_TRANSAKSI;
   static const TOP_UP = _Paths.TOP_UP;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const ISI_DATA = '/isi-data';
   static const RIWAYAT_TRANSAKSI = '/riwayat-transaksi';
   static const TOP_UP = '/top-up';
+  static const PROFILE = '/profile';
 }

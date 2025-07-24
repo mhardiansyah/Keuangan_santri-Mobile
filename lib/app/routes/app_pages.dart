@@ -16,6 +16,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main-navigation/bindings/main_navigation_binding.dart';
 import '../modules/main-navigation/views/main_navigation_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/riwayat_transaksi/bindings/riwayat_transaksi_binding.dart';
@@ -86,6 +88,11 @@ class AppPages {
       name: _Paths.TOP_UP,
       page: () => const TopUpView(),
       binding: TopUpBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }
