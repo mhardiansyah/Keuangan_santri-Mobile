@@ -145,14 +145,43 @@ class HomeView extends GetView<HomeController> {
                         _buildInfoCard(
                           'Total Transaksi',
                           '20',
-                          Colors.orange,
+                          'assets/icons/dolars.png',
                           'Diupdate: 20 Juni 2025',
                           '+10',
                           Colors.green,
+                          Color(0xffffe3c2), // Warna lingkaran oranye muda
+                        ),
+                        _buildInfoCard(
+                          'Total Produk',
+                          '12',
+                          'assets/icons/kardus.png',
+                          'Diupdate: 20 Juni 2025',
+                          '+3',
+                          Colors.green,
+                          Color(0xffcdf6f4), // Warna biru muda
+                        ),
+                        _buildInfoCard(
+                          'Total Santri',
+                          '35',
+                          'assets/icons/person.png',
+                          'Diupdate: 20 Juni 2025',
+                          '+2',
+                          Colors.green,
+                          Color(0xffd0f2cf), // Warna hijau muda
+                        ),
+                        _buildInfoCard(
+                          'Total Kasbon',
+                          '300K',
+                          'assets/icons/kasbon.png',
+                          'Diupdate: 20 Juni 2025',
+                          '+10',
+                          Colors.red,
+                          Color(0xfffff5c3), // Warna kuning pucat
                         ),
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -165,16 +194,18 @@ class HomeView extends GetView<HomeController> {
   Widget _buildInfoCard(
     String title,
     String value,
-    Color color,
+    String iconPath,
     String updateText,
     String changeText,
     Color changeColor,
+    Color circleColor, // Tambahan
   ) {
     return Container(
+      width: 160, // <- Ukuran disesuaikan
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -188,28 +219,46 @@ class HomeView extends GetView<HomeController> {
         children: [
           Row(
             children: [
-              Icon(Icons.circle, color: color, size: 20), // Ikon sesuai warna
+              Container(
+                width: 35,
+                height: 35,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: circleColor, // Gunakan warna dari parameter
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(iconPath, fit: BoxFit.contain),
+              ),
               SizedBox(width: 8),
-              Text(title, style: TextStyle(fontSize: 14, color: Colors.black)),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 16),
           Row(
             children: [
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
               SizedBox(width: 8),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: changeColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  color: changeColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   changeText,
@@ -222,10 +271,13 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 40), // Lebih lega sebelum Divider
           Divider(color: Colors.grey.shade300, thickness: 1),
-          SizedBox(height: 8),
-          Text(updateText, style: TextStyle(fontSize: 12, color: Colors.grey)),
+          SizedBox(height: 12),
+          Text(
+            updateText,
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ),
         ],
       ),
     );
