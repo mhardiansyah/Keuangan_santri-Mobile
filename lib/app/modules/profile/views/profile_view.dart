@@ -72,12 +72,12 @@ class ProfileView extends GetView<ProfileController> {
               icon: Icons.visibility_off,
               isPassword: true,
             ),
-            const Spacer(),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
-                  // tambahkan fungsi logout
+                  controller.logout();
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.red),
