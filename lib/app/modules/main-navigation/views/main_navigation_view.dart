@@ -22,84 +22,128 @@ class MainNavigationView extends GetView<MainNavigationController> {
   ];
   Widget build(BuildContext context) {
     return Obx(() {
-      return Scaffold(
-        body: pages[controller.selectedIndex.value],
-        floatingActionButton: FloatingActionButton(
-          shape: const CircleBorder(),
-          onPressed: () {},
-          child: Icon(Icons.add, size: 28, color: Colors.white),
-          backgroundColor: Colors.green,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 8,
-          child: Container(
-            height: 60,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      return Stack(
+        children: [
+          Scaffold(
+            body: pages[controller.selectedIndex.value],
+            floatingActionButton: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    _buildNavItem(Icons.home, 'Home', 0),
-                    const SizedBox(width: 30),
-                    _buildNavItem(Icons.store, 'Toko', 1),
-                  ],
+                SizedBox(
+                  height: 62,
+                  width: 62,
+                  child: FloatingActionButton(
+                    shape: CircleBorder(),
+                    backgroundColor: Colors.green,
+                    onPressed: () {
+                      Get.dialog(
+                        AlertDialog(
+                          title: Text('Coming Soon'),
+                          content: Text('This feature is under development.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Get.back(),
+                              child: Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Icon(Icons.add, size: 42, color: Colors.white),
+                  ),
                 ),
-                const SizedBox(width: 40),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
+              ],
+            ),
+
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              notchMargin: 8,
+              child: Container(
+                height: 70,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Top up",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Row(
+                        children: [
+                          _buildNavItem(
+                            Icons.home,
+                            "Home",
+                            0,
+                            selectedColor: Colors.orange,
+                          ),
+                          const SizedBox(width: 22),
+                          _buildNavItem(Icons.store, "Toko", 1),
+                        ],
+                      ),
+                    ),
+
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _buildNavItem(Icons.history, "Riwayat", 3),
+                          const SizedBox(width: 18),
+                          _buildNavItem(Icons.person, "Profile", 4),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 30),
-                Row(
-                  children: [
-                    _buildNavItem(Icons.history, 'History', 3),
-                    const SizedBox(width: 30),
-                    _buildNavItem(Icons.person, 'Profile', 4),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 20,
+            left: MediaQuery.of(context).size.width / 2 - 20,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Top up",
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     });
   }
 
-  Widget _buildNavItem(IconData icon, String label, int index) {
+  Widget _buildNavItem(
+    IconData icon,
+    String label,
+    int index, {
+    Color? selectedColor,
+  }) {
     final isSelected = controller.selectedIndex.value == index;
-    final color = isSelected ? Colors.green : Colors.grey;
+    final color = isSelected ? (selectedColor ?? Colors.orange) : Colors.grey;
 
     return GestureDetector(
       onTap: () => controller.changeTabIndex(index),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12.0,
-          // vertical: 8,
-        ), // Padding disesuaikan
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 28),
-            // const SizedBox(height: 10),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+            Icon(icon, color: color, size: 26),
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
             ),
           ],

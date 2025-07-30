@@ -10,125 +10,133 @@ class ProductView extends GetView<ProductController> {
 
   @override
   Widget build(BuildContext context) {
+    final scale = MediaQuery.of(context).size.width * 0.4;
+
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Search bar
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Search bar
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: TextField(
+                          onChanged: controller.searchProduct,
+                          decoration: InputDecoration(
+                            hintText: 'Cari produk',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
-                        ],
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        onChanged: controller.searchProduct,
-                        decoration: InputDecoration(
-                          hintText: 'Cari produk',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Implement keranjang/cart action
-                      Get.toNamed('/cart');
-                    },
-                    borderRadius: BorderRadius.circular(25),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(25),
+                    SizedBox(width: 12),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed('/cart');
+                      },
+                      borderRadius: BorderRadius.circular(25),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Icon(Icons.shopping_cart, color: Colors.green),
                       ),
-                      child: Icon(Icons.shopping_cart, color: Colors.green),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+
+                // Category filter
+                Obx(
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:
+                          ['Semua', 'makanan', 'ATK', 'Sabun'].map((kategori) {
+                            final isSelected =
+                                controller.selectedCategory.value ==
+                                (kategori == 'Semua' ? '' : kategori);
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(25),
+                                onTap: () => controller.setCategory(kategori),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
+                                      color:
+                                          isSelected
+                                              ? Colors.green
+                                              : Colors.grey.shade300,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    kategori,
+                                    style: TextStyle(
+                                      color:
+                                          isSelected
+                                              ? Colors.green
+                                              : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 16),
-
-              // Category filter
-              Obx(
-                () => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:
-                      ['Semua', 'makanan', 'ATK', 'Sabun'].map((kategori) {
-                        final isSelected =
-                            controller.selectedCategory.value ==
-                            (kategori == 'Semua' ? '' : kategori);
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(25),
-                            onTap: () => controller.setCategory(kategori),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                  color:
-                                      isSelected
-                                          ? Colors.green
-                                          : Colors.grey.shade300,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                kategori,
-                                style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.green : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
                 ),
-              ),
 
-              SizedBox(height: 16),
+                SizedBox(height: 16),
 
-              // Product Grid
-              Expanded(
-                child: Obx(() {
+                // Product Grid
+                Obx(() {
                   if (controller.isLoading.value) {
                     return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.55,
+                        childAspectRatio: 0.52,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
@@ -183,10 +191,12 @@ class ProductView extends GetView<ProductController> {
                           )
                           .toList();
                   return GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.all(12),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.60,
+                      childAspectRatio: 0.54,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
@@ -299,8 +309,8 @@ class ProductView extends GetView<ProductController> {
                     },
                   );
                 }),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

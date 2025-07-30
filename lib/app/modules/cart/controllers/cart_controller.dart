@@ -27,12 +27,12 @@ class CartController extends GetxController {
     cartItems.refresh();
   }
 
-  void decjumlah(CartModels item){
+  void decjumlah(CartModels item) {
     if (item.jumlah > 1) {
       item.jumlah -= 1;
       cartItems.refresh();
     } else {
-      removeCart(item.product);
+      // removeCart(item.product);
     }
   }
 
@@ -40,9 +40,12 @@ class CartController extends GetxController {
     cartItems.clear();
   }
 
-  int get totalHarga => cartItems.fold(
-    0, (sum, item) => sum + item.jumlah * item.product.harga
-  );
+  int get totalHargaPokok =>
+      cartItems.fold(0, (sum, item) => sum + item.jumlah * item.product.harga);
+
+  int get pajak => (totalHargaPokok * 0.1).toInt();
+
+  int get totalPembayaran => totalHargaPokok + pajak;
 
   void onInit() {
     super.onInit();

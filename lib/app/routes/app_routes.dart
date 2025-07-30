@@ -17,6 +17,7 @@ abstract class Routes {
   static const RIWAYAT_TRANSAKSI = _Paths.RIWAYAT_TRANSAKSI;
   static const TOP_UP = _Paths.TOP_UP;
   static const PROFILE = _Paths.PROFILE;
+  static const HISTORY = _Paths.HISTORY;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const RIWAYAT_TRANSAKSI = '/riwayat-transaksi';
   static const TOP_UP = '/top-up';
   static const PROFILE = '/profile';
+  static const HISTORY = '/history';
 }

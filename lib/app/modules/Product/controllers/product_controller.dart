@@ -36,8 +36,9 @@ class ProductController extends GetxController {
     isLoading.value = true;
 
     try {
-      var urlItems = Uri.parse("http://172.16.40.128:5000/items");
+      var urlItems = Uri.parse("http://10.0.2.2:5000/items");
       final response = await http.get(urlItems);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonresponse = json.decode(response.body);
         print(json.decode(response.body));
