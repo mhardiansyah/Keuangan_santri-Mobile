@@ -1,3 +1,5 @@
+// ignore_for_file: override_on_non_overriding_member
+
 import 'package:get/get.dart';
 import 'package:sakusantri/app/core/models/cart_models.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
