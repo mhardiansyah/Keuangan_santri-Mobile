@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -13,7 +14,16 @@ class HomeController extends GetxController {
   var itemsList = <Items>[].obs;
   var cardId = ''.obs;
   var dataLogin = Rxn<Login>();
+  Timer? nfcTimer;
+  bool wasNfcAvailable = false;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getData();
+    startNfcWatcher();
+    connectToUsbReader();
+  }
 
   void getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -21,6 +31,21 @@ class HomeController extends GetxController {
     if (jsonString != null) {
       dataLogin.value = Login.fromJson(json.decode(jsonString));
     }
+  }
+
+  
+
+  void startNfcWatcher() {
+    nfcTimer = Timer.periodic(Duration(seconds: 2), (_) async {
+      bool isAvailable = await NfcManager.instance.isAvailable();
+
+      if (isAvailable && !wasNfcAvailable) {
+        print('NFC baru saja diaktifkan. Memulai scanning...');
+        nfcScan(); // NFC baru saja diaktifkan
+      }
+
+      wasNfcAvailable = isAvailable;
+    });
   }
 
   void connectToUsbReader() async {
