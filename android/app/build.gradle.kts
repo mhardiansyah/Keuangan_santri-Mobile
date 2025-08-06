@@ -8,10 +8,7 @@ plugins {
 android {
     namespace = "com.sakusantri.sakusantri"
     compileSdk = flutter.compileSdkVersion
-<<<<<<< HEAD
     // ndkVersion = flutter.ndkVersion
-=======
->>>>>>> e1ce3203786c265e0dad5fe0b8e05fc6bfd7695b
     ndkVersion = "27.0.12077973"
 
     compileOptions {

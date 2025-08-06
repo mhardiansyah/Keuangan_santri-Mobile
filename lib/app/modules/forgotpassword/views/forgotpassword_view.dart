@@ -9,75 +9,98 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
       body: SafeArea(
         child: Stack(
           children: [
-            // Back Button di pojok kiri atas
+            // Tombol Back
             Padding(
-              padding: EdgeInsets.only(top: 8, left: 8),
+              padding: const EdgeInsets.only(top: 8, left: 8),
               child: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Get.back(),
                 tooltip: 'Back',
               ),
             ),
+
             // Form di tengah
             Center(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 400),
+                  constraints: const BoxConstraints(maxWidth: 400),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 40), // Jarak dari atas agar tidak ketabrak tombol back
+                      const SizedBox(height: 40),
+
                       // Logo
                       Image.asset(
-                        'assets/icons/logomysaku.png',
+                        'assets/icons/mysakudark.png',
                         height: 60,
                       ),
-                      SizedBox(height: 32),
+                      const SizedBox(height: 32),
 
-                      // Title
-                      Text(
-                        'Forgot Password',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      // Title (lowercase sesuai desain)
+                      const Text(
+                        'lupa password',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                      SizedBox(height: 6),
+                      const SizedBox(height: 6),
 
                       // Subtitle
                       Text(
                         "Selamat datang di MySaku",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[400],
+                        ),
                       ),
-                      SizedBox(height: 32),
+                      const SizedBox(height: 32),
 
                       // Email Label
-                      Align(
+                      const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "Email",
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       // Email Field
-                      Obx(() => TextField(
-                            onChanged: (value) => controller.email.value = value,
-                            decoration: InputDecoration(
-                              hintText: "Masukan Email Anda",
-                              errorText: controller.emailError.value,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
+                      Obx(
+                        () => TextField(
+                          onChanged: (value) => controller.email.value = value,
+                          decoration: InputDecoration(
+                            hintText: "Masukan Email Anda",
+                            hintStyle: const TextStyle(color: Colors.grey),
+                            errorText: controller.emailError.value,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
-                            keyboardType: TextInputType.emailAddress,
-                          )),
-                      SizedBox(height: 32),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
 
                       // Submit Button
                       SizedBox(
@@ -86,31 +109,31 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
                         child: ElevatedButton(
                           onPressed: controller.submitEmail,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2ECC71),
+                            backgroundColor: const Color(0xFF4C3FE4),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Text(
-                            "Kirim",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          child: const Text(
+                            "kirim",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Login Link
                       GestureDetector(
                         onTap: () => Get.toNamed(Routes.LOGIN),
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             text: "Klik disini untuk ",
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(color: Colors.white),
                             children: [
                               TextSpan(
-                                text: "LOGIN",
+                                text: "Login",
                                 style: TextStyle(
-                                  color: Colors.green,
+                                  color: Color(0xFF4C3FE4),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
