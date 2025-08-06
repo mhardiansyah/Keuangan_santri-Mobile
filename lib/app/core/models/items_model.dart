@@ -37,7 +37,7 @@ class Items {
     "kategori": kategori,
     "jumlah": jumlah,
     "gambar": gambar,
-    "created_at": createdAt.toIso8601String() ?? DateTime.now(),
-    "updated_at": updatedAt.toIso8601String() ?? DateTime.now(),
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
   };
 }

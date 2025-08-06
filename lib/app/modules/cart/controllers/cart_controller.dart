@@ -1,3 +1,5 @@
+// ignore_for_file: override_on_non_overriding_member
+
 import 'package:get/get.dart';
 import 'package:sakusantri/app/core/models/cart_models.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
@@ -47,19 +49,12 @@ class CartController extends GetxController {
 
   int get totalPembayaran => totalHargaPokok + pajak;
 
+  @override
   void onInit() {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   void increment() => count.value++;
 }

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/isi_data/controllers/isi_data_controller.dart';
 
 class IsiDataView extends GetView<IsiDataController> {
-  IsiDataView({super.key});
+  const IsiDataView({super.key});
 
   @override
   Widget build(BuildContext context) {

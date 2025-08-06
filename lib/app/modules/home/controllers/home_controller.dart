@@ -14,10 +14,6 @@ class HomeController extends GetxController {
   var cardId = ''.obs;
   var dataLogin = Rxn<Login>();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

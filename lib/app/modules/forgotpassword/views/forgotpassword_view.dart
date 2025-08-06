@@ -4,7 +4,7 @@ import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/forgotpassword_controller.dart';
 
 class ForgotpasswordView extends GetView<ForgotpasswordController> {
-  ForgotpasswordView({super.key});
+  const ForgotpasswordView({super.key});
 
   @override
   Widget build(BuildContext context) {

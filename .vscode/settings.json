@@ -2,7 +2,13 @@
     "cmake.sourceDirectory": "C:/Users/Rahsya Aditiya/OneDrive/Documents/keuangan santri/Keuangan_santri-Mobile/linux",
     "cSpell.words": [
         "Boxraints",
+<<<<<<< HEAD
         "Forgotpassword"
     ],
     "java.configuration.updateBuildConfiguration": "interactive"
+=======
+        "Forgotpassword",
+        "hari"
+    ]
+>>>>>>> e1ce3203786c265e0dad5fe0b8e05fc6bfd7695b
 }

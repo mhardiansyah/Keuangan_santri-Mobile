@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/modules/home/views/home_view.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -8,18 +9,18 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF0E1220),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.green),
-          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
+          onPressed: () => HomeView(),
         ),
         title: const Text(
           'Profile',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF0E1220),
         elevation: 0,
       ),
       body: LayoutBuilder(
@@ -69,9 +70,7 @@ class ProfileView extends GetView<ProfileController> {
       children: [
         const CircleAvatar(
           radius: 50,
-          backgroundImage: AssetImage(
-            'assets/profile.jpg' ?? 'assets/icons/person.png',
-          ),
+          backgroundImage: AssetImage('assets/profile.jpg'),
         ),
         Positioned(
           bottom: 0,
@@ -109,7 +108,7 @@ class ProfileView extends GetView<ProfileController> {
         const SizedBox(height: 16),
         buildTextField(
           label: 'Password',
-          hintText: '',
+          hintText: '**********',
           icon: Icons.visibility_off,
           isPassword: true,
         ),

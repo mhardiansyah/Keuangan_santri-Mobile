@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
@@ -5,7 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
-  ProductView({super.key});
+  const ProductView({super.key});
   get controllercart => Get.put(CartController());
 
   @override
@@ -83,7 +85,7 @@ class ProductView extends GetView<ProductController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:
-                          ['Semua', 'makanan', 'ATK', 'Sabun'].map((kategori) {
+                          ['Semua', 'Makanan', 'ATK', 'Sabun'].map((kategori) {
                             final isSelected =
                                 controller.selectedCategory.value ==
                                 (kategori == 'Semua' ? '' : kategori);

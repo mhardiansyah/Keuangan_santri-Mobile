@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
-  RegisterView({super.key});
+  const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
