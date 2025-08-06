@@ -150,7 +150,7 @@ class ProfileView extends GetView<ProfileController> {
           label,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 8),
