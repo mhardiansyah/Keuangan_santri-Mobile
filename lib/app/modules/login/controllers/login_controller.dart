@@ -1,8 +1,12 @@
 // ignore_for_file: unused_import
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   // Reactive variables for email and password
@@ -52,12 +56,31 @@ class LoginController extends GetxController {
     passwordError.value = null;
   }
 
-  void login() {
+  void login() async {
     if (validateForm()) {
       // Perform login logic here
-      Get.snackbar('Login', 'Login berhasil!');
-      Get.toNamed(Routes.HOME);
-      clearForm();
+
+      try {
+        Uri urlLogin = Uri.parse('http://10.0.2.2:5000/auth/login/');
+        var response = await http.post(
+          urlLogin,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'email': email.value, 'password': password.value}),
+        );
+        print('response.statusCode: ${response.statusCode}');
+        if (response.statusCode == 201) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('login', response.body);
+          Get.snackbar('Login', 'Login berhasil!');
+          Get.offAllNamed(Routes.MAIN_NAVIGATION);
+        } else {
+          Get.snackbar('Login', 'Email atau password salah!');
+        }
+      } catch (e) {
+        Get.snackbar('Login', 'Terjadi kesalahan, $e');
+      }
+
+      // clearForm();
     } else {
       Get.snackbar('Error', 'Silakan perbaiki kesalahan di login');
     }

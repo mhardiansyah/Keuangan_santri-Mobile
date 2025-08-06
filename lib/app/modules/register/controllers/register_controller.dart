@@ -1,8 +1,11 @@
 // ignore_for_file: unused_import
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterController extends GetxController {
   var name = ''.obs;
@@ -71,17 +74,45 @@ class RegisterController extends GetxController {
     passwordError.value = null;
   }
 
-  void register() {
+  void register() async {
     if (validateForm()) {
       // Proses register di sini
-      Get.snackbar('Register', 'Registrasi berhasil!');
-      Get.offAllNamed(Routes.HOME);
-      clearForm();
-    }
-    else {
+      Uri urlRegister = Uri.parse('http://10.0.2.2:5000/auth/register/');
+      try {
+        var response = await http.post(
+          urlRegister,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'name': name.value,
+            'email': email.value,
+            'password': password.value,
+          }),
+        );
+        if (response.statusCode == 201) {
+          Get.defaultDialog(
+            title: 'berhasil',
+            middleText: 'Registrasi berhasil',
+            confirm: TextButton(
+              onPressed: () => Get.toNamed(Routes.MAIN_NAVIGATION),
+              child: Text('OK'),
+            ),
+          );
+        } else {
+          Get.defaultDialog(
+            title: 'Gagal',
+            middleText: 'Registrasi gagal',
+            confirm: TextButton(onPressed: () => Get.back(), child: Text('OK')),
+          );
+          print('Kode status: ${response.statusCode}');
+          print('Terjadi kesalahan: ${response.body}');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Terjadi kesalahan: $e');
+        print('Terjadi kesalahan: $e');
+      }
+      // clearForm();
+    } else {
       Get.snackbar('Error', 'Silakan perbaiki kesalahan di formulir');
     }
   }
-
-  
 }

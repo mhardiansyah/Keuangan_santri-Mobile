@@ -7,6 +7,7 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put<HomeController>(HomeController());
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -20,17 +21,19 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: AssetImage('assets/icons/logo.png'),
+                        backgroundImage: AssetImage('assets/icons/kardus.png'),
                       ),
                       SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Hello Abqory',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          Obx(
+                            () => Text(
+                              'Hello ${controller.dataLogin.value?.name}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -78,6 +81,14 @@ class HomeView extends GetView<HomeController> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        Obx(
+                          () => Text(
+                            controller.cardId.value.isEmpty
+                                ? 'Scan NFC untuk melihat ID Kartu'
+                                : 'ID Kartu: ${controller.cardId.value}',
+                          ),
+                        ),
                         const SizedBox(height: 33),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,10 +96,12 @@ class HomeView extends GetView<HomeController> {
                             SizedBox(
                               width: 142,
                               child: ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  controller.nfcScan();
+                                },
                                 icon: Icon(Icons.details, color: Colors.white),
                                 label: Text(
-                                  'Lihat Detail',
+                                  'Scan NFC',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -108,13 +121,15 @@ class HomeView extends GetView<HomeController> {
                             SizedBox(
                               width: 142,
                               child: ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  controller.connectToUsbReader();
+                                },
                                 icon: Icon(
                                   Icons.qr_code_scanner,
                                   color: Colors.white,
                                 ),
                                 label: Text(
-                                  'Scan QR',
+                                  'Connect to USB Reader',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -198,12 +213,12 @@ class HomeView extends GetView<HomeController> {
     String updateText,
     String changeText,
     Color changeColor,
-    Color circleColor, 
+    Color circleColor,
   ) {
     return Container(
       padding: EdgeInsets.only(left: 15, right: 18, top: 18, bottom: 7),
       width: 120,
-      
+
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),

@@ -10,7 +10,8 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 2), () {
-      Get.toNamed(Routes.MAIN_NAVIGATION); // Navigate to login after splash
+      // Get.toNamed(Routes.MAIN_NAVIGATION); // Navigate to login after splash
+      Get.toNamed(Routes.LOGIN);
     });
     return Scaffold(
       body: Center(

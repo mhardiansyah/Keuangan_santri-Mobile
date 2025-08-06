@@ -7,6 +7,7 @@ import 'package:sakusantri/app/modules/Product/views/product_view.dart';
 import 'package:sakusantri/app/modules/cart/views/cart_view.dart';
 import 'package:sakusantri/app/modules/home/views/home_view.dart';
 import 'package:sakusantri/app/modules/main-navigation/controllers/main_navigation_controller.dart';
+import 'package:sakusantri/app/modules/profile/views/profile_view.dart';
 
 class MainNavigationView extends GetView<MainNavigationController> {
   // ignore: use_super_parameters
@@ -18,7 +19,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
     ProductView(),
     SizedBox(),
     CartView(),
-    Center(child: Text('Profile')),
+    ProfileView(),
   ];
   Widget build(BuildContext context) {
     return Obx(() {
@@ -39,7 +40,9 @@ class MainNavigationView extends GetView<MainNavigationController> {
                       Get.dialog(
                         AlertDialog(
                           title: Text('Coming Soon'),
-                          content: Text('This feature is under development.'),
+                          content: Text(
+                            'masih dalam tahap pengembangan untuk fitur ini sabar ya😊🔥🔥🔥',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Get.back(),
