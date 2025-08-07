@@ -18,6 +18,7 @@ abstract class Routes {
   static const TOP_UP = _Paths.TOP_UP;
   static const PROFILE = _Paths.PROFILE;
   static const HISTORY = _Paths.HISTORY;
+  static const WAITING_TAP = _Paths.WAITING_TAP;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const TOP_UP = '/top-up';
   static const PROFILE = '/profile';
   static const HISTORY = '/history';
+  static const WAITING_TAP = '/waiting-tap';
 }
