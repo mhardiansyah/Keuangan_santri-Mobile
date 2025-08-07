@@ -5,19 +5,19 @@ import 'package:get/get.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
 import 'package:http/http.dart' as http;
 
-class Product {
-  final String name;
-  final int price;
-  final int stock;
-  final String category;
+// class Product {
+//   final String name;
+//   final int price;
+//   final int stock;
+//   final String category;
 
-  Product({
-    required this.name,
-    required this.price,
-    required this.stock,
-    required this.category,
-  });
-}
+//   Product({
+//     required this.name,
+//     required this.price,
+//     required this.stock,
+//     required this.category,
+//   });
+// }
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
@@ -72,7 +72,7 @@ class ProductController extends GetxController {
       allItems.where((item) {
         final machtkeyword = item.nama.toLowerCase().contains(keyword);
         final matchkategori =
-            kategori.isEmpty || item.kategori.toLowerCase().contains(kategori);
+            kategori.isEmpty || item.kategoriId.toString() == kategori;
         return machtkeyword && matchkategori;
       }),
     );
