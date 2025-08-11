@@ -1,109 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
-  ProductView({super.key});
+  const ProductView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controllercart = Get.put(CartController());
+
     return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
+
+      //AppBar disamakan seperti halaman Profile
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text(
+          'Toko',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF0E1220),
+        elevation: 0,
+      ),
+
+      //Bottom cart bar jika ada item
+      bottomNavigationBar: Obx(() {
+        if (controllercart.cartItems.isEmpty) return const SizedBox.shrink();
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF6366F1),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Row(
+            children: [
+              Text(
+                '${controllercart.cartItems.length} Item dipilih',
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => Get.toNamed('/cart'),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFACC15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.shopping_cart, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Search bar
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        onChanged: controller.searchProduct,
-                        decoration: InputDecoration(
-                          hintText: 'Cari produk',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                      ),
-                    ),
+              //Search Bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: TextField(
+                  onChanged: controller.searchProduct,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Masukan nama Item',
+                    hintStyle: TextStyle(color: Colors.white54),
+                    icon: Icon(Icons.search, color: Colors.white),
                   ),
-                  SizedBox(width: 12),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Implement keranjang/cart action
-                    },
-                    borderRadius: BorderRadius.circular(25),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Icon(Icons.shopping_cart, color: Colors.green),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              SizedBox(height: 16),
 
-              // Category filter
-              Obx(
-                () => Row(
+              const SizedBox(height: 16),
+
+              //Kategori
+              Obx(() {
+                final kategoriList = [
+                  {'id': '', 'label': 'Semua'},
+                  {'id': '1', 'label': 'Makanan'},
+                  {'id': '2', 'label': 'Minuman'},
+                  {'id': '3', 'label': 'Alat Tulis'},
+                ];
+                return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:
-                      ['Food', 'ATK', 'Sabun'].map((category) {
-                        final isSelected =
-                            controller.selectedCategory.value == category;
+                      kategoriList.map((kategori) {
+                        final selected =
+                            controller.selectedCategory.value == kategori['id'];
                         return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(25),
-                            onTap: () => controller.setCategory(category),
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: GestureDetector(
+                            onTap:
+                                () => controller.setCategory(kategori['id']!),
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
                                 vertical: 10,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                  color:
-                                      isSelected
-                                          ? Colors.green
-                                          : Colors.grey.shade300,
-                                  width: 2,
-                                ),
+                                color:
+                                    selected
+                                        ? const Color(0xFF6366F1)
+                                        : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                category,
+                                kategori['label']!,
                                 style: TextStyle(
                                   color:
-                                      isSelected ? Colors.green : Colors.black,
+                                      selected
+                                          ? Colors.white
+                                          : const Color(0xFF6366F1),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -111,128 +132,113 @@ class ProductView extends GetView<ProductController> {
                           ),
                         );
                       }).toList(),
-                ),
-              ),
+                );
+              }),
 
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-              // Product Grid
+              //Grid Produk
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
-                  final products = controller.filteredProducts;
+                  final products = controller.itemsList;
+
                   return GridView.builder(
-                    padding: EdgeInsets.all(12),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.60,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
                     itemCount: products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.60,
+                        ),
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
                         ),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Gambar Produk di bagian atas (ungu)
+                            //Gambar produk
                             Container(
-                              height: 180,
                               decoration: BoxDecoration(
-                                color: Colors.deepPurple[100],
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
+                              padding: const EdgeInsets.all(6),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    product.gambar,
+                                    fit: BoxFit.contain,
+                                    errorBuilder:
+                                        (_, __, ___) => const Center(
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                  ),
                                 ),
-                                // child: Image.network(
-                                //   product.imageUrl, // Ambil dari database
-                                //   fit: BoxFit.cover,
-                                //   width: double.infinity,
-                                //   errorBuilder:
-                                //       (context, error, stackTrace) => Center(
-                                //         child: Icon(Icons.broken_image),
-                                //       ),
-                                // ),
                               ),
                             ),
 
-                            // Konten teks dan tombol
-                            Padding(
-                              padding:  EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                            const SizedBox(height: 8),
+                            Text(
+                              product.nama,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Tersedia',
+                              style: TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Rp${product.harga}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Spacer(),
+
+                            //Tombol tambah ke keranjang
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: InkWell(
+                                onTap: () {
+                                  controllercart.addCart(product);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFFACC15),
+                                    shape: BoxShape.circle,
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Rp. ${product.price}',
-                                    style: TextStyle(color: Colors.green),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: Colors.black,
                                   ),
-                                  Text(
-                                    'Stock: ${product.stock}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.toNamed('/cart');
-                                      },
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Container(
-                                        padding: EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.1,
-                                              ),
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ],

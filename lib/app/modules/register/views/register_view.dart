@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
-  RegisterView({super.key});
+  const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF0F172A),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -21,13 +22,13 @@ class RegisterView extends GetView<RegisterController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Logo
-                  Image.asset('assets/icons/logomysaku.png', height: 72),
+                  Image.asset('assets/icons/mysakudark.png', height: 72),
                   SizedBox(height: 32),
 
                   // Title
                   Text(
                     'Register',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 4),
 
@@ -46,6 +47,7 @@ class RegisterView extends GetView<RegisterController> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -56,15 +58,17 @@ class RegisterView extends GetView<RegisterController> {
                       onChanged: (value) => controller.name.value = value,
                       decoration: InputDecoration(
                         hintText: "Masukan Nama Anda",
+                        hintStyle: TextStyle(color: Colors.grey),
                         errorText: controller.nameError.value,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Color(0xFF1E293B),
                       ),
                       keyboardType: TextInputType.name,
-                    ),
+       
+       style:  TextStyle(color: Colors.white),             ),
                   ),
                   SizedBox(height: 16),
 
@@ -76,6 +80,7 @@ class RegisterView extends GetView<RegisterController> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -86,14 +91,16 @@ class RegisterView extends GetView<RegisterController> {
                       onChanged: (value) => controller.email.value = value,
                       decoration: InputDecoration(
                         hintText: "Masukan Email Anda",
+                        hintStyle: TextStyle(color: Colors.grey),
                         errorText: controller.emailError.value,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Color(0xFF1E293B),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      style:  TextStyle(color: Colors.white),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -106,6 +113,7 @@ class RegisterView extends GetView<RegisterController> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -117,12 +125,13 @@ class RegisterView extends GetView<RegisterController> {
                       obscureText: controller.isPasswordHidden.value,
                       decoration: InputDecoration(
                         hintText: "Masukan Password Anda",
+                        hintStyle: TextStyle(color: Colors.grey),
                         errorText: controller.passwordError.value,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Color(0xFF1E293B),
                         suffixIcon: IconButton(
                           icon: Icon(
                             controller.isPasswordHidden.value
@@ -133,6 +142,7 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                       ),
                       keyboardType: TextInputType.visiblePassword,
+                      style:  TextStyle(color: Colors.white),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -145,6 +155,7 @@ class RegisterView extends GetView<RegisterController> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -157,12 +168,13 @@ class RegisterView extends GetView<RegisterController> {
                       obscureText: controller.isConfirmPasswordHidden.value,
                       decoration: InputDecoration(
                         hintText: "Masukan Konfirmasi Password",
+                        hintStyle: TextStyle(color: Colors.grey),
                         errorText: controller.confirmPasswordError.value,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Color(0xFF1E293B),
                         suffixIcon: IconButton(
                           icon: Icon(
                             controller.isConfirmPasswordHidden.value
@@ -173,6 +185,7 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                       ),
                       keyboardType: TextInputType.visiblePassword,
+                      style:  TextStyle(color: Colors.white),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -183,7 +196,7 @@ class RegisterView extends GetView<RegisterController> {
                     height: 48,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2ECC71),
+                        backgroundColor: Color(0xFF4C3FE4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -210,7 +223,9 @@ class RegisterView extends GetView<RegisterController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Already have account? "),
+                      Text("Already have account? ",
+                          style: TextStyle(color: Colors.white)
+                          ),
                       GestureDetector(
                         onTap: () {
                           Get.toNamed('/login');
@@ -218,7 +233,7 @@ class RegisterView extends GetView<RegisterController> {
                         child: Text(
                           "Sign In",
                           style: TextStyle(
-                            color: Color(0xFF2ECC71),
+                            color: Color(0xFF4C3FE4),
                             fontWeight: FontWeight.bold,
                           ),
                         ),

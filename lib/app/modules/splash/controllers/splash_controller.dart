@@ -2,24 +2,19 @@
 
 import 'package:get/get.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashController extends GetxController {
   //TODO: Implement SplashController
 
   final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();   
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  RxString logined = "".obs;
 
-  @override
-  void onClose() {
-    super.onClose();
+  cekData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
   }
 
   void increment() => count.value++;

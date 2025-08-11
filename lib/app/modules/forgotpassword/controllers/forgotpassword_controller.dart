@@ -33,10 +33,6 @@ class ForgotpasswordController extends GetxController {
   }
 
   // Optional override
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onClose() {
