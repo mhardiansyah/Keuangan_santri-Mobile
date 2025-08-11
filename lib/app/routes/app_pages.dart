@@ -27,6 +27,8 @@ import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/waiting_tap/bindings/waiting_tap_binding.dart';
+import '../modules/waiting_tap/views/waiting_tap_view.dart';
 
 // ignore_for_file: unused_import
 
@@ -66,11 +68,7 @@ class AppPages {
       page: () => ProductView(),
       binding: ProductBinding(),
     ),
-    GetPage(
-      name: _Paths.CART,
-      page: () => CartView(),
-      binding: CartBinding(),
-    ),
+    GetPage(name: _Paths.CART, page: () => CartView(), binding: CartBinding()),
     GetPage(
       name: _Paths.MAIN_NAVIGATION,
       page: () => MainNavigationView(),
@@ -100,6 +98,11 @@ class AppPages {
       name: _Paths.HISTORY,
       page: () => const HistoryView(),
       binding: HistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.WAITING_TAP,
+      page: () => const WaitingTapView(),
+      binding: WaitingTapBinding(),
     ),
   ];
 }

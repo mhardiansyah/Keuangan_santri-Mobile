@@ -312,14 +312,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  logger:
-    dependency: transitive
-    description:
-      name: logger
-      sha256: "55d6c23a6c15db14920e037fe7e0dc32e7cdaf3b64b4b25df2d541b5b6b81c0c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.1"
   logging:
     dependency: transitive
     description:
@@ -368,30 +360,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4"
-  ndef_record:
-    dependency: transitive
-    description:
-      name: ndef_record
-      sha256: "0c72dfac0d5c16fc264846d103ee5d8249cd3858261a5a537b455a24c1bd5857"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
-  nfc_classic_mifare_plus:
-    dependency: "direct main"
-    description:
-      name: nfc_classic_mifare_plus
-      sha256: e34b8891aeca6a14ffea976a2684bdf44c0babc2937587f3ad2aaeaa3a35e4d9
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
-  nfc_manager:
-    dependency: "direct main"
-    description:
-      name: nfc_manager
-      sha256: "164cc0223dee528d4d05a542da921f0b3a31ca0312400701c93ebf4ce757f676"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
   path:
     dependency: transitive
     description:
@@ -573,14 +541,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  usb_serial:
-    dependency: "direct main"
-    description:
-      name: usb_serial
-      sha256: a605a600e34e7f28d4e80851ca3999ef747e42e406138887b8a88b8c382a8b07
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2"
   uuid:
     dependency: transitive
     description:
@@ -630,5 +590,5 @@ packages:
     source: hosted
     version: "1.1.0"
 sdks:
-  dart: ">=3.8.1 <4.0.0"
+  dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.27.0"

@@ -8,6 +8,7 @@ import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
 import 'app/routes/app_pages.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     GetMaterialApp(
       title: "Application",

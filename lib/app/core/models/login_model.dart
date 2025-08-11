@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+    Login loginFromJson(String str) => Login.fromJson(json.decode(str));
 class Login {
     int id;
     String email;
@@ -18,6 +21,7 @@ class Login {
         required this.updatedAt,
         required this.accessToken,
     });
+
 
     factory Login.fromJson(Map<String, dynamic> json) => Login(
         id: json["id"],
