@@ -3,7 +3,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +21,8 @@ class LoginController extends GetxController {
 
   // Reactive variable for password visibility
   var isPasswordHidden = true.obs;
+  var url = dotenv.env['base_url'];
+  final box = GetStorage();
 
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
@@ -61,16 +65,22 @@ class LoginController extends GetxController {
       // Perform login logic here
 
       try {
-        Uri urlLogin = Uri.parse('http://10.0.2.2:5000/auth/login/');
+        Uri urlLogin = Uri.parse('${url}/auth/login/');
         var response = await http.post(
           urlLogin,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'email': email.value, 'password': password.value}),
         );
         print('response.statusCode: ${response.statusCode}');
+
+        final data = json.decode(response.body);
         if (response.statusCode == 201) {
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('login', response.body);
+          box.write('access_token', data['access_token']);
+          box.write('name', data['name']);
+          box.write('email', data['email']);
+          box.write('password', data['password']);
+
+          print('access_token: ${box.read('access_token')}');
           Get.snackbar('Login', 'Login berhasil!');
           Get.offAllNamed(Routes.MAIN_NAVIGATION);
         } else {
@@ -85,7 +95,4 @@ class LoginController extends GetxController {
       Get.snackbar('Error', 'Silakan perbaiki kesalahan di login');
     }
   }
-
-
-
 }

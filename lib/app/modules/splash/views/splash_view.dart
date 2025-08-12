@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/splash_controller.dart';
 
@@ -8,8 +9,16 @@ class SplashView extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    RxString logined = "".obs;
+
     Future.delayed(const Duration(seconds: 2), () {
-      Get.toNamed(Routes.LOGIN);
+      logined.value = box.read('access_token') ?? "";
+      if (logined.value.isNotEmpty) {
+        Get.offAllNamed(Routes.MAIN_NAVIGATION);
+      } else {
+        Get.offAllNamed(Routes.LOGIN);
+      }
     });
 
     return Scaffold(
