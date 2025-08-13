@@ -18,6 +18,10 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main-navigation/bindings/main_navigation_binding.dart';
 import '../modules/main-navigation/views/main_navigation_view.dart';
+import '../modules/nominal/bindings/nominal_binding.dart';
+import '../modules/nominal/views/nominal_view.dart';
+import '../modules/notif_pembayaran/bindings/notif_pembayaran_binding.dart';
+import '../modules/notif_pembayaran/views/notif_pembayaran_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -38,6 +42,7 @@ class AppPages {
   AppPages._();
 
   static const INITIAL = Routes.SPLASH;
+  static const INITIAL = Routes.NOTIF_PEMBAYARAN;
 
   static final routes = [
     GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
@@ -103,6 +108,16 @@ class AppPages {
       name: _Paths.WAITING_TAP,
       page: () => const WaitingTapView(),
       binding: WaitingTapBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIF_PEMBAYARAN,
+      page: () => const NotifPembayaranView(),
+      binding: NotifPembayaranBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOMINAL,
+      page: () => const NominalView(),
+      binding: NominalBinding(),
     ),
   ];
 }
