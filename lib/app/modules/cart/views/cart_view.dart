@@ -9,16 +9,18 @@ class CartView extends GetView<CartController> {
   Widget build(BuildContext context) {
     Get.put(CartController());
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-
     return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
-        title: const Text('Checkout'),
+        backgroundColor: const Color(0xFF0F172A),
+        elevation: 0,
+        title: const Text(
+          'Checkout',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.green),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
       ),
@@ -26,36 +28,26 @@ class CartView extends GetView<CartController> {
         child: Obx(() {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: screenHeight - AppBar().preferredSize.height - MediaQuery.of(context).padding.top - 16,
-              ),
-              child: IntrinsicHeight(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // List Produk
-                    ...controller.cartItems.map((item) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // List Produk
+                ...controller.cartItems.map((item) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E293B),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Gambar Produk
                             Container(
-                              width: isLandscape ? screenWidth * 0.15 : 80,
+                              width: 80,
                               height: 80,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -75,27 +67,15 @@ class CartView extends GetView<CartController> {
                                     item.product.nama,
                                     style: const TextStyle(
                                       fontSize: 16,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'Rp. ${item.product.harga}',
-                                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () => controller.decjumlah(item),
-                                        icon: const Icon(Icons.remove_circle_outline, color: Colors.green),
-                                      ),
-                                      Text('${item.jumlah}', style: const TextStyle(fontSize: 16)),
-                                      IconButton(
-                                        onPressed: () => controller.incjumlah(item),
-                                        icon: const Icon(Icons.add_circle_outline, color: Colors.green),
-                                      ),
-                                    ],
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.white70),
                                   ),
                                 ],
                               ),
@@ -106,84 +86,141 @@ class CartView extends GetView<CartController> {
                             ),
                           ],
                         ),
-                      );
-                    }),
+                        const SizedBox(height: 12),
+                        // Tombol tambah/kurang
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildQtyButton(
+                              icon: Icons.add,
+                              onTap: () => controller.incjumlah(item),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                '${item.jumlah}',
+                                style: const TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                            _buildQtyButton(
+                              icon: Icons.remove,
+                              onTap: () => controller.decjumlah(item),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
 
-                    const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                    // Ringkasan Pembayaran
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(12),
+                // Ringkasan Pembayaran
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Ringkasan Pembayaran',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Harga Pokok',
+                              style: TextStyle(color: Colors.white70)),
+                          Text('Rp. ${controller.totalHargaPokok}',
+                              style: const TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Pajak',
+                              style: TextStyle(color: Colors.white70)),
+                          Text('Rp. ${controller.pajak}',
+                              style: const TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                      const Divider(height: 30, color: Colors.white24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Ringkasan Pembayaran',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            'Total Pembayaran',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Harga Pokok'),
-                              Text('Rp. ${controller.totalHargaPokok}'),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Pajak'),
-                              Text('Rp. ${controller.pajak}'),
-                            ],
-                          ),
-                          const Divider(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Total Pembayaran',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'Rp. ${controller.totalPembayaran}',
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          Text(
+                            'Rp. ${controller.totalPembayaran}',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ],
                       ),
-                    ),
+                    ],
+                  ),
+                ),
 
-                    const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                    // Tombol Bayar
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: controller.clear,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: const Text(
-                          'Bayar',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
+                // Tombol Bayar
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: controller.clear,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4634CC), // warna sama seperti NominalView
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-
-                    const SizedBox(height: 30),
-                  ],
+                    child: const Text(
+                      'Bayar',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _buildQtyButton({required IconData icon, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: const BoxDecoration(
+          color: Color(0xFF4634CC), // ganti ke warna utama NominalView
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 16),
       ),
     );
   }
