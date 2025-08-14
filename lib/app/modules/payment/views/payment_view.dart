@@ -160,7 +160,7 @@ class PaymentView extends StatelessWidget {
             // Tombol bayar
             SizedBox(
               width: double.infinity,
-              height: 55,
+              height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4634CC),
