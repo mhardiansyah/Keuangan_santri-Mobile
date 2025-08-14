@@ -4,20 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// class Product {
-//   final String name;
-//   final int price;
-//   final int stock;
-//   final String category;
-
-//   Product({
-//     required this.name,
-//     required this.price,
-//     required this.stock,
-//     required this.category,
-//   });
-// }
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
@@ -25,6 +13,7 @@ class ProductController extends GetxController {
   var searchKeyword = ''.obs;
   var itemsList = <Items>[].obs;
   List<Items> allItems = [];
+  var url = dotenv.env['base_url'];
 
   @override
   void onInit() {
@@ -36,7 +25,7 @@ class ProductController extends GetxController {
     isLoading.value = true;
 
     try {
-      var urlItems = Uri.parse("http://10.0.2.2:5000/items");
+      var urlItems = Uri.parse("${url}/items");
       final response = await http.get(urlItems);
       print(response.statusCode);
       if (response.statusCode == 200) {

@@ -1,6 +1,7 @@
 // home_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -12,6 +13,8 @@ class HomeView extends GetView<HomeController> {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final screenWidth = MediaQuery.of(context).size.width;
+    final box = GetStorage();
+    final username = box.read('name') ?? "User";
 
     return KeyboardListener(
       focusNode: controller.focusNode,
@@ -31,19 +34,19 @@ class HomeView extends GetView<HomeController> {
                       backgroundImage: AssetImage('assets/icons/logo.png'),
                     ),
                     const SizedBox(width: 10),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Hello Faqih',
-                          style: TextStyle(
+                          'Hello $username',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 2),
-                        Text(
+                        const SizedBox(height: 2),
+                        const Text(
                           'Welcome Back',
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),

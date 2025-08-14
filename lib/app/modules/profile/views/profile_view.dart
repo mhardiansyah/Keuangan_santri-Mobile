@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/modules/home/views/home_view.dart';
 import '../controllers/profile_controller.dart';
 
@@ -70,7 +71,9 @@ class ProfileView extends GetView<ProfileController> {
       children: [
         const CircleAvatar(
           radius: 50,
-          backgroundImage: AssetImage('assets/profile.jpg'),
+          backgroundImage: AssetImage(
+            'assets/profile.jpg' ?? 'assets/images/default_image.png',
+          ),
         ),
         Positioned(
           bottom: 0,
@@ -89,26 +92,30 @@ class ProfileView extends GetView<ProfileController> {
   }
 
   Widget buildFormSection() {
+    final box = GetStorage();
+    final username = box.read('name') ?? "User";
+    final email = box.read('email') ?? "Email";
+    final password = box.read('password') ?? "Password";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildTextField(
           label: 'Nama:',
-          hintText: 'Faqih Abqory',
+          hintText: username ?? 'User',
           icon: Icons.edit,
           isPassword: false,
         ),
         const SizedBox(height: 16),
         buildTextField(
           label: 'Email:',
-          hintText: 'Qoy123@gmail.com',
+          hintText: email ?? 'Qoy123@gmail.com',
           icon: Icons.email,
           isPassword: false,
         ),
         const SizedBox(height: 16),
         buildTextField(
           label: 'Password',
-          hintText: '**********',
+          hintText: password ?? '**********',
           icon: Icons.visibility_off,
           isPassword: true,
         ),

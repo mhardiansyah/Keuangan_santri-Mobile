@@ -19,6 +19,9 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const HISTORY = _Paths.HISTORY;
   static const WAITING_TAP = _Paths.WAITING_TAP;
+  static const NOTIF_PEMBAYARAN = _Paths.NOTIF_PEMBAYARAN;
+  static const NOMINAL = _Paths.NOMINAL;
+  static const PAYMENT = _Paths.PAYMENT;
 }
 
 abstract class _Paths {
@@ -39,4 +42,7 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const HISTORY = '/history';
   static const WAITING_TAP = '/waiting-tap';
+  static const NOTIF_PEMBAYARAN = '/notif-pembayaran';
+  static const NOMINAL = '/nominal';
+  static const PAYMENT = '/payment';
 }
