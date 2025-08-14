@@ -126,8 +126,6 @@ class HomeView extends GetView<HomeController> {
                             width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
                             child: ElevatedButton.icon(
                               onPressed: () {
-                                controller.santri.value = null;
-                                controller.cardInput.value = '';
                                 controller.focusNode.requestFocus();
                                 controller.dialogCek();
                               },
@@ -154,22 +152,6 @@ class HomeView extends GetView<HomeController> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      TextField(
-                        onSubmitted: (value) {
-                          controller.getSantriByUID(value);
-                        },
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          labelText: 'Masukkan UID',
-                          labelStyle: TextStyle(color: Colors.white70),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

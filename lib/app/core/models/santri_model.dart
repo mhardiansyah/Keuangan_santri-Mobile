@@ -1,58 +1,87 @@
 import 'dart:convert';
 
-Santri santriFromJson(String str) => Santri.fromJson(json.decode(str));
-class Santri {
-    int id;
-    String name;
-    String kelas;
-    int saldo;
-    int hutang;
-    DateTime createdAt;
-    DateTime updatedAt;
-    Kartu kartu;
-
-    Santri({
-        required this.id,
-        required this.name,
-        required this.kelas,
-        required this.saldo,
-        required this.hutang,
-        required this.createdAt,
-        required this.updatedAt,
-        required this.kartu,
-    });
-
-    factory Santri.fromJson(Map<String, dynamic> json) => Santri(
-        id: json["id"],
-        name: json["name"],
-        kelas: json["kelas"],
-        saldo: json["saldo"],
-        hutang: json["hutang"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        kartu: Kartu.fromJson(json["kartu"]),
-    );
-
-}
+Kartu kartuFromJson(String str) => Kartu.fromJson(json.decode(str));
 
 class Kartu {
-    int id;
-    String nomorKartu;
-    DateTime createdAt;
-    DateTime updatedAt;
+  String status;
+  String msg;
+  Data data;
 
-    Kartu({
-        required this.id,
-        required this.nomorKartu,
-        required this.createdAt,
-        required this.updatedAt,
-    });
+  Kartu({required this.status, required this.msg, required this.data});
 
-    factory Kartu.fromJson(Map<String, dynamic> json) => Kartu(
-        id: json["id"],
-        nomorKartu: json["nomor_kartu"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+  factory Kartu.fromJson(Map<String, dynamic> json) {
+    return Kartu(
+      status: json['status'],
+      msg: json['msg'],
+      data: Data.fromJson(json['data']),
     );
+  }
+}
 
+Data datafromJson(String str) => Data.fromJson(json.decode(str));
+
+class Data {
+  int id;
+  String nomorKartu;
+  DateTime createdAt;
+  DateTime updatedAt;
+  Santri santri;
+
+  Data({
+    required this.id,
+    required this.nomorKartu,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.santri,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      id: json['id'],
+      nomorKartu: json['nomorKartu'] ?? json['nomor_kartu'],
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toString(),
+      ),
+      updatedAt: DateTime.parse(
+        json['updated_at'] ?? DateTime.now().toString(),
+      ),
+      santri: Santri.fromJson(json['santri']),
+    );
+  }
+}
+
+class Santri {
+  int id;
+  String name;
+  String kelas;
+  int saldo;
+  int hutang;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Santri({
+    required this.id,
+    required this.name,
+    required this.kelas,
+    required this.saldo,
+    required this.hutang,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Santri.fromJson(Map<String, dynamic> json) {
+    return Santri(
+      id: json['id'],
+      name: json['name'],
+      kelas: json['kelas'],
+      saldo: json['saldo'] ?? 0,
+      hutang: json['hutang'] ?? 0,
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toString(),
+      ),
+      updatedAt: DateTime.parse(
+        json['updated_at'] ?? DateTime.now().toString(),
+      ),
+    );
+  }
 }
