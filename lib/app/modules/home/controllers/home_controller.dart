@@ -54,9 +54,9 @@ class HomeController extends GetxController {
   }
 
   void dialogCek() {
-    santri.value = null;
-    cardInput.value = '';
-    cardUID.value = '';
+    // santri.value = null;
+    // cardInput.value = '';
+    // cardUID.value = '';
 
     Get.dialog(
       Dialog(
@@ -65,44 +65,84 @@ class HomeController extends GetxController {
           focusNode: focusNode,
           onKeyEvent: (node, event) => onKeyEvent(node, event),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            // padding: const EdgeInsets.all(20),
             width: double.infinity,
             constraints: const BoxConstraints(minHeight: 150),
+            decoration: BoxDecoration(
+              color: Color(0xff1D2938),
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Obx(() {
               final data = santri.value;
-
-              if (data == null) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    SizedBox(height: 20),
-                    Text("Tempelkan kartu...", style: TextStyle(fontSize: 16)),
-                  ],
-                );
-              }
-
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              return Stack(
                 children: [
-                  const Text(
-                    "Data Santri",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 70,
+                      vertical: 20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (data == null) ...[
+                          Image.asset(
+                            "assets/icons/tapKartu.png",
+                            width: 60,
+                            height: 60,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Silahkan Tap kartu anda...",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ] else ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            "Saldo ${data.name} tersisa:",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            "Rp${data.saldo ?? 0}",
+                            style: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  infoRow("Nama", data.name ?? "N/A"),
-                  infoRow("Kelas", data.kelas ?? "N/A"),
-                  infoRow("Saldo", "Rp ${data.saldo ?? 0}"),
-                  infoRow("Hutang", "Rp ${data.hutang ?? 0}"),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        resetInput();
+                  // Tombol close
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: InkWell(
+                      onTap: () {
                         Get.back();
                       },
-                      child: const Text("Tutup"),
+                      borderRadius: BorderRadius.circular(50),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Color(0xff4F39F6),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -113,7 +153,9 @@ class HomeController extends GetxController {
       ),
       barrierDismissible: true,
     ).then((_) {
-      resetInput();
+      Future.delayed(const Duration(milliseconds: 300), () {
+        resetInput();
+      });
     });
 
     Future.delayed(const Duration(milliseconds: 100), () {

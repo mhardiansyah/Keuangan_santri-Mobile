@@ -6,7 +6,6 @@ import 'package:sakusantri/app/core/models/items_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class ProductController extends GetxController {
   var isLoading = true.obs;
   var selectedCategory = ''.obs;
@@ -59,9 +58,10 @@ class ProductController extends GetxController {
 
     itemsList.assignAll(
       allItems.where((item) {
-        final machtkeyword = item.nama.toLowerCase().contains(keyword);
+        // final machtkeyword = item.nama.toLowerCase().contains(keyword);
+        final machtkeyword = (item.nama ?? '').toLowerCase().contains(keyword);
         final matchkategori =
-            kategori.isEmpty || item.kategoriId.toString() == kategori;
+            kategori.isEmpty || (item.kategoriId.toString() ?? '') == kategori;
         return machtkeyword && matchkategori;
       }),
     );

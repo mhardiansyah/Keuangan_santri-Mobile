@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
@@ -95,43 +96,49 @@ class ProductView extends GetView<ProductController> {
                   {'id': '2', 'label': 'Minuman'},
                   {'id': '3', 'label': 'Alat Tulis'},
                 ];
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:
-                      kategoriList.map((kategori) {
-                        final selected =
-                            controller.selectedCategory.value == kategori['id'];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: GestureDetector(
-                            onTap:
-                                () => controller.setCategory(kategori['id']!),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    selected
-                                        ? const Color(0xFF6366F1)
-                                        : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                kategori['label']!,
-                                style: TextStyle(
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                        kategoriList.map((kategori) {
+                          final selected =
+                              controller.selectedCategory.value ==
+                              kategori['id'];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0,
+                            ),
+                            child: GestureDetector(
+                              onTap:
+                                  () => controller.setCategory(kategori['id']!),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
                                   color:
                                       selected
-                                          ? Colors.white
-                                          : const Color(0xFF6366F1),
-                                  fontWeight: FontWeight.bold,
+                                          ? const Color(0xFF6366F1)
+                                          : Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  kategori['label']!,
+                                  style: TextStyle(
+                                    color:
+                                        selected
+                                            ? Colors.white
+                                            : const Color(0xFF6366F1),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                  ),
                 );
               }),
 
@@ -141,7 +148,23 @@ class ProductView extends GetView<ProductController> {
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
+                    // return const Center(child: CircularProgressIndicator());
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.60,
+                          ),
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(),
+                        );
+                      },
+                    );
                   }
 
                   final products = controller.itemsList;
