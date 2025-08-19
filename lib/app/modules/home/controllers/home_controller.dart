@@ -54,10 +54,6 @@ class HomeController extends GetxController {
   }
 
   void dialogCek() {
-    // santri.value = null;
-    // cardInput.value = '';
-    // cardUID.value = '';
-
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

@@ -85,7 +85,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        'RP. 10.000.000',
+                        'Rp.10.000.000',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
