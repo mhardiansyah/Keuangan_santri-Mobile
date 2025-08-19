@@ -6,6 +6,8 @@ import '../modules/Top-up/bindings/top_up_binding.dart';
 import '../modules/Top-up/views/top_up_view.dart';
 import '../modules/cart/bindings/cart_binding.dart';
 import '../modules/cart/views/cart_view.dart';
+import '../modules/detail_notif/bindings/detail_notif_binding.dart';
+import '../modules/detail_notif/views/detail_notif_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/history/bindings/history_binding.dart';
@@ -22,6 +24,8 @@ import '../modules/nominal/bindings/nominal_binding.dart';
 import '../modules/nominal/views/nominal_view.dart';
 import '../modules/notif_pembayaran/bindings/notif_pembayaran_binding.dart';
 import '../modules/notif_pembayaran/views/notif_pembayaran_view.dart';
+import '../modules/notifikasi/bindings/notifikasi_binding.dart';
+import '../modules/notifikasi/views/notifikasi_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
 import '../modules/payment/views/payment_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -124,6 +128,16 @@ class AppPages {
       name: _Paths.PAYMENT,
       page: () => PaymentView(),
       binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFIKASI,
+      page: () => const NotifikasiView(),
+      binding: NotifikasiBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_NOTIF,
+      page: () => const DetailNotifView(),
+      binding: DetailNotifBinding(),
     ),
   ];
 }

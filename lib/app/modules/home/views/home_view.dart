@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -55,7 +56,9 @@ class HomeView extends GetView<HomeController> {
                     const Spacer(),
                     IconButton(
                       style: IconButton.styleFrom(backgroundColor: Colors.grey),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed(Routes.NOTIFIKASI);
+                      },
                       icon: const Icon(
                         Icons.notifications,
                         color: Colors.white,
