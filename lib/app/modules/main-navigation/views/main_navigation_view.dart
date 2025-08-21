@@ -33,7 +33,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
         children: [
           Scaffold(
             body: pages[controller.selectedIndex.value],
-            backgroundColor: Colors.transparent,
+            backgroundColor: const Color(0xFF0E1220),
             floatingActionButton: SizedBox(
               height: isLandscape ? 50 : 62,
               width: isLandscape ? 50 : 62,

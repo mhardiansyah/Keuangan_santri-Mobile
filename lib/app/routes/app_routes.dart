@@ -24,6 +24,8 @@ abstract class Routes {
   static const PAYMENT = _Paths.PAYMENT;
   static const NOTIFIKASI = _Paths.NOTIFIKASI;
   static const DETAIL_NOTIF = _Paths.DETAIL_NOTIF;
+  static const DETAIL_RIWAYAT_TRANSAKSI = _Paths.DETAIL_RIWAYAT_TRANSAKSI;
+  static const RIWAYAT_HUTANG = _Paths.RIWAYAT_HUTANG;
 }
 
 abstract class _Paths {
@@ -49,4 +51,6 @@ abstract class _Paths {
   static const PAYMENT = '/payment';
   static const NOTIFIKASI = '/notifikasi';
   static const DETAIL_NOTIF = '/detail-notif';
+  static const DETAIL_RIWAYAT_TRANSAKSI = '/detail-riwayat-transaksi';
+  static const RIWAYAT_HUTANG = '/riwayat-hutang';
 }

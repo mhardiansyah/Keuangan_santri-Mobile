@@ -12,7 +12,7 @@ class ProductView extends GetView<ProductController> {
     final controllercart = Get.put(CartController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
@@ -82,7 +82,7 @@ class ProductView extends GetView<ProductController> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: selected
-                                      ? const Color(0xFF6366F1)
+                                      ? const Color(0xFF4634CC)
                                       : Colors.white,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -91,7 +91,7 @@ class ProductView extends GetView<ProductController> {
                                   style: TextStyle(
                                     color: selected
                                         ? Colors.white
-                                        : const Color(0xFF6366F1),
+                                        : const Color(0xFF4634CC),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

@@ -8,6 +8,8 @@ import '../modules/cart/bindings/cart_binding.dart';
 import '../modules/cart/views/cart_view.dart';
 import '../modules/detail_notif/bindings/detail_notif_binding.dart';
 import '../modules/detail_notif/views/detail_notif_view.dart';
+import '../modules/detail_riwayat_transaksi/bindings/detail_riwayat_transaksi_binding.dart';
+import '../modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/history/bindings/history_binding.dart';
@@ -32,6 +34,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/riwayat_hutang/bindings/riwayat_hutang_binding.dart';
+import '../modules/riwayat_hutang/views/riwayat_hutang_view.dart';
 import '../modules/riwayat_transaksi/bindings/riwayat_transaksi_binding.dart';
 import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -138,6 +142,16 @@ class AppPages {
       name: _Paths.DETAIL_NOTIF,
       page: () => const DetailNotifView(),
       binding: DetailNotifBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_RIWAYAT_TRANSAKSI,
+      page: () => const DetailRiwayatTransaksiView(),
+      binding: DetailRiwayatTransaksiBinding(),
+    ),
+    GetPage(
+      name: _Paths.RIWAYAT_HUTANG,
+      page: () => const RiwayatHutangView(),
+      binding: RiwayatHutangBinding(),
     ),
   ];
 }

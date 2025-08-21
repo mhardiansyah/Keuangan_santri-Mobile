@@ -15,7 +15,7 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
-          onPressed: () => HomeView(),
+          onPressed: () => Get.off(() => HomeView()),
         ),
         title: const Text(
           'Riwayat',
@@ -31,40 +31,41 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 45,
+              height: 46,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(30),
               ),
               child: TextField(
-                onChanged: controller.setSearchQuery,
+                onChanged: controller.setSearchQuery, 
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search, color: Colors.white),
                   hintText: 'Masukkan nama santri',
+                  hintStyle: TextStyle(color: Colors.white54),
+
                 ),
               ),
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          // Filter Kelas
           Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: ['XII', 'XI', 'X'].map((kelas) {
+                children: ['ALL', 'XII', 'XI', 'X'].map((kelas) {
                   final isSelected = controller.selectedKelas.value == kelas;
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: GestureDetector(
                       onTap: () => controller.setKelas(kelas),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           color: isSelected ? const Color(0xFF4634CC) : Colors.white,
                           borderRadius: BorderRadius.circular(30),
@@ -82,12 +83,10 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                 }).toList(),
               )),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          // Transaksi List
           Expanded(
             child: Obx(() {
-              // Filter berdasarkan nama dari search bar
               final query = controller.searchQuery.value.toLowerCase();
               final filteredHariIni = controller.transaksiHariIni
                   .where((e) => e['nama'].toString().toLowerCase().contains(query))
@@ -98,10 +97,10 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                   .toList();
 
               return ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 children: [
                   _buildSection("Hari Ini", filteredHariIni),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 36),
                   _buildSection("Kemaren", filteredKemaren),
                 ],
               );
@@ -114,42 +113,58 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
 
   Widget _buildSection(String title, List<Map<String, dynamic>> data) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           title,
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
+
         if (data.isEmpty)
           const Text(
             "Tidak ada data",
             style: TextStyle(color: Colors.white70),
           )
         else
-          ...data.map((transaksi) => Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(12),
+          Column(
+            children: data.map((transaksi) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 24,
+                      radius: 28,
                       backgroundImage: AssetImage(transaksi['image']),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             transaksi['nama'],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
                           ),
-                          Text(transaksi['kelas']),
+                          const SizedBox(height: 4),
+                          Text(
+                            transaksi['kelas'],
+                            style: const TextStyle(color: Colors.white70, fontSize: 13),
+                          ),
                         ],
                       ),
                     ),
@@ -158,21 +173,28 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                       children: [
                         Text(
                           'Rp${transaksi['nominal']}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 4),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          margin: const EdgeInsets.only(top: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: transaksi['status'] == 'Lunas' ? Colors.green[100] : Colors.red[100],
-                            borderRadius: BorderRadius.circular(12),
+                            color: transaksi['status'] == 'Lunas'
+                                ? Colors.green[100]
+                                : Colors.red[100],
+                            borderRadius: BorderRadius.circular(14),
                           ),
                           child: Text(
                             transaksi['status'],
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: transaksi['status'] == 'Lunas' ? Colors.green : Colors.red,
+                              color: transaksi['status'] == 'Lunas'
+                                  ? Colors.green
+                                  : Colors.red,
                             ),
                           ),
                         ),
@@ -180,7 +202,9 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                     ),
                   ],
                 ),
-              )),
+              );
+            }).toList(),
+          ),
       ],
     );
   }
