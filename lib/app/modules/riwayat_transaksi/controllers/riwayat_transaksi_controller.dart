@@ -1,5 +1,4 @@
 // ignore_for_file: unnecessary_cast
-
 import 'package:get/get.dart';
 
 class RiwayatTransaksiController extends GetxController {
@@ -21,6 +20,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XII',
           'status': 'Lunas',
           'nominal': '20.000',
+          'tanggal': '2025-08-21',
           'image': 'assets/images/user1.png',
         },
         {
@@ -28,6 +28,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XII',
           'status': 'Lunas',
           'nominal': '15.000',
+          'tanggal': '2025-08-21',
           'image': 'assets/images/user1.png',
         },
       ],
@@ -37,6 +38,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XII',
           'status': 'Hutang',
           'nominal': '20.000',
+          'tanggal': '2025-08-20',
           'image': 'assets/images/user2.png',
         },
         {
@@ -44,6 +46,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XII',
           'status': 'Lunas',
           'nominal': '15.000',
+          'tanggal': '2025-08-20',
           'image': 'assets/images/user1.png',
         },
       ],
@@ -55,6 +58,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XI',
           'status': 'Lunas',
           'nominal': '10.000',
+          'tanggal': '2025-08-21',
           'image': 'assets/images/user1.png',
         },
       ],
@@ -64,6 +68,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'XI',
           'status': 'Hutang',
           'nominal': '5.000',
+          'tanggal': '2025-08-20',
           'image': 'assets/images/user2.png',
         },
       ],
@@ -75,6 +80,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'X',
           'status': 'Lunas',
           'nominal': '12.000',
+          'tanggal': '2025-08-21',
           'image': 'assets/images/user1.png',
         },
       ],
@@ -84,6 +90,7 @@ class RiwayatTransaksiController extends GetxController {
           'kelas': 'X',
           'status': 'Hutang',
           'nominal': '8.000',
+          'tanggal': '2025-08-20',
           'image': 'assets/images/user2.png',
         },
       ],
@@ -95,6 +102,7 @@ class RiwayatTransaksiController extends GetxController {
     super.onInit();
     loadTransaksi();
   }
+
   void setKelas(String kelas) {
     selectedKelas.value = kelas;
     loadTransaksi();

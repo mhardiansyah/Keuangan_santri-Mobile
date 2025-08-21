@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
 import 'package:sakusantri/app/modules/home/views/home_view.dart';
 import '../controllers/riwayat_transaksi_controller.dart';
 
@@ -134,75 +135,81 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
         else
           Column(
             children: data.map((transaksi) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
-                  borderRadius: BorderRadius.circular(16),
+              return GestureDetector(
+  onTap: () {
+    Get.to(() => DetailRiwayatTransaksiView(transaksi: transaksi));
+  },
+  child: Container(
+    margin: const EdgeInsets.only(bottom: 20),
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: const Color(0xFF1E293B),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Row(
+      children: [
+        CircleAvatar(
+          radius: 28,
+          backgroundImage: AssetImage(transaksi['image']),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                transaksi['nama'],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 15,
                 ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundImage: AssetImage(transaksi['image']),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transaksi['nama'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            transaksi['kelas'],
-                            style: const TextStyle(color: Colors.white70, fontSize: 13),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Rp${transaksi['nominal']}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 6),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: transaksi['status'] == 'Lunas'
-                                ? Colors.green[100]
-                                : Colors.red[100],
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Text(
-                            transaksi['status'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: transaksi['status'] == 'Lunas'
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                transaksi['kelas'],
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              'Rp${transaksi['nominal']}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: transaksi['status'] == 'Lunas'
+                    ? Colors.green[100]
+                    : Colors.red[100],
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                transaksi['status'],
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: transaksi['status'] == 'Lunas'
+                      ? Colors.green
+                      : Colors.red,
                 ),
-              );
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
+
             }).toList(),
           ),
       ],
