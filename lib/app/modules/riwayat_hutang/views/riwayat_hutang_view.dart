@@ -26,7 +26,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
       ),
       body: Column(
         children: [
-          // 🔍 Search bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Container(
@@ -51,7 +50,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
 
           const SizedBox(height: 20),
 
-          // 🎓 Filter kelas
           Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: ['ALL', 'XII', 'XI', 'X'].map((kelas) {
@@ -81,7 +79,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
 
           const SizedBox(height: 20),
 
-          // 📋 List hutang
           Expanded(
             child: Obx(() {
               final sortedData = controller.sortedByHutang;
@@ -107,7 +104,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
     );
   }
 
-  // 🔖 Card item dengan badge ranking
   Widget _buildItem(Map<String, dynamic> data, int rank) {
     Color badgeColor;
     Widget badgeContent;
@@ -115,7 +111,7 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
     switch (rank) {
       case 1:
         badgeColor = Colors.amber;
-        badgeContent = const Icon(Icons.emoji_events, color: Colors.white);
+        badgeContent = Image.asset('assets/icons/piala.png', width: 24, height: 24);
         break;
       case 2:
         badgeColor = Colors.grey;

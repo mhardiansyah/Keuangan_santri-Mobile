@@ -26,6 +26,7 @@ abstract class Routes {
   static const DETAIL_NOTIF = _Paths.DETAIL_NOTIF;
   static const DETAIL_RIWAYAT_TRANSAKSI = _Paths.DETAIL_RIWAYAT_TRANSAKSI;
   static const RIWAYAT_HUTANG = _Paths.RIWAYAT_HUTANG;
+  static const ENTER_PASSCODE = _Paths.ENTER_PASSCODE;
 }
 
 abstract class _Paths {
@@ -37,9 +38,7 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const PRODUCT = '/product';
   static const CART = '/cart';
-
   static const MAIN_NAVIGATION = '/main-navigation';
-
   static const ISI_DATA = '/isi-data';
   static const RIWAYAT_TRANSAKSI = '/riwayat-transaksi';
   static const TOP_UP = '/top-up';
@@ -53,4 +52,5 @@ abstract class _Paths {
   static const DETAIL_NOTIF = '/detail-notif';
   static const DETAIL_RIWAYAT_TRANSAKSI = '/detail-riwayat-transaksi';
   static const RIWAYAT_HUTANG = '/riwayat-hutang';
+  static const ENTER_PASSCODE = '/enter-passcode';
 }

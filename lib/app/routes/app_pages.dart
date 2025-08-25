@@ -10,6 +10,8 @@ import '../modules/detail_notif/bindings/detail_notif_binding.dart';
 import '../modules/detail_notif/views/detail_notif_view.dart';
 import '../modules/detail_riwayat_transaksi/bindings/detail_riwayat_transaksi_binding.dart';
 import '../modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
+import '../modules/enter_passcode/bindings/enter_passcode_binding.dart';
+import '../modules/enter_passcode/views/enter_passcode_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/history/bindings/history_binding.dart';
@@ -51,7 +53,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH;
+  static const INITIAL = Routes.ENTER_PASSCODE;
 
   static final routes = [
     GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
@@ -145,13 +147,20 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_RIWAYAT_TRANSAKSI,
-      page: () => const DetailRiwayatTransaksiView(transaksi: {},),
+      page: () => const DetailRiwayatTransaksiView(
+        transaksi: {},
+      ),
       binding: DetailRiwayatTransaksiBinding(),
     ),
     GetPage(
       name: _Paths.RIWAYAT_HUTANG,
       page: () => const RiwayatHutangView(),
       binding: RiwayatHutangBinding(),
+    ),
+    GetPage(
+      name: _Paths.ENTER_PASSCODE,
+      page: () => const EnterPasscodeView(),
+      binding: EnterPasscodeBinding(),
     ),
   ];
 }
