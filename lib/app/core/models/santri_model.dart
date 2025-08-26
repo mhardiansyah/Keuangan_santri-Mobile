@@ -56,6 +56,7 @@ class Santri {
   String kelas;
   int saldo;
   int hutang;
+  String jurusan;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -65,6 +66,7 @@ class Santri {
     required this.kelas,
     required this.saldo,
     required this.hutang,
+    required this.jurusan,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -76,6 +78,7 @@ class Santri {
       kelas: json['kelas'],
       saldo: json['saldo'] ?? 0,
       hutang: json['hutang'] ?? 0,
+      jurusan: json['jurusan'] ?? '',
       createdAt: DateTime.parse(
         json['created_at'] ?? DateTime.now().toString(),
       ),

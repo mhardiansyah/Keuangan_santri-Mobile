@@ -1,6 +1,7 @@
 // ignore_for_file: override_on_non_overriding_member
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/core/models/cart_models.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
 
@@ -9,6 +10,7 @@ class CartController extends GetxController {
 
   final count = 0.obs;
   var cartItems = <CartModels>[].obs;
+  final box = GetStorage();
 
   @override
   void addCart(Items product) {
@@ -39,6 +41,7 @@ class CartController extends GetxController {
   }
 
   void clear() {
+    saveDataPayment();
     cartItems.clear();
   }
 
@@ -49,12 +52,15 @@ class CartController extends GetxController {
 
   int get totalPembayaran => totalHargaPokok + pajak;
 
+  void saveDataPayment() {
+    // Implement save data logic here
+    box.write('totalHargaPokok', totalHargaPokok);
+    box.write('pajak', pajak);
+    box.write('totalPembayaran', totalPembayaran);
+  }
+
   @override
   void onInit() {
     super.onInit();
   }
-
-
-
-  void increment() => count.value++;
 }

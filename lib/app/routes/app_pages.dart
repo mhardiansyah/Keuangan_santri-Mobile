@@ -28,6 +28,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/riwayat_hutang/bindings/riwayat_hutang_binding.dart';
+import '../modules/riwayat_hutang/views/riwayat_hutang_view.dart';
 import '../modules/riwayat_transaksi/bindings/riwayat_transaksi_binding.dart';
 import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -124,6 +126,11 @@ class AppPages {
       name: _Paths.PAYMENT,
       page: () => PaymentView(),
       binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.RIWAYAT_HUTANG,
+      page: () => const RiwayatHutangView(),
+      binding: RiwayatHutangBinding(),
     ),
   ];
 }

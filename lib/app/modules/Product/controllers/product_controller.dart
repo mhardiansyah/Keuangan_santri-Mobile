@@ -20,6 +20,7 @@ class ProductController extends GetxController {
     fetchProduct();
   }
 
+
   void fetchProduct() async {
     isLoading.value = true;
 

@@ -66,13 +66,21 @@ class ProfileView extends GetView<ProfileController> {
   }
 
   Widget profileAvatar() {
+    final box = GetStorage();
+    final username = box.read('name') ?? "User";
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        const CircleAvatar(
+        CircleAvatar(
+          backgroundColor: getRandomColor(0),
           radius: 50,
-          backgroundImage: AssetImage(
-            'assets/profile.jpg' ?? 'assets/images/default_image.png',
+          child: Text(
+            getInitials(username ?? "User"),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
         Positioned(
@@ -96,6 +104,7 @@ class ProfileView extends GetView<ProfileController> {
     final username = box.read('name') ?? "User";
     final email = box.read('email') ?? "Email";
     final password = box.read('password') ?? "Password";
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -174,5 +183,30 @@ class ProfileView extends GetView<ProfileController> {
         ),
       ],
     );
+  }
+
+  String getInitials(String name) {
+    if (name.isEmpty) return "";
+    List<String> parts = name.split(" ");
+    if (parts.length == 1) {
+      return parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
+    } else {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+  }
+
+  // Fungsi buat generate warna acak (tetap sama per santri.id biar konsisten)
+  Color getRandomColor(int seed) {
+    final colors = [
+      Colors.blue,
+      Colors.green,
+      Colors.red,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.brown,
+      Colors.indigo,
+    ];
+    return colors[seed % colors.length];
   }
 }

@@ -43,18 +43,8 @@ class MainNavigationView extends GetView<MainNavigationController> {
                   0xFFFDBD03,
                 ), // Warna kuning sesuai desain
                 onPressed: () {
-                  Get.dialog(
-                    AlertDialog(
-                      title: const Text('Coming Soon'),
-                      content: const Text('This feature is under development.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Get.back(),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
+                  controller.focusNode.requestFocus();
+                  controller.dialogCek();
                 },
                 child: Icon(
                   Icons.add,
@@ -68,7 +58,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
             bottomNavigationBar: BottomAppBar(
               shape: const CircularNotchedRectangle(),
               notchMargin: 8,
-              color: const Color(0xFF4634CC), // Warna ungu utama sesuai desain
+              color: const Color(0xFF4634CC),
               child: Container(
                 height: isLandscape ? 60 : 70,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -106,18 +96,18 @@ class MainNavigationView extends GetView<MainNavigationController> {
             ),
           ),
           // Label "Top up" di bawah FAB
-          Positioned(
-            bottom: isLandscape ? 18 : 20,
-            left: (screenWidth / 2) - 20,
-            child: Text(
-              "Top up",
-              style: TextStyle(
-                fontSize: isLandscape ? 10 : 11,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: isLandscape ? 18 : 20,
+          //   left: (screenWidth / 2) - 20,
+          //   child: Text(
+          //     "Top up",
+          //     style: TextStyle(
+          //       fontSize: isLandscape ? 10 : 11,
+          //       fontWeight: FontWeight.bold,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
         ],
       );
     });
@@ -130,7 +120,6 @@ class MainNavigationView extends GetView<MainNavigationController> {
     bool isLandscape = false,
   }) {
     final isSelected = controller.selectedIndex.value == index;
-    final color = isSelected ? Colors.white : Colors.white70;
 
     return GestureDetector(
       onTap: () => controller.changeTabIndex(index),
@@ -140,16 +129,34 @@ class MainNavigationView extends GetView<MainNavigationController> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: isLandscape ? 22 : 26),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: color,
-                fontSize: isLandscape ? 10 : 11,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            Container(
+              constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.white : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    icon,
+                    color: isSelected ? const Color(0xFF4634CC) : Colors.white,
+                    size: isLandscape ? 22 : 26,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color:
+                          isSelected ? const Color(0xFF4634CC) : Colors.white,
+                      fontSize: isLandscape ? 10 : 11,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

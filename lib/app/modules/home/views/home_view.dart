@@ -29,9 +29,17 @@ class HomeView extends GetView<HomeController> {
                 // Header
                 Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
+                      backgroundColor: getRandomColor(0),
                       radius: 20,
-                      backgroundImage: AssetImage('assets/icons/logo.png'),
+                      child: Text(
+                        getInitials(username),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Column(
@@ -101,13 +109,16 @@ class HomeView extends GetView<HomeController> {
                           SizedBox(
                             width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
                             child: ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                controller.openTarikTunai();
+                                controller.focusNode.requestFocus();
+                              },
                               icon: const Icon(
-                                Icons.details,
+                                Icons.account_balance_wallet_outlined,
                                 color: Colors.white,
                               ),
                               label: const Text(
-                                'Lihat Detail',
+                                'Tarik saldo',
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
@@ -126,8 +137,8 @@ class HomeView extends GetView<HomeController> {
                             width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
                             child: ElevatedButton.icon(
                               onPressed: () {
+                                controller.cekSaldo();
                                 controller.focusNode.requestFocus();
-                                controller.dialogCek();
                               },
                               icon: const Icon(
                                 Icons.qr_code_scanner,
@@ -308,5 +319,30 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
     );
+  }
+
+  String getInitials(String name) {
+    if (name.isEmpty) return "";
+    List<String> parts = name.split(" ");
+    if (parts.length == 1) {
+      return parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
+    } else {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+  }
+
+  // Fungsi buat generate warna acak (tetap sama per santri.id biar konsisten)
+  Color getRandomColor(int seed) {
+    final colors = [
+      Colors.blue,
+      Colors.green,
+      Colors.red,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.brown,
+      Colors.indigo,
+    ];
+    return colors[seed % colors.length];
   }
 }
