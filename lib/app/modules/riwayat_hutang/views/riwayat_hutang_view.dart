@@ -52,32 +52,44 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
           const SizedBox(height: 20),
 
           // 🎓 Filter kelas
-          Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: ['ALL', 'XII', 'XI', 'X'].map((kelas) {
-                  final isSelected = controller.selectedKelas.value == kelas;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: GestureDetector(
-                      onTap: () => controller.setKelas(kelas),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF4634CC) : Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          kelas,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : const Color(0xFF4634CC),
-                            fontWeight: FontWeight.bold,
+          Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:
+                  ['ALL', 'XII', 'XI', 'X'].map((kelas) {
+                    final isSelected = controller.selectedKelas.value == kelas;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: GestureDetector(
+                        onTap: () => controller.setKelas(kelas),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                isSelected
+                                    ? const Color(0xFF4634CC)
+                                    : Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            kelas,
+                            style: TextStyle(
+                              color:
+                                  isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF4634CC),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              )),
+                    );
+                  }).toList(),
+            ),
+          ),
 
           const SizedBox(height: 20),
 
@@ -86,15 +98,19 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
             child: Obx(() {
               final sortedData = controller.sortedByHutang;
               final query = controller.searchQuery.value.toLowerCase();
-              final filteredData = sortedData.where((e) {
-                final nama = e['nama'].toString().toLowerCase();
-                final kelas = controller.selectedKelas.value;
-                return nama.contains(query) &&
-                    (kelas == "ALL" || e['kelas'] == kelas);
-              }).toList();
+              final filteredData =
+                  sortedData.where((e) {
+                    final nama = e['nama'].toString().toLowerCase();
+                    final kelas = controller.selectedKelas.value;
+                    return nama.contains(query) &&
+                        (kelas == "ALL" || e['kelas'] == kelas);
+                  }).toList();
 
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 itemCount: filteredData.length,
                 itemBuilder: (context, index) {
                   return _buildItem(filteredData[index], index + 1);
@@ -119,17 +135,26 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
         break;
       case 2:
         badgeColor = Colors.grey;
-        badgeContent = const Text("2", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+        badgeContent = const Text(
+          "2",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        );
         break;
       case 3:
         badgeColor = Colors.brown;
-        badgeContent = const Text("3", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+        badgeContent = const Text(
+          "3",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        );
         break;
       default:
         badgeColor = const Color(0xFF4634CC);
         badgeContent = Text(
           rank.toString(),
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         );
     }
 
@@ -158,17 +183,33 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
 
           CircleAvatar(
             radius: 26,
-            backgroundImage: AssetImage(data['image']),
+            backgroundColor: getRandomColor(data['id']),
+            child: Text(
+              getInitials(data['nama']),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
+
           const SizedBox(width: 12),
 
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(data['nama'],
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text(data['kelas'], style: const TextStyle(color: Colors.white70)),
+                Text(
+                  getInitials(data['nama']),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  data['kelas'],
+                  style: const TextStyle(color: Colors.white70),
+                ),
               ],
             ),
           ),
@@ -178,11 +219,17 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
             children: [
               Text(
                 'Rp${data['nominal']}',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.red[200],
                   borderRadius: BorderRadius.circular(14),
@@ -190,14 +237,41 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
                 child: const Text(
                   "Bayar",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white, fontSize: 12),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(width: 12),
         ],
       ),
     );
+  }
+
+  String getInitials(String name) {
+    if (name.isEmpty) return "";
+    List<String> parts = name.split(" ");
+    if (parts.length == 1) {
+      return parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
+    } else {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+  }
+
+  Color getRandomColor(int seed) {
+    final colors = [
+      Colors.blue,
+      Colors.green,
+      Colors.red,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.brown,
+      Colors.indigo,
+    ];
+    return colors[seed % colors.length];
   }
 }

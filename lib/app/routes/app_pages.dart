@@ -6,6 +6,12 @@ import '../modules/Top-up/bindings/top_up_binding.dart';
 import '../modules/Top-up/views/top_up_view.dart';
 import '../modules/cart/bindings/cart_binding.dart';
 import '../modules/cart/views/cart_view.dart';
+import '../modules/detail_notif/bindings/detail_notif_binding.dart';
+import '../modules/detail_notif/views/detail_notif_view.dart';
+import '../modules/detail_riwayat_transaksi/bindings/detail_riwayat_transaksi_binding.dart';
+import '../modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
+import '../modules/enter_passcode/bindings/enter_passcode_binding.dart';
+import '../modules/enter_passcode/views/enter_passcode_view.dart';
 import '../modules/forgotpassword/bindings/forgotpassword_binding.dart';
 import '../modules/forgotpassword/views/forgotpassword_view.dart';
 import '../modules/history/bindings/history_binding.dart';
@@ -22,6 +28,8 @@ import '../modules/nominal/bindings/nominal_binding.dart';
 import '../modules/nominal/views/nominal_view.dart';
 import '../modules/notif_pembayaran/bindings/notif_pembayaran_binding.dart';
 import '../modules/notif_pembayaran/views/notif_pembayaran_view.dart';
+import '../modules/notifikasi/bindings/notifikasi_binding.dart';
+import '../modules/notifikasi/views/notifikasi_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
 import '../modules/payment/views/payment_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -131,6 +139,26 @@ class AppPages {
       name: _Paths.RIWAYAT_HUTANG,
       page: () => const RiwayatHutangView(),
       binding: RiwayatHutangBinding(),
+    ),
+    GetPage(
+      name: _Paths.ENTER_PASSCODE,
+      page: () => const EnterPasscodeView(),
+      binding: EnterPasscodeBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFIKASI,
+      page: () => const NotifikasiView(),
+      binding: NotifikasiBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_NOTIF,
+      page: () => const DetailNotifView(),
+      binding: DetailNotifBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_RIWAYAT_TRANSAKSI,
+      page: () => const DetailRiwayatTransaksiView(),
+      binding: DetailRiwayatTransaksiBinding(),
     ),
   ];
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -16,208 +17,212 @@ class HomeView extends GetView<HomeController> {
     final box = GetStorage();
     final username = box.read('name') ?? "User";
 
-    return KeyboardListener(
-      focusNode: controller.focusNode,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0E1220),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: getRandomColor(0),
-                      radius: 20,
-                      child: Text(
-                        getInitials(username),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hello $username',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        const Text(
-                          'Welcome Back',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      style: IconButton.styleFrom(backgroundColor: Colors.grey),
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.notifications,
+    return Scaffold(
+      backgroundColor: const Color(0xFF0E1220),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: getRandomColor(0),
+                    radius: 20,
+                    child: Text(
+                      getInitials(username),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Card Penjualan
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 20,
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4634CC),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
+                  const SizedBox(width: 10),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Total Penjualan',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'RP. 10.000.000',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
+                      Text(
+                        'Hello $username',
+                        style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 33),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                controller.openTarikTunai();
-                                controller.focusNode.requestFocus();
-                              },
-                              icon: const Icon(
-                                Icons.account_balance_wallet_outlined,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Tarik saldo',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4634CC),
-                                side: const BorderSide(
-                                  color: Colors.white,
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                controller.cekSaldo();
-                                controller.focusNode.requestFocus();
-                              },
-                              icon: const Icon(
-                                Icons.qr_code_scanner,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Scan card',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4634CC),
-                                side: const BorderSide(
-                                  color: Colors.white,
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Welcome Back',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Grid Info Cards
-                GridView.count(
-                  crossAxisCount: isLandscape ? 3 : 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children: [
-                    _buildInfoCard(
-                      'Total Transaksi',
-                      '20',
-                      'assets/icons/dolars.png',
-                      'Diupdate: 20 Juni 2025',
-                      '+10',
-                      Colors.green,
-                      const Color(0xffffe3c2),
+                  const Spacer(),
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Color(0xFF4634CC),
                     ),
-                    _buildInfoCard(
+                    onPressed: () {
+                      Get.toNamed(Routes.NOTIFIKASI);
+                    },
+                    icon: const Icon(Icons.notifications, color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Card Penjualan
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4634CC),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Penjualan',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'RP. 10.000.000',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 33),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              controller.openTarikTunai();
+                              controller.focusNode.requestFocus();
+                            },
+                            icon: const Icon(
+                              Icons.account_balance_wallet_outlined,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'Tarik saldo',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF4634CC),
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              controller.cekSaldo();
+                              controller.focusNode.requestFocus();
+                            },
+                            icon: const Icon(
+                              Icons.qr_code_scanner,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'Scan card',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF4634CC),
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Grid Info Cards
+              GridView.count(
+                crossAxisCount: isLandscape ? 3 : 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: <Widget>[
+                  _buildInfoCard(
+                    'Total Transaksi',
+                    '20',
+                    'assets/icons/dolars.png',
+                    'Diupdate: 20 Juni 2025',
+                    '+10',
+                    Colors.green,
+                    const Color(0xffffe3c2),
+                  ),
+                  _buildInfoCard(
+                    'Total Santri',
+                    '50',
+                    'assets/icons/person.png',
+                    'Diupdate: 20 Juni 2025',
+                    '+3',
+                    Colors.green,
+                    const Color(0xffd0f2cf),
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.toNamed(Routes.RIWAYAT_TRANSAKSI),
+                    child: _buildInfoCard(
                       'Total Produk',
-                      '12',
+                      '35',
                       'assets/icons/kardus.png',
-                      'Diupdate: 20 Juni 2025',
-                      '+3',
+                      'Selengkapnya',
+                      '+2',
                       Colors.green,
                       const Color(0xffcdf6f4),
                     ),
-                    _buildInfoCard(
-                      'Total Santri',
-                      '35',
-                      'assets/icons/person.png',
-                      'Diupdate: 20 Juni 2025',
-                      '+2',
-                      Colors.green,
-                      const Color(0xffd0f2cf),
-                    ),
-                    _buildInfoCard(
-                      'Total Kasbon',
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.toNamed(Routes.RIWAYAT_HUTANG),
+                    child: _buildInfoCard(
+                      'Total Hutang',
                       '300K',
                       'assets/icons/kasbon.png',
-                      'Diupdate: 20 Juni 2025',
+                      'Selengkapnya',
                       '+10',
                       Colors.red,
                       const Color(0xfffff5c3),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         ),
       ),

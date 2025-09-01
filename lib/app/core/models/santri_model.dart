@@ -23,6 +23,7 @@ Data datafromJson(String str) => Data.fromJson(json.decode(str));
 class Data {
   int id;
   String nomorKartu;
+  String passcode;
   DateTime createdAt;
   DateTime updatedAt;
   Santri santri;
@@ -30,6 +31,7 @@ class Data {
   Data({
     required this.id,
     required this.nomorKartu,
+    required this.passcode,
     required this.createdAt,
     required this.updatedAt,
     required this.santri,
@@ -46,11 +48,15 @@ class Data {
         json['updated_at'] ?? DateTime.now().toString(),
       ),
       santri: Santri.fromJson(json['santri']),
+      passcode: json['passcode'] ?? '',
     );
   }
 }
 
+Santri santrifromJson(String str) => Santri.fromJson(json.decode(str));
+
 class Santri {
+
   int id;
   String name;
   String kelas;

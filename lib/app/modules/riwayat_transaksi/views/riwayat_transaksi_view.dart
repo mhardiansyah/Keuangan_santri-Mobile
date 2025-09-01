@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sakusantri/app/modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import 'package:shimmer/shimmer.dart';
 import '../controllers/riwayat_transaksi_controller.dart';
 
@@ -60,7 +62,7 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
             () => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:
-                  ['All', 'XI', 'X', 'XII'].map((kelas) {
+                  ['All', 'XII', 'XI', 'X'].map((kelas) {
                     final isSelected = controller.selectedKelas.value == kelas;
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -172,10 +174,17 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
               }
 
               if (controller.allHistoryList.isEmpty) {
-                return const Center(
-                  child: Text(
-                    "Tidak ada data",
-                    style: TextStyle(color: Colors.white70),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    controller.fetchRiwayatTransaksi();
+                  },
+                  backgroundColor: Colors.white,
+                  color: Color(0xFF4634CC),
+                  child: Center(
+                    child: Text(
+                      "Tidak ada data",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                 );
               }
@@ -201,7 +210,6 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                       ),
                       child: Row(
                         children: [
-                          // 🖼 Foto Santri
                           CircleAvatar(
                             radius: 28,
                             backgroundColor: getRandomColor(
@@ -309,7 +317,6 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
     }
   }
 
-  // Fungsi buat generate warna acak (tetap sama per santri.id biar konsisten)
   Color getRandomColor(int seed) {
     final colors = [
       Colors.blue,

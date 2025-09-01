@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/payment_controller.dart';
 
@@ -51,7 +52,7 @@ class PaymentView extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     Text(
-                      "RP. ${controller.saldo.value}",
+                      formatRupiah(controller.saldo.value),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -64,7 +65,7 @@ class PaymentView extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     Text(
-                      "-RP. ${controller.hutang.value}",
+                      "-${formatRupiah(controller.hutang.value)}",
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 16,
@@ -87,7 +88,7 @@ class PaymentView extends StatelessWidget {
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                   Text(
-                    "RP. ${controller.totalPembayaran.value}",
+                    formatRupiah(controller.totalPembayaran.value),
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ],
@@ -102,16 +103,27 @@ class PaymentView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Obx(() {
+              final saldo = controller.saldo.value;
+              final hutang = controller.hutang.value;
+              final isDisableHutang = (saldo > hutang);
+
+              final isDisableSaldo =
+                  (saldo == 0 && hutang == 0) || saldo < hutang;
               return Row(
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => controller.selectMethod("Hutang"),
+                      onTap:
+                          isDisableHutang
+                              ? null
+                              : () => controller.selectMethod("Hutang"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
                           color:
-                              controller.selectedMethod.value == "Hutang"
+                              isDisableHutang
+                                  ? const Color(0xFF121821)
+                                  : controller.selectedMethod.value == "Hutang"
                                   ? const Color(0xFF4634CC)
                                   : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
@@ -140,12 +152,17 @@ class PaymentView extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => controller.selectMethod("Saldo"),
+                      onTap:
+                          isDisableSaldo
+                              ? null
+                              : () => controller.selectMethod("Saldo"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
                           color:
-                              controller.selectedMethod.value == "Saldo"
+                              isDisableSaldo
+                                  ? const Color(0xFF121821)
+                                  : controller.selectedMethod.value == "Saldo"
                                   ? const Color(0xFF4634CC)
                                   : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
@@ -203,5 +220,14 @@ class PaymentView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }

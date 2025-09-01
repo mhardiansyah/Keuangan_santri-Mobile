@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sakusantri/app/modules/cart/controllers/cart_controller.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import 'package:shimmer/shimmer.dart';
 import '../controllers/product_controller.dart';
 
@@ -62,6 +64,7 @@ class ProductView extends GetView<ProductController> {
                       {'id': '2', 'label': 'Minuman'},
                       {'id': '3', 'label': 'Alat Tulis'},
                     ];
+
                     return SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -109,6 +112,63 @@ class ProductView extends GetView<ProductController> {
                       ),
                     );
                   }),
+                  
+                  // Obx(() {
+                  //   final kategoriList = [
+                  //     Kategori(id: 0, nama: 'Semua'), // kategori default
+                  //     ...controller.kategoriList, // kategori dari API
+                  //   ];
+
+                  //   return SingleChildScrollView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children:
+                  //           kategoriList.map((kategori) {
+                  //             final selected =
+                  //                 controller.selectedCategory.value ==
+                  //                 kategori.id.toString();
+
+                  //             return Padding(
+                  //               padding: const EdgeInsets.symmetric(
+                  //                 horizontal: 6.0,
+                  //               ),
+                  //               child: GestureDetector(
+                  //                 onTap:
+                  //                     () => controller.setCategory(
+                  //                       kategori.id == 0
+                  //                           ? ''
+                  //                           : kategori.id.toString(),
+                  //                     ),
+                  //                 child: Container(
+                  //                   padding: const EdgeInsets.symmetric(
+                  //                     horizontal: 18,
+                  //                     vertical: 10,
+                  //                   ),
+                  //                   decoration: BoxDecoration(
+                  //                     color:
+                  //                         selected
+                  //                             ? const Color(0xFF6366F1)
+                  //                             : Colors.white,
+                  //                     borderRadius: BorderRadius.circular(20),
+                  //                   ),
+                  //                   child: Text(
+                  //                     kategori.nama,
+                  //                     style: TextStyle(
+                  //                       color:
+                  //                           selected
+                  //                               ? Colors.white
+                  //                               : const Color(0xFF6366F1),
+                  //                       fontWeight: FontWeight.bold,
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             );
+                  //           }).toList(),
+                  //     ),
+                  //   );
+                  // }),
 
                   const SizedBox(height: 16),
 
@@ -213,6 +273,9 @@ class ProductView extends GetView<ProductController> {
                         },
                         child: GridView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.only(
+                            bottom: controllercart.cartItems.isEmpty ? 0 : 80,
+                          ),
                           itemCount: products.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -269,16 +332,19 @@ class ProductView extends GetView<ProductController> {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text(
-                                    'Tersedia',
+                                  Text(
+                                    'stock: ${product.jumlah}',
                                     style: TextStyle(
-                                      color: Colors.greenAccent,
+                                      color:
+                                          product.jumlah < 10
+                                              ? Colors.yellow
+                                              : Colors.greenAccent,
                                       fontSize: 12,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Rp${product.harga}',
+                                    formatRupiah(product.harga),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -294,6 +360,10 @@ class ProductView extends GetView<ProductController> {
                                       onTap: () {
                                         controllercart.addCart(product);
                                       },
+                                      onDoubleTap:
+                                          () => controllercart.removeCart(
+                                            product,
+                                          ),
                                       child: Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: const BoxDecoration(
@@ -328,49 +398,42 @@ class ProductView extends GetView<ProductController> {
                 bottom: 20,
                 left: 20,
                 right: 20,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4634CC),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${controllercart.cartItems.length} Item dipilih',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14, // lebih kecil
-                          fontWeight: FontWeight.w500,
+                child: GestureDetector(
+                  onTap: () => Get.toNamed(Routes.CART),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4634CC),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/cart'),
-                        child: Container(
-                          padding: const EdgeInsets.all(6), // lebih kecil
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFFACC15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.shopping_cart,
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${controllercart.cartItems.length} Item dipilih',
+                          style: const TextStyle(
                             color: Colors.white,
-                            size: 18,
+                            fontSize: 14, // lebih kecil
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
-                    ],
+                        const Spacer(),
+                        const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -379,5 +442,14 @@ class ProductView extends GetView<ProductController> {
         ),
       ),
     );
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }

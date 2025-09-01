@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart' as storage;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
@@ -46,7 +47,7 @@ class HomeController extends GetxController {
   KeyEventResult onKeyEvent(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
       // ambil karakter asli, bukan keyLabel
-      final key = event.character;
+      final key = event.logicalKey.keyLabel;
       print("Key pressed: $key");
 
       if (event.logicalKey == LogicalKeyboardKey.enter) {
@@ -54,11 +55,20 @@ class HomeController extends GetxController {
         print('input mentah uid: ${cardUID.value}');
 
         final uid = cardInput.value.trim();
+        if (isScanning.value) {
+          print("⏳ Masih scanning, abaikan kartu: $uid");
+          cardInput.value = '';
+          return KeyEventResult.handled;
+        }
         cardUID.value = uid;
 
         print('Input kartu selesai: $uid');
-        // cardInput.value = '';
-        _fetchSantri(uid);
+        cardInput.value = '';
+        if (currentMode.value == 'Tarik-tunai') {
+          _fetchSantri(uid, withTarikSaldo: true);
+        } else {
+          _fetchSantri(uid, withTarikSaldo: false);
+        }
       } else if (key != null && key.isNotEmpty) {
         cardInput.value += key;
         print("Key pressed: $key (accumulated: ${cardInput.value})");
@@ -119,8 +129,8 @@ class HomeController extends GetxController {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            "Rp${data.saldo ?? 0}",
-                            style: const TextStyle(
+                            formatRupiah(data.saldo),
+                            style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -178,6 +188,15 @@ class HomeController extends GetxController {
     dialogCek();
   }
 
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
+  }
+
   void resetInput() {
     cardInput.value = '';
     cardUID.value = '';
@@ -194,6 +213,7 @@ class HomeController extends GetxController {
     bool withTarikSaldo = false,
   }) async {
     print('kartu yang di tap $nomorKartu');
+
     santri.value = null;
     // santri.refresh();
     if (withTarikSaldo && currentMode.value != 'Tarik-tunai') {
@@ -210,7 +230,13 @@ class HomeController extends GetxController {
     ).replace(queryParameters: {'noKartu': nomorKartu});
     print("👉 Fetch dengan nomorKartu='$nomorKartu'");
 
+    if (isScanning.value) {
+      print("❌ Abaikan karena masih proses kartu lain");
+      return;
+    }
+
     try {
+      isScanning.value = true;
       final response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
@@ -250,6 +276,8 @@ class HomeController extends GetxController {
     } catch (e) {
       print('Error fetchSantri: $e');
       Get.snackbar('Error', 'Terjadi kesalahan koneksi.');
+    } finally {
+      isScanning.value = false;
     }
   }
 

@@ -23,6 +23,10 @@ abstract class Routes {
   static const NOMINAL = _Paths.NOMINAL;
   static const PAYMENT = _Paths.PAYMENT;
   static const RIWAYAT_HUTANG = _Paths.RIWAYAT_HUTANG;
+  static const ENTER_PASSCODE = _Paths.ENTER_PASSCODE;
+  static const NOTIFIKASI = _Paths.NOTIFIKASI;
+  static const DETAIL_NOTIF = _Paths.DETAIL_NOTIF;
+  static const DETAIL_RIWAYAT_TRANSAKSI = _Paths.DETAIL_RIWAYAT_TRANSAKSI;
 }
 
 abstract class _Paths {
@@ -47,4 +51,8 @@ abstract class _Paths {
   static const NOMINAL = '/nominal';
   static const PAYMENT = '/payment';
   static const RIWAYAT_HUTANG = '/riwayat-hutang';
+  static const ENTER_PASSCODE = '/enter-passcode';
+  static const NOTIFIKASI = '/notifikasi';
+  static const DETAIL_NOTIF = '/detail-notif';
+  static const DETAIL_RIWAYAT_TRANSAKSI = '/detail-riwayat-transaksi';
 }

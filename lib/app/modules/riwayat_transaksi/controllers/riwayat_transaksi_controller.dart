@@ -21,12 +21,12 @@ class RiwayatTransaksiController extends GetxController {
 
   String convertKelas(String kelas) {
     switch (kelas) {
-      case "10":
-        return "X";
-      case "11":
-        return "XI";
       case "12":
         return "XII";
+      case "11":
+        return "XI";
+      case "10":
+        return "X";
       default:
         return kelas;
     }
@@ -70,6 +70,8 @@ class RiwayatTransaksiController extends GetxController {
         applyFilter();
       } else {
         Get.snackbar('Error', 'Failed to fetch transaction history');
+        print("Failed with status code: ${response.statusCode}");
+        print('isi gagal: ${response.body}');
       }
     } catch (e) {
       print("Error fetching transaction history: $e");

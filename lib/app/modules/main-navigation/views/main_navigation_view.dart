@@ -16,7 +16,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
   @override
   final pages = [
     HomeView(),
-    ProductView(),
+    CartView(),
     SizedBox(), // Placeholder for Top up
     RiwayatTransaksiView(),
     ProfileView(),
@@ -39,9 +39,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
               width: isLandscape ? 50 : 62,
               child: FloatingActionButton(
                 shape: const CircleBorder(),
-                backgroundColor: const Color(
-                  0xFFFDBD03,
-                ), // Warna kuning sesuai desain
+                backgroundColor: const Color(0xFFFDBD03),
                 onPressed: () {
                   controller.focusNode.requestFocus();
                   controller.dialogCek();
@@ -72,8 +70,8 @@ class MainNavigationView extends GetView<MainNavigationController> {
                       isLandscape: isLandscape,
                     ),
                     _buildNavItem(
-                      Icons.store,
-                      "Toko",
+                      Icons.shopping_cart,
+                      "Checkout",
                       1,
                       isLandscape: isLandscape,
                     ),

@@ -14,6 +14,7 @@ class PaymentController extends GetxController {
   //data arguments
   var santriId = 0.obs;
   var name = ''.obs;
+  var passcode = ''.obs;
   var kelas = ''.obs;
   var saldo = 0.obs;
   var hutang = 0.obs;
@@ -31,6 +32,7 @@ class PaymentController extends GetxController {
     if (arguments != null) {
       santriId.value = arguments['id'] ?? 0;
       name.value = arguments['nama'] ?? '';
+      passcode.value = arguments['passcode'] ?? '';
       kelas.value = arguments['kelas'] ?? '';
       saldo.value = arguments['saldo'] ?? 0;
       hutang.value = arguments['hutang'] ?? 0;
@@ -38,6 +40,7 @@ class PaymentController extends GetxController {
     totalHargaPokok.value = box.read('totalHargaPokok') ?? 0;
     pajak.value = box.read('pajak') ?? 0;
     totalPembayaran.value = box.read('totalPembayaran') ?? 0;
+    // print("passcode dari db: $passcode");
   }
 
   void selectMethod(String method) {
@@ -50,7 +53,11 @@ class PaymentController extends GetxController {
       return;
     }
 
-    final urlTransaksi = Uri.parse("$url/transaksi/deduct/${santriId.value}");
+    final urlTransaksi = Uri.parse(
+      selectedMethod.value == "Saldo"
+          ? "$url/transaksi/deduct/${santriId.value}"
+          : "$url/transaksi/hutang/${santriId.value}",
+    );
 
     try {
       final response = await http.post(
@@ -64,12 +71,13 @@ class PaymentController extends GetxController {
 
         saldo.value = saldo.value - totalPembayaran.value;
         Get.snackbar("Success", "Pembayaran Berhasil");
-        Get.offAllNamed(
+        Get.toNamed(
           Routes.NOTIF_PEMBAYARAN,
           arguments: {
             'method': selectedMethod.value,
             'total': totalPembayaran.value,
             'santriName': name.value,
+            // 'passcode': passcode.value,
             'santriId': santriId.value,
             'type': TransaksiType.pembayaran,
           },

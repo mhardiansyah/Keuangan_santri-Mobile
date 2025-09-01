@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart' as storage;
 import 'package:http/http.dart' as http;
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
@@ -60,15 +61,17 @@ class WaitingTapController extends GetxController {
           final data = jsonResponse['data'];
           final kartu = Data.fromJson(data);
           santri.value = kartu.santri;
+          // addCartItems(kartu.santri.id);
           if (kartu.santri != null) {
             Get.offAllNamed(
               Routes.PAYMENT,
               arguments: {
-                'id': kartu.santri?.id,
-                'nama': kartu.santri?.name,
-                'kelas': kartu.santri?.kelas,
-                'saldo': kartu.santri?.saldo,
-                'hutang': kartu.santri?.hutang,
+                'id': kartu.santri.id,
+                'nama': kartu.santri.name,
+                // 'passcode': kartu.passcode,
+                'kelas': kartu.santri.kelas,
+                'saldo': kartu.santri.saldo,
+                'hutang': kartu.santri.hutang,
               },
             );
             return;
@@ -82,6 +85,40 @@ class WaitingTapController extends GetxController {
       print('Error fungsi getSantribyUID: $e');
     }
   }
+
+  // Future<void> addCartItems(int santriId) async {
+  //   try {
+  //     final box = storage.GetStorage();
+  //     final List<dynamic> cartItems = box.read('cartItem') ?? [];
+
+  //     if (cartItems.isEmpty) {
+  //       Get.snackbar('Error', 'Keranjang kosong');
+  //       return;
+  //     }
+
+  //     for (var item in cartItems) {
+  //       final body = {
+  //         "santriId": santriId,
+  //         "itemId": item['product']['id'],
+  //         "quantity": item['jumlah'],
+  //       };
+
+  //       final response = await http.post(
+  //         Uri.parse("$url/cart"),
+  //         headers: {"Content-Type": "application/json"},
+  //         body: jsonEncode(body),
+  //       );
+
+  //       if (response.statusCode != 201 && response.statusCode != 200) {
+  //         print("Gagal tambah cart: ${response.body}");
+  //       }
+  //     }
+
+  //     Get.snackbar('Success', 'Semua item berhasil ditambahkan ke keranjang');
+  //   } catch (e) {
+  //     print("Error fungsi addCartItems: $e");
+  //   }
+  // }
 
   @override
   void onReady() {

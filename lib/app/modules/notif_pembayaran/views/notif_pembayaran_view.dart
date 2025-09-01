@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/notif_pembayaran_controller.dart';
@@ -133,7 +134,7 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
                           ),
                         ),
                         Text(
-                          "Rp${controller.totalHarga.value}",
+                          formatRupiah(controller.totalHarga.value),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -181,6 +182,7 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
                   ),
                   onPressed: () {
                     Get.offAllNamed(Routes.MAIN_NAVIGATION);
+                    controller.checkout(controller.santriId.value);
                     Get.snackbar(
                       "Tersimpan",
                       "Data transaksi berhasil disimpan",
@@ -199,5 +201,14 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
         }),
       ),
     );
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }
