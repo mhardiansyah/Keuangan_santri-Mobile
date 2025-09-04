@@ -1,9 +1,11 @@
 // home_view.dart
+// ignore_for_file: unused_element_parameter
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({super.key});
@@ -11,309 +13,385 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     Get.lazyPut<HomeController>(() => HomeController());
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final screenWidth = MediaQuery.of(context).size.width;
     final box = GetStorage();
     final username = box.read('name') ?? "User";
 
-    return KeyboardListener(
-      focusNode: controller.focusNode,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0E1220),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage('assets/icons/logo.png'),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hello $username',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF0E1220),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 22,
+                    backgroundImage: AssetImage('assets/icons/logo.png'),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hello $username",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        const SizedBox(height: 2),
-                        const Text(
-                          'Welcome Back',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      style: IconButton.styleFrom(backgroundColor: Colors.grey),
-                      onPressed: () {
-                        Get.toNamed(Routes.NOTIFIKASI);
-                      },
+                      ),
+                      const Text(
+                        "Welcome Back",
+                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white24,
+                    child: IconButton(
+                      onPressed: () => Get.toNamed(Routes.NOTIFIKASI),
                       icon: const Icon(
                         Icons.notifications,
                         color: Colors.white,
+                        size: 20,
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                  ),
+                ],
+              ),
 
-                // Card Penjualan
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 20,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4634CC),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Total Penjualan',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+              const SizedBox(height: 20),
+
+              // Saldo Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF5A47E5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Saldo hari ini",
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "RP. 10.000.000",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'RP. 10.000.000',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.money,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            label: const Text(
+                              "Tarik tunai",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white10,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 33),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.details,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Lihat Detail',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4634CC),
-                                side: const BorderSide(
-                                  color: Colors.white,
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.qr_code_scanner,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            label: const Text(
+                              "Scan Saldo",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white10,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: isLandscape ? (screenWidth * 0.4) - 40 : 142,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                controller.focusNode.requestFocus();
-                                controller.dialogCek();
-                              },
-                              icon: const Icon(
-                                Icons.qr_code_scanner,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Scan card',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4634CC),
-                                side: const BorderSide(
-                                  color: Colors.white,
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Grid Info Cards
-                GridView.count(
-                  crossAxisCount: isLandscape ? 3 : 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children: <Widget>[
-                    _buildInfoCard(
-                      'Total Transaksi',
-                      '20',
-                      'assets/icons/dolars.png',
-                      'Diupdate: 20 Juni 2025',
-                      '+10',
-                      Colors.green,
-                      const Color(0xffffe3c2),
-                    ),
-                    _buildInfoCard(
-                      'Total Santri',
-                      '50',
-                      'assets/icons/person.png',
-                      'Diupdate: 20 Juni 2025',
-                      '+3',
-                      Colors.green,
-                      const Color(0xffd0f2cf),
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(Routes.RIWAYAT_TRANSAKSI),
-                      child: _buildInfoCard(
-                      'Total Produk',
-                      '35',
-                      'assets/icons/kardus.png',
-                      'Selengkapnya',
-                      '+2',
-                      Colors.green,
-                      const Color(0xffcdf6f4),
-                    ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(Routes.RIWAYAT_HUTANG),
-                      child: _buildInfoCard(
-                        'Total Hutang',
-                        '300K',
-                        'assets/icons/kasbon.png',
-                        'Selengkapnya',
-                        '+10',
-                        Colors.red,
-                        const Color(0xfffff5c3),
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Box Total Transaksi
+              _buildInfoBox(
+                imagePath: "assets/icons/dolars.png",
+                iconBg: const Color(0xFFFFE3C2),
+                title: "Total Transaksi",
+                value: "Rp.20jt",
+                actionText: "",
+                items: [
+                  {
+                    "label": "Transaksi Pagi",
+                    "status": "Lihat",
+                    "color": Colors.green,
+                  },
+                  {
+                    "label": "Transaksi Siang",
+                    "status": "Lihat",
+                    "color": Colors.green,
+                  },
+                  {
+                    "label": "Transaksi Malam",
+                    "status": "Lihat",
+                    "color": Colors.green,
+                  },
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Box Total Produk
+              _buildInfoBox(
+                imagePath: "assets/icons/kardus.png",
+                iconBg: const Color(0xFFCDF6F4),
+                title: "Total Produk",
+                value: "12",
+                actionText: "",
+                items: [
+                  {
+                    "label": "Roti Aoka Keju",
+                    "status": "Habis",
+                    "color": Colors.red,
+                  },
+                  {
+                    "label": "Milku Stroberi",
+                    "status": "Habis",
+                    "color": Colors.red,
+                  },
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Box Total Kasbon
+              _buildInfoBox(
+                imagePath: "assets/icons/kasbon.png",
+                iconBg: const Color(0xFFFFF5C3),
+                title: "Total Kasbon",
+                value: "300K",
+                actionText: "",
+                ranking: [
+                  {"name": "Muhammad Dafleng", "kelas": "XII"},
+                  {"name": "Muhammad Dafleng", "kelas": "XII"},
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoCard(
-    String title,
-    String value,
-    String iconPath,
-    String updateText,
-    String changeText,
-    Color changeColor,
-    Color circleColor,
-  ) {
+  // --- reusable box widget ---
+  Widget _buildInfoBox({
+    String? imagePath,
+    Color? iconBg,
+    required String title,
+    required String value,
+    required String actionText,
+    List<Map<String, dynamic>>? items,
+    List<Map<String, dynamic>>? ranking,
+  }) {
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 18, top: 18, bottom: 7),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1F2C),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 35,
-                height: 35,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: circleColor,
-                  shape: BoxShape.circle,
+          // Left side
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: iconBg,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(imagePath!, width: 24, height: 24),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Image.asset(iconPath, fit: BoxFit.contain),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
+                const SizedBox(height: 16),
+                Text(
+                  value,
                   style: const TextStyle(
-                    fontSize: 14,
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: changeColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  changeText,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: changeColor,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: () {
+                    if (title == "Total Transaksi") {
+                      Get.toNamed(Routes.TOTAL_PENDAPATAN);
+                    } else if (title == "Total Produk") {
+                      Get.toNamed(Routes.PENGATURAN_TOKO);
+                    } else if (title == "Total Kasbon") {
+                      Get.toNamed(Routes.RIWAYAT_HUTANG);
+                    }
+                  },
+                  child: const Text(
+                    "Selengkapnya",
+                    style: TextStyle(
+                      color: Color(0xFFFBC02D),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          Divider(color: Colors.grey.shade700, thickness: 1),
-          const SizedBox(height: 7),
-          Text(
-            updateText,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget infoRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text("$title: ", style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 8),
-          Expanded(child: Text(value)),
+          // Right side
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                if (items != null)
+                  ...items.map(
+                    (item) => Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A2F3C),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item["label"],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: (item["color"] as Color).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              item["status"],
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: item["color"],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (ranking != null)
+                  ...ranking.map(
+                    (rank) => Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A2F3C),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 16,
+                            backgroundImage: AssetImage(
+                              'assets/icons/logo.png',
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              rank["name"],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            rank["kelas"],
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );

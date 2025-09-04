@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/modules/detail_riwayat_transaksi/views/detail_riwayat_transaksi_view.dart';
-import 'package:sakusantri/app/modules/home/views/home_view.dart';
+import 'package:sakusantri/app/modules/main-navigation/views/main_navigation_view.dart';
 import '../controllers/riwayat_transaksi_controller.dart';
 
 class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
@@ -16,7 +16,7 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
-          onPressed: () => Get.off(() => HomeView()),
+          onPressed: () => Get.off(() => MainNavigationView()),
         ),
         title: const Text(
           'Riwayat',

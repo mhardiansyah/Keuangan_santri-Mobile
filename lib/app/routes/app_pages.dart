@@ -32,6 +32,8 @@ import '../modules/notifikasi/bindings/notifikasi_binding.dart';
 import '../modules/notifikasi/views/notifikasi_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
 import '../modules/payment/views/payment_view.dart';
+import '../modules/pengaturan_toko/bindings/pengaturan_toko_binding.dart';
+import '../modules/pengaturan_toko/views/pengaturan_toko_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -43,6 +45,8 @@ import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/total_pendapatan/bindings/total_pendapatan_binding.dart';
+import '../modules/total_pendapatan/views/total_pendapatan_view.dart';
 import '../modules/waiting_tap/bindings/waiting_tap_binding.dart';
 import '../modules/waiting_tap/views/waiting_tap_view.dart';
 
@@ -53,7 +57,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.ENTER_PASSCODE;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
     GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
@@ -161,6 +165,16 @@ class AppPages {
       name: _Paths.ENTER_PASSCODE,
       page: () => const EnterPasscodeView(),
       binding: EnterPasscodeBinding(),
+    ),
+    GetPage(
+      name: _Paths.PENGATURAN_TOKO,
+      page: () => const PengaturanTokoView(),
+      binding: PengaturanTokoBinding(),
+    ),
+    GetPage(
+      name: _Paths.TOTAL_PENDAPATAN,
+      page: () => const TotalPendapatanView(),
+      binding: TotalPendapatanBinding(),
     ),
   ];
 }
