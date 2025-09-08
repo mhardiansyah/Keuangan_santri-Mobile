@@ -86,13 +86,26 @@ class CartView extends GetView<CartController> {
               padding: const EdgeInsets.all(18),
               child:
                   iscartEmpty
-                      ? Center(
-                        child: Text(
-                          'Tidak ada item di keranjang',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w500,
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tidak ada item di keranjang',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 100),
+                              Image.asset(
+                                "assets/icons/empty-box.png",
+                                width: 200,
+                              ),
+                            ],
                           ),
                         ),
                       )
