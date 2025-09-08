@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
+import 'package:sakusantri/app/core/models/santri_model.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/riwayat_hutang_controller.dart';
 
 class RiwayatHutangView extends GetView<RiwayatHutangController> {
@@ -7,7 +11,8 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(RiwayatHutangController());
+    // Pastikan controller sudah di-inject
+    final controller = Get.put(RiwayatHutangController());
 
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
@@ -17,7 +22,7 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
           onPressed: () => Get.back(),
         ),
         title: const Text(
-          'Riwayat hutang',
+          'Riwayat Hutang',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -28,7 +33,7 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
         children: [
           // 🔍 Search bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               height: 46,
@@ -48,8 +53,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
               ),
             ),
           ),
-
-          const SizedBox(height: 20),
 
           // 🎓 Filter kelas
           Obx(
@@ -96,15 +99,89 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
           // 📋 List hutang
           Expanded(
             child: Obx(() {
-              final sortedData = controller.sortedByHutang;
-              final query = controller.searchQuery.value.toLowerCase();
-              final filteredData =
-                  sortedData.where((e) {
-                    final nama = e['nama'].toString().toLowerCase();
-                    final kelas = controller.selectedKelas.value;
-                    return nama.contains(query) &&
-                        (kelas == "ALL" || e['kelas'] == kelas);
-                  }).toList();
+              if (controller.isLoading.value) {
+                // tampilan shimmer loading
+                return ListView.builder(
+                  itemCount: 6, // jumlah placeholder shimmer
+                  itemBuilder: (context, index) {
+                    return Shimmer.fromColors(
+                      baseColor: const Color(0xFF1E293B),
+                      highlightColor: const Color(0xFF334155),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // baris pertama
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 14,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Container(
+                                          width: 100,
+                                          height: 12,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              // baris kedua
+                              Container(
+                                width: double.infinity,
+                                height: 12,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+
+              final filteredData = controller.filteredSantri;
+
+              filteredData.sort((a, b) => b.hutang.compareTo(a.hutang));
+
+              if (filteredData.isEmpty) {
+                return const Center(
+                  child: Text(
+                    "Data tidak ditemukan",
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                );
+              }
 
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(
@@ -113,7 +190,9 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
                 ),
                 itemCount: filteredData.length,
                 itemBuilder: (context, index) {
-                  return _buildItem(filteredData[index], index + 1);
+                  final item = filteredData[index];
+                  final rank = controller.getRank(item);
+                  return _buildItem(item, rank);
                 },
               );
             }),
@@ -124,7 +203,7 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
   }
 
   // 🔖 Card item dengan badge ranking
-  Widget _buildItem(Map<String, dynamic> data, int rank) {
+  Widget _buildItem(Santri data, int rank) {
     Color badgeColor;
     Widget badgeContent;
 
@@ -166,6 +245,7 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
       ),
       child: Row(
         children: [
+          // Badge
           Container(
             width: 50,
             height: 80,
@@ -178,47 +258,45 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
             ),
             child: Center(child: badgeContent),
           ),
-
           const SizedBox(width: 12),
 
+          // Avatar
           CircleAvatar(
             radius: 26,
-            backgroundColor: getRandomColor(data['id']),
+            backgroundColor: getRandomColor(data.id),
             child: Text(
-              getInitials(data['nama']),
+              getInitials(data.name),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-
           const SizedBox(width: 12),
 
+          // Info Santri
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  getInitials(data['nama']),
+                  data.name,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  data['kelas'],
-                  style: const TextStyle(color: Colors.white70),
-                ),
+                Text(data.kelas, style: const TextStyle(color: Colors.white70)),
               ],
             ),
           ),
 
+          // Nominal + Button
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'Rp${data['nominal']}',
+                formatRupiah(data.hutang),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -273,5 +351,14 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
       Colors.indigo,
     ];
     return colors[seed % colors.length];
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }

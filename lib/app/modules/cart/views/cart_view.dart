@@ -26,14 +26,6 @@ class CartView extends GetView<CartController> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFF4634CC),
-            size: 28,
-          ),
-          onPressed: () => Get.back(),
-        ),
       ),
 
       // Tombol Bayar selalu di bawah
@@ -85,192 +77,222 @@ class CartView extends GetView<CartController> {
 
       body: SafeArea(
         child: Obx(() {
+          final iscartEmpty = controller.cartItems.isEmpty;
           return Focus(
             autofocus: true,
             focusNode: controller.focusNode,
             onKeyEvent: controller.onkeyEvent,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(18),
-              child: Column(
-                children: [
-                  // List Produk
-                  ...controller.cartItems.map((item) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Gambar Produk
-                          Container(
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                image: NetworkImage(item.product.gambar),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+              child:
+                  iscartEmpty
+                      ? Center(
+                        child: Text(
+                          'Tidak ada item di keranjang',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(width: 16),
+                        ),
+                      )
+                      : Column(
+                        children: [
+                          // List Produk
+                          ...controller.cartItems.map((item) {
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1E293B),
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Gambar Produk
+                                  Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          item.product.gambar,
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
 
-                          // Nama dan harga
-                          Expanded(
+                                  // Nama dan harga
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.product.nama,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          formatRupiah(item.product.harga),
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        // Tombol qty
+                                        Row(
+                                          children: [
+                                            _buildQtyButton(
+                                              icon: Icons.add,
+                                              onTap:
+                                                  () => controller.incjumlah(
+                                                    item,
+                                                  ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                  ),
+                                              child: Text(
+                                                '${item.jumlah}',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                            _buildQtyButton(
+                                              icon: Icons.remove,
+                                              onTap:
+                                                  () => controller.decjumlah(
+                                                    item,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Tombol hapus
+                                  IconButton(
+                                    onPressed:
+                                        () =>
+                                            controller.removeCart(item.product),
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                      size: 26,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+
+                          // Ringkasan Pembayaran
+                          Container(
+                            margin: const EdgeInsets.only(top: 8, bottom: 80),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1E293B),
+                              borderRadius: BorderRadius.circular(18),
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  item.product.nama,
-                                  style: const TextStyle(
+                                const Text(
+                                  'Ringkasan Pembayaran',
+                                  style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white,
                                     fontWeight: FontWeight.w600,
+                                    color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  formatRupiah(item.product.harga),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                // Tombol qty
+                                const SizedBox(height: 16),
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildQtyButton(
-                                      icon: Icons.add,
-                                      onTap: () => controller.incjumlah(item),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                      ),
-                                      child: Text(
-                                        '${item.jumlah}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
+                                    const Text(
+                                      'Harga pokok',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 15,
                                       ),
                                     ),
-                                    _buildQtyButton(
-                                      icon: Icons.remove,
-                                      onTap: () => controller.decjumlah(item),
+                                    Text(
+                                      formatRupiah(controller.totalHargaPokok),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Pajak',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      formatRupiah(controller.pajak),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(
+                                  height: 24,
+                                  color: Colors.white24,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Total Pembayaran',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      formatRupiah(controller.totalPembayaran),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
                           ),
-
-                          // Tombol hapus
-                          IconButton(
-                            onPressed:
-                                () => controller.removeCart(item.product),
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                              size: 26,
-                            ),
-                          ),
                         ],
                       ),
-                    );
-                  }).toList(),
-
-                  // Ringkasan Pembayaran
-                  Container(
-                    margin: const EdgeInsets.only(top: 8, bottom: 80),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E293B),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Ringkasan Pembayaran',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Harga pokok',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              formatRupiah(controller.totalHargaPokok),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Pajak',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              formatRupiah(controller.pajak),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Divider(height: 24, color: Colors.white24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total Pembayaran',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              formatRupiah(controller.totalPembayaran),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
             ),
           );
         }),
