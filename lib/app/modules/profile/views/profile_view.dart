@@ -72,7 +72,7 @@ class ProfileView extends GetView<ProfileController> {
         const CircleAvatar(
           radius: 50,
           backgroundImage: AssetImage(
-            'assets/profile.jpg' ?? 'assets/images/default_image.png',
+            'assets/images/default_image.png',
           ),
         ),
         Positioned(

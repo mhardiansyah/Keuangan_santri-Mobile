@@ -23,6 +23,7 @@ Data datafromJson(String str) => Data.fromJson(json.decode(str));
 class Data {
   int id;
   String nomorKartu;
+  String passcode;
   DateTime createdAt;
   DateTime updatedAt;
   Santri santri;
@@ -30,6 +31,7 @@ class Data {
   Data({
     required this.id,
     required this.nomorKartu,
+    required this.passcode,
     required this.createdAt,
     required this.updatedAt,
     required this.santri,
@@ -46,16 +48,21 @@ class Data {
         json['updated_at'] ?? DateTime.now().toString(),
       ),
       santri: Santri.fromJson(json['santri']),
+      passcode: json['passcode'] ?? '',
     );
   }
 }
 
+Santri santrifromJson(String str) => Santri.fromJson(json.decode(str));
+
 class Santri {
+
   int id;
   String name;
   String kelas;
   int saldo;
   int hutang;
+  String jurusan;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -65,6 +72,7 @@ class Santri {
     required this.kelas,
     required this.saldo,
     required this.hutang,
+    required this.jurusan,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -76,6 +84,7 @@ class Santri {
       kelas: json['kelas'],
       saldo: json['saldo'] ?? 0,
       hutang: json['hutang'] ?? 0,
+      jurusan: json['jurusan'] ?? '',
       createdAt: DateTime.parse(
         json['created_at'] ?? DateTime.now().toString(),
       ),

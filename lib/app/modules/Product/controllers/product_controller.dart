@@ -59,9 +59,9 @@ class ProductController extends GetxController {
     itemsList.assignAll(
       allItems.where((item) {
         // final machtkeyword = item.nama.toLowerCase().contains(keyword);
-        final machtkeyword = (item.nama ?? '').toLowerCase().contains(keyword);
+        final machtkeyword = (item.nama).toLowerCase().contains(keyword);
         final matchkategori =
-            kategori.isEmpty || (item.kategoriId.toString() ?? '') == kategori;
+            kategori.isEmpty || (item.kategoriId.toString()) == kategori;
         return machtkeyword && matchkategori;
       }),
     );

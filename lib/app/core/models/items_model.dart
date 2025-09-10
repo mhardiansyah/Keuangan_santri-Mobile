@@ -5,6 +5,7 @@ class Items {
   int? kategoriId;
   int jumlah;
   String gambar;
+  String? barcode;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -15,6 +16,7 @@ class Items {
     required this.kategoriId,
     required this.jumlah,
     required this.gambar,
+    required this.barcode,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -26,6 +28,7 @@ class Items {
     kategoriId: json["kategori_id"],
     jumlah: json["jumlah"] ?? 0,
     gambar: json["gambar"] ?? '',
+    barcode: json["barcode"] ?? '',
     createdAt: DateTime.tryParse(json["created_at"] ?? '') ?? DateTime.now(),
     updatedAt: DateTime.tryParse(json["updated_at"] ?? '') ?? DateTime.now(),
   );

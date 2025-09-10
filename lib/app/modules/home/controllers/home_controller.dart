@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unnecessary_null_comparison
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -7,73 +7,96 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart' as storage;
 import 'package:http/http.dart' as http;
-import 'package:sakusantri/app/core/models/login_model.dart';
+import 'package:intl/intl.dart';
+
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
+import 'package:sakusantri/app/core/types/transaksi_type.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class HomeController extends GetxController {
+  // Observables
   var isLoading = true.obs;
   var itemsList = <Items>[].obs;
   var cardInput = ''.obs;
   var cardUID = ''.obs;
   var santri = Rxn<Santri>();
   var kartu = Rxn<Kartu>();
-  var url = dotenv.env['base_url'];
   var isScanning = false.obs;
-  final box = storage.GetStorage();
+  var currentMode = "Tarik-tunai".obs;
 
+  // Santri info
   var santriName = "N/A".obs;
   var santriKelas = "N/A".obs;
   var santriSaldo = 0.obs;
   var santriHutang = 0.obs;
 
-  FocusNode focusNode = FocusNode();
+  // Utils
+  final box = storage.GetStorage();
+  final focusNode = FocusNode();
+  final baseUrl = dotenv.env['base_url'];
 
   @override
   void onInit() {
     super.onInit();
-    Future.delayed(Duration.zero, () {
-      focusNode.requestFocus();
-    });
+    Future.delayed(Duration.zero, () => focusNode.requestFocus());
+    print("focus node: $focusNode");
   }
 
+  /// Handler input kartu via keyboard
   KeyEventResult onKeyEvent(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
+      // ambil karakter asli, bukan keyLabel
       final key = event.logicalKey.keyLabel;
+      print("Key pressed: $key");
 
-      if (key == 'Enter') {
+      if (event.logicalKey == LogicalKeyboardKey.enter) {
+        print('input mentah: ${cardInput.value}');
+        print('input mentah uid: ${cardUID.value}');
+
         final uid = cardInput.value.trim();
+        if (isScanning.value) {
+          print("⏳ Masih scanning, abaikan kartu: $uid");
+          cardInput.value = '';
+          return KeyEventResult.handled;
+        }
         cardUID.value = uid;
+
+        print('Input kartu selesai: $uid');
         cardInput.value = '';
-        getSantriByUID(uid);
-      } else {
+        if (currentMode.value == 'Tarik-tunai') {
+          _fetchSantri(uid, withTarikSaldo: true);
+        } else {
+          _fetchSantri(uid, withTarikSaldo: false);
+        }
+      } else if (key != null && key.isNotEmpty) {
         cardInput.value += key;
+        print("Key pressed: $key (accumulated: ${cardInput.value})");
       }
     }
     return KeyEventResult.handled;
   }
 
+  /// Dialog untuk cek saldo / tarik tunai
   void dialogCek() {
-    // santri.value = null;
-    // cardInput.value = '';
-    // cardUID.value = '';
+    santri.value = null; // reset dulu
 
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Focus(
           focusNode: focusNode,
-          onKeyEvent: (node, event) => onKeyEvent(node, event),
+          onKeyEvent: onKeyEvent,
           child: Container(
-            // padding: const EdgeInsets.all(20),
             width: double.infinity,
             constraints: const BoxConstraints(minHeight: 150),
             decoration: BoxDecoration(
-              color: Color(0xff1D2938),
+              color: const Color(0xff1D2938),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Obx(() {
               final data = santri.value;
+
               return Stack(
                 children: [
                   Padding(
@@ -87,11 +110,7 @@ class HomeController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (data == null) ...[
-                          Image.asset(
-                            "assets/icons/tapKartu.png",
-                            width: 60,
-                            height: 60,
-                          ),
+                          Image.asset("assets/icons/tapKartu.png", width: 60),
                           const SizedBox(height: 16),
                           const Text(
                             "Silahkan Tap kartu anda...",
@@ -110,8 +129,8 @@ class HomeController extends GetxController {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            "Rp${data.saldo ?? 0}",
-                            style: const TextStyle(
+                            formatRupiah(data.saldo),
+                            style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -122,14 +141,13 @@ class HomeController extends GetxController {
                       ],
                     ),
                   ),
+
                   // Tombol close
                   Positioned(
                     top: 8,
                     right: 8,
                     child: InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
+                      onTap: Get.back,
                       borderRadius: BorderRadius.circular(50),
                       child: Container(
                         padding: const EdgeInsets.all(6),
@@ -151,29 +169,32 @@ class HomeController extends GetxController {
           ),
         ),
       ),
-      barrierDismissible: true,
-    ).then((_) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        resetInput();
-      });
-    });
+      barrierDismissible: false,
+    ).then((_) => Get.until((route) => !Get.isDialogOpen!));
 
     Future.delayed(const Duration(milliseconds: 100), () {
       focusNode.requestFocus();
     });
   }
 
-  Widget infoRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text("$title: ", style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 8),
-          Expanded(child: Text(value)),
-        ],
-      ),
+  /// Ganti mode dialog
+  void openTarikTunai() {
+    currentMode.value = 'Tarik-tunai';
+    dialogCek();
+  }
+
+  void cekSaldo() {
+    currentMode.value = 'cekSaldo';
+    dialogCek();
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
     );
+    return formatCurrency.format(amount);
   }
 
   void resetInput() {
@@ -186,57 +207,128 @@ class HomeController extends GetxController {
     santriHutang.value = 0;
   }
 
-  void getSantriByUID(String nomor_kartu) async {
-    print('kartu yang di tap $nomor_kartu');
+  /// Request API untuk ambil santri
+  Future<void> _fetchSantri(
+    String nomorKartu, {
+    bool withTarikSaldo = false,
+  }) async {
+    print('kartu yang di tap $nomorKartu');
 
-    // Kosongkan dulu supaya UI direset
     santri.value = null;
-    santri.refresh();
+    // santri.refresh();
+    if (withTarikSaldo && currentMode.value != 'Tarik-tunai') {
+      print("❌ Abaikan fetchSantri karena bukan mode Tarik-tunai");
+      return;
+    }
+    if (!withTarikSaldo && currentMode.value != 'cekSaldo') {
+      print("❌ Abaikan fetchSantri karena bukan mode cekSaldo");
+      return;
+    }
 
-    Uri urlHome = Uri.parse(
-      "$url/kartu",
-    ).replace(queryParameters: {'noKartu': nomor_kartu});
+    final url = Uri.parse(
+      "$baseUrl/kartu",
+    ).replace(queryParameters: {'noKartu': nomorKartu});
+    print("👉 Fetch dengan nomorKartu='$nomorKartu'");
+
+    if (isScanning.value) {
+      print("❌ Abaikan karena masih proses kartu lain");
+      return;
+    }
 
     try {
+      isScanning.value = true;
       final response = await http.get(
-        urlHome,
+        url,
         headers: {"Content-Type": "application/json"},
       );
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        if (jsonResponse['data'] is List) {
-          final dataList = jsonResponse['data'] as List;
+        print("Response body: ${response.body}");
+        print("Data type: ${jsonResponse['data'].runtimeType}");
 
-          final match = dataList.firstWhere(
-            (item) => item['nomorKartu'] == nomor_kartu,
-            orElse: () => null,
-          );
+        if (jsonResponse['data'] != null) {
+          final data = jsonResponse['data'];
+          final kartuData = Data.fromJson(data);
 
-          if (match != null) {
-            final kartu = Data.fromJson(match);
-            santri.value = kartu.santri;
-            santri.refresh();
-            _updateSanriData(kartu.santri);
+          santri.value = kartuData.santri;
+          _updateSantriData(kartuData.santri);
+
+          if (withTarikSaldo == true && currentMode.value == 'Tarik-tunai') {
+            _showTarikTunaiDialog(kartuData);
             return;
+          } else if (withTarikSaldo == false &&
+              currentMode.value == 'cekSaldo') {
+            Get.snackbar(
+              'Info',
+              'Kartu ditemukan: ${kartuData.santri.name}',
+            );
+          } else {
+            Get.back();
           }
 
-          Get.snackbar('Info', 'Kartu tidak ditemukan');
+          return;
         }
+        Get.snackbar('Info', 'Kartu tidak ditemukan');
       } else {
-        santri.value = null;
         Get.snackbar('Error', 'Gagal mengambil data.');
       }
     } catch (e) {
-      santri.value = null;
-      print('Error getSantriByUID: $e');
+      print('Error fetchSantri: $e');
+      Get.snackbar('Error', 'Terjadi kesalahan koneksi.');
+    } finally {
+      isScanning.value = false;
     }
   }
 
-  void _updateSanriData(Santri santriData) {
-    santriName.value = santriData.name ?? "N/A";
-    santriKelas.value = santriData.kelas ?? "N/A";
-    santriSaldo.value = santriData.saldo ?? 0;
-    santriHutang.value = santriData.hutang ?? 0;
+  void _showTarikTunaiDialog(Data kartu) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 150),
+          decoration: BoxDecoration(
+            color: const Color(0xff1D2938),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset("assets/icons/kartucek.png", width: 60),
+              const SizedBox(height: 16),
+              const Text(
+                "Kartu ditemukan",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (Get.isDialogOpen == true) {
+        Get.until((route) => !Get.isDialogOpen!);
+      }
+
+      Get.toNamed(
+        Routes.NOMINAL,
+        arguments: {
+          "santriId": kartu.santri.id,
+          "santriName": kartu.santri.name,
+          "type": TransaksiType.topUp,
+        },
+      );
+    });
+  }
+
+  void _updateSantriData(Santri santriData) {
+    santriName.value = santriData.name;
+    santriKelas.value = santriData.kelas;
+    santriSaldo.value = santriData.saldo;
+    santriHutang.value = santriData.hutang;
   }
 }
