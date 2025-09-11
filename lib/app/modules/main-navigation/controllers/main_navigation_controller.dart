@@ -207,8 +207,8 @@ class MainNavigationController extends GetxController {
             Get.toNamed(
               Routes.NOMINAL,
               arguments: {
-                "santriId": kartu.santri.id,
-                "santriName": kartu.santri.name,
+                "santriId": kartu.santri?.id,
+                "santriName": kartu.santri?.name,
                 "type": TransaksiType.topUp,
               },
             );
@@ -224,10 +224,10 @@ class MainNavigationController extends GetxController {
   }
 
   void _updateSanriData(Santri santriData) {
-    santriName.value = santriData.name;
-    santriKelas.value = santriData.kelas;
-    santriSaldo.value = santriData.saldo;
-    santriHutang.value = santriData.hutang;
+    santriName.value = santriData.name ?? "N/A";
+    santriKelas.value = santriData.kelas ?? "N/A";
+    santriSaldo.value = santriData.saldo ?? 0;
+    santriHutang.value = santriData.hutang ?? 0;
   }
 
   void changeTabIndex(int index) {

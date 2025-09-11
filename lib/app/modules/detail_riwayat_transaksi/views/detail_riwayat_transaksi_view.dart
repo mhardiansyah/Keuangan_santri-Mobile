@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
 
 class DetailRiwayatTransaksiView extends StatelessWidget {
-  final Map<String, dynamic> transaksi;
 
-  const DetailRiwayatTransaksiView({super.key, required this.transaksi});
+  const DetailRiwayatTransaksiView({super.key,});
 
   @override
   Widget build(BuildContext context) {
+    final transaksi = Get.arguments as Map<String, dynamic>;
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
@@ -18,18 +20,15 @@ class DetailRiwayatTransaksiView extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: const Text(
-          "Riwayat",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          "Detail Transaksi",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Container(
-          width: double.infinity, // full lebar
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
             color: const Color(0xFF1E293B),
@@ -40,13 +39,23 @@ class DetailRiwayatTransaksiView extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage(transaksi['image']),
+                child: Text(
+                  transaksi['name'],
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
-              _buildRow("Nama:", transaksi['nama']),
-              _buildRow("Tanggal Transaksi:", transaksi['tanggal'] ?? "24 Januari 2025"),
-              _buildRow("Waktu Beli:", transaksi['waktu'] ?? "13.00 WIB"),
-              _buildRow("Jumlah Bayar:", "Rp${transaksi['nominal']}"),
+              _buildRow("Nama:", transaksi['name']),
+              _buildRow("Kelas:", transaksi['kelas']),
+              _buildRow(
+                "Tanggal Transaksi:",
+                DateFormat("dd MMM yyyy").format(transaksi['createdAt']),
+              ),
+              _buildRow("Jumlah Bayar:", "Rp${transaksi['totalAmount']}"),
               _buildRow("Status Transaksi:", transaksi['status']),
             ],
           ),
@@ -57,7 +66,7 @@ class DetailRiwayatTransaksiView extends StatelessWidget {
 
   Widget _buildRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10), // agak lega jaraknya
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

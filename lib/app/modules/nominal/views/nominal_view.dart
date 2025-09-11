@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/core/types/transaksi_type.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/nominal_controller.dart';
 
 class NominalView extends StatelessWidget {
@@ -19,9 +21,13 @@ class NominalView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
-          'Tarik tunai',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Obx(
+          () => Text(
+            controller.transaksiType.value == TransaksiType.topUp
+                ? 'Top Up'
+                : 'Tarik Tunai',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),
@@ -33,49 +39,63 @@ class NominalView extends StatelessWidget {
             const SizedBox(height: 24),
             const Text(
               "Pilih nominal",
-              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
 
-            // Input nominal (tengah)
+            // Input nominal reactive
             SizedBox(
               width: 400,
-              child: TextField(
-                controller: controller.textController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // ⬅ hanya angka
-                ],
-                onChanged: controller.updateNominalFromText,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xFF0F172A),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 14,
-                    horizontal: 16,
+              child: Obx(() {
+                return TextField(
+                  key: ValueKey(
+                    controller.inputText.value,
+                  ), // biar UI refresh kalau value berubah
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: controller.updateNominalFromText,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: "Masukkan nominal",
+                    hintStyle: const TextStyle(color: Colors.white54),
+                    filled: true,
+                    fillColor: const Color(0xFF0F172A),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.white70),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.white70),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.white70),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.white70),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.white),
-                  ),
-                ),
-              ),
+                  controller: TextEditingController(
+                      text: controller.inputText.value,
+                    )
+                    ..selection = TextSelection.fromPosition(
+                      TextPosition(offset: controller.inputText.value.length),
+                    ),
+                );
+              }),
             ),
 
             const SizedBox(height: 32),
 
-            // Bagian jumlah cepat (rata kiri)
+            // Jumlah cepat
             Align(
               alignment: Alignment.centerLeft,
               child: Column(
@@ -92,21 +112,23 @@ class NominalView extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.quickAmounts.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 3.0,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 3.0,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                       itemBuilder: (context, index) {
                         final amount = controller.quickAmounts[index];
                         final isSelected = selectedNominal == amount;
 
                         return OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: isSelected
-                                ? const Color(0xFF4634CC)
-                                : Colors.transparent,
+                            backgroundColor:
+                                isSelected
+                                    ? const Color(0xFF4634CC)
+                                    : Colors.transparent,
                             side: const BorderSide(color: Colors.white54),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -129,12 +151,11 @@ class NominalView extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 100), // jarak ke tombol bawah
+            const SizedBox(height: 100),
           ],
         ),
       ),
 
-      // Tombol Tarik di bawah
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24.0),
         child: SizedBox(
@@ -147,14 +168,32 @@ class NominalView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
+              if (controller.transaksiType.value == TransaksiType.topUp) {
+                await controller.topUpSaldo();
+              } else if (controller.transaksiType.value ==
+                  TransaksiType.tarikTunai) {
+                await controller.tarikTunai();
+              }
+              // Get.toNamed(
+              //   Routes.NOTIF_PEMBAYARAN,
+              //   arguments: {
+              //     "santriName": controller.santriName.value,
+              //     "total": controller.selectedNominal.value,
+              //   },
+              // );
+
               debugPrint(
                 "Nominal dipilih: ${controller.selectedNominal.value}",
               );
             },
-            child: const Text(
-              'Tarik',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+            child: Obx(
+              () => Text(
+                controller.transaksiType.value == TransaksiType.topUp
+                    ? "Top Up"
+                    : "Tarik Tunai",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
           ),
         ),

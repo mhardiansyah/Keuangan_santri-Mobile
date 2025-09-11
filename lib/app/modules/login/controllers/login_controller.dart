@@ -62,35 +62,45 @@ class LoginController extends GetxController {
 
   void login() async {
     if (validateForm()) {
-      // Perform login logic here
-
       try {
         Uri urlLogin = Uri.parse('${url}/auth/login/');
+        var body = jsonEncode({
+          'email': email.value,
+          'password': password.value,
+          'role': 'Admin',
+        });
+
+        print('URL: $urlLogin');
+        print('Body: $body');
+
         var response = await http.post(
           urlLogin,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'email': email.value, 'password': password.value}),
+          body: body,
         );
+
         print('response.statusCode: ${response.statusCode}');
+        print('response.body: ${response.body}');
 
         final data = json.decode(response.body);
-        if (response.statusCode == 201) {
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
           box.write('access_token', data['access_token']);
           box.write('name', data['name']);
           box.write('email', data['email']);
-          box.write('password', data['password']);
 
           print('access_token: ${box.read('access_token')}');
           Get.snackbar('Login', 'Login berhasil!');
           Get.offAllNamed(Routes.MAIN_NAVIGATION);
         } else {
-          Get.snackbar('Login', 'Email atau password salah!');
+          Get.snackbar(
+            'Login',
+            data['message'] ?? 'Email atau password salah!',
+          );
         }
       } catch (e) {
-        Get.snackbar('Login', 'Terjadi kesalahan, $e');
+        Get.snackbar('Login', 'Terjadi kesalahan: $e');
       }
-
-      // clearForm();
     } else {
       Get.snackbar('Error', 'Silakan perbaiki kesalahan di login');
     }

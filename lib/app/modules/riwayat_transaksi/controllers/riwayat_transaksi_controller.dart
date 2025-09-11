@@ -1,159 +1,82 @@
 // ignore_for_file: unnecessary_cast
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
 
 class RiwayatTransaksiController extends GetxController {
-  var selectedKelas = 'ALL'.obs;
+  var selectedKelas = 'All'.obs;
   var searchQuery = ''.obs;
+  var url = dotenv.env['base_url'];
+  var allHistoryList = <HistoryDetail>[].obs;
+  var allHistoryFiltered = <HistoryDetail>[].obs;
 
-  var transaksiHariIni = <Map<String, dynamic>>[].obs;
-  var transaksiKemaren = <Map<String, dynamic>>[].obs;
-
-  var filteredHariIni = <Map<String, dynamic>>[].obs;
-  var filteredKemaren = <Map<String, dynamic>>[].obs;
-
-  /// Dummy data transaksi per kelas
-  final Map<String, Map<String, List<Map<String, dynamic>>>> _dummyData = {
-    'XII': {
-      'hariIni': [
-        {
-          'nama': 'Muhammad Dafleng',
-          'kelas': 'XII',
-          'status': 'Lunas',
-          'nominal': '20.000',
-          'tanggal': '2025-08-21',
-          'image': 'assets/images/user1.png',
-        },
-        {
-          'nama': 'Aditiya Rahsya',
-          'kelas': 'XII',
-          'status': 'Lunas',
-          'nominal': '15.000',
-          'tanggal': '2025-08-21',
-          'image': 'assets/images/user1.png',
-        },
-      ],
-      'kemaren': [
-        {
-          'nama': 'Muhammad Dafleng',
-          'kelas': 'XII',
-          'status': 'Hutang',
-          'nominal': '20.000',
-          'tanggal': '2025-08-20',
-          'image': 'assets/images/user2.png',
-        },
-        {
-          'nama': 'Aditiya Rahsya',
-          'kelas': 'XII',
-          'status': 'Lunas',
-          'nominal': '15.000',
-          'tanggal': '2025-08-20',
-          'image': 'assets/images/user1.png',
-        },
-      ],
-    },
-    'XI': {
-      'hariIni': [
-        {
-          'nama': 'Budi Santoso',
-          'kelas': 'XI',
-          'status': 'Lunas',
-          'nominal': '10.000',
-          'tanggal': '2025-08-21',
-          'image': 'assets/images/user1.png',
-        },
-      ],
-      'kemaren': [
-        {
-          'nama': 'Andi Pratama',
-          'kelas': 'XI',
-          'status': 'Hutang',
-          'nominal': '5.000',
-          'tanggal': '2025-08-20',
-          'image': 'assets/images/user2.png',
-        },
-      ],
-    },
-    'X': {
-      'hariIni': [
-        {
-          'nama': 'Siti Aminah',
-          'kelas': 'X',
-          'status': 'Lunas',
-          'nominal': '12.000',
-          'tanggal': '2025-08-21',
-          'image': 'assets/images/user1.png',
-        },
-      ],
-      'kemaren': [
-        {
-          'nama': 'Joko Widodo',
-          'kelas': 'X',
-          'status': 'Hutang',
-          'nominal': '8.000',
-          'tanggal': '2025-08-20',
-          'image': 'assets/images/user2.png',
-        },
-      ],
-    },
-  };
-
+  var isLoading = false.obs;
   @override
   void onInit() {
     super.onInit();
-    loadTransaksi();
+    fetchRiwayatTransaksi();
+  }
+
+  String convertKelas(String kelas) {
+    switch (kelas) {
+      case "12":
+        return "XII";
+      case "11":
+        return "XI";
+      case "10":
+        return "X";
+      default:
+        return kelas;
+    }
   }
 
   void setKelas(String kelas) {
     selectedKelas.value = kelas;
-    loadTransaksi();
+    applyFilter();
   }
 
   void setSearchQuery(String query) {
     searchQuery.value = query;
-    filterTransaksiBySearch();
+    applyFilter();
   }
 
-  void loadTransaksi() {
-    if (selectedKelas.value == 'ALL') {
-      transaksiHariIni.value = _dummyData.values
-          .expand((kelasData) => kelasData['hariIni']!)
-          .toList();
-
-      transaksiKemaren.value = _dummyData.values
-          .expand((kelasData) => kelasData['kemaren']!)
-          .toList();
-    } else {
-      final data = _dummyData[selectedKelas.value] ?? {
-        'hariIni': [],
-        'kemaren': [],
-      };
-
-      transaksiHariIni.value =
-          (data['hariIni'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-
-      transaksiKemaren.value =
-          (data['kemaren'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-    }
-
-    filterTransaksiBySearch();
-  }
-
-  void filterTransaksiBySearch() {
+  void applyFilter() {
+    final kelas = selectedKelas.value;
     final query = searchQuery.value.toLowerCase();
 
-    if (query.isEmpty) {
-      filteredHariIni.value = transaksiHariIni;
-      filteredKemaren.value = transaksiKemaren;
-    } else {
-      filteredHariIni.value = transaksiHariIni
-          .where(
-              (item) => item['nama'].toString().toLowerCase().contains(query))
-          .toList();
+    allHistoryFiltered.assignAll(
+      allHistoryList.where((item) {
+        final matchKelas =
+            (kelas == 'All') ? true : convertKelas(item.santri.kelas) == kelas;
 
-      filteredKemaren.value = transaksiKemaren
-          .where(
-              (item) => item['nama'].toString().toLowerCase().contains(query))
-          .toList();
+        final matchQuery = item.santri.name.toLowerCase().contains(query);
+
+        return matchKelas && matchQuery;
+      }),
+    );
+  }
+
+  void fetchRiwayatTransaksi() async {
+    try {
+      isLoading.value = true;
+      var urlRiwayatTransaksi = Uri.parse("$url/history");
+      final response = await http.get(urlRiwayatTransaksi);
+      if (response.statusCode == 200) {
+        final data = historyFromJson(response.body);
+
+        allHistoryList.value = data.historyDetail;
+        applyFilter();
+      } else {
+        Get.snackbar('Error', 'Failed to fetch transaction history');
+        print("Failed with status code: ${response.statusCode}");
+        print('isi gagal: ${response.body}');
+      }
+    } catch (e) {
+      print("Error fetching transaction history: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 }

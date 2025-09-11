@@ -261,7 +261,7 @@ class HomeController extends GetxController {
               currentMode.value == 'cekSaldo') {
             Get.snackbar(
               'Info',
-              'Kartu ditemukan: ${kartuData.santri.name}',
+              'Kartu ditemukan: ${kartuData.santri?.name ?? "-"}',
             );
           } else {
             Get.back();
@@ -317,8 +317,8 @@ class HomeController extends GetxController {
       Get.toNamed(
         Routes.NOMINAL,
         arguments: {
-          "santriId": kartu.santri.id,
-          "santriName": kartu.santri.name,
+          "santriId": kartu.santri?.id,
+          "santriName": kartu.santri?.name,
           "type": TransaksiType.topUp,
         },
       );
@@ -326,9 +326,9 @@ class HomeController extends GetxController {
   }
 
   void _updateSantriData(Santri santriData) {
-    santriName.value = santriData.name;
-    santriKelas.value = santriData.kelas;
-    santriSaldo.value = santriData.saldo;
-    santriHutang.value = santriData.hutang;
+    santriName.value = santriData.name ?? "N/A";
+    santriKelas.value = santriData.kelas ?? "N/A";
+    santriSaldo.value = santriData.saldo ?? 0;
+    santriHutang.value = santriData.hutang ?? 0;
   }
 }

@@ -140,6 +140,16 @@ class AppPages {
       binding: PaymentBinding(),
     ),
     GetPage(
+      name: _Paths.RIWAYAT_HUTANG,
+      page: () => const RiwayatHutangView(),
+      binding: RiwayatHutangBinding(),
+    ),
+    GetPage(
+      name: _Paths.ENTER_PASSCODE,
+      page: () => const EnterPasscodeView(),
+      binding: EnterPasscodeBinding(),
+    ),
+    GetPage(
       name: _Paths.NOTIFIKASI,
       page: () => const NotifikasiView(),
       binding: NotifikasiBinding(),
@@ -151,30 +161,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_RIWAYAT_TRANSAKSI,
-      page: () => const DetailRiwayatTransaksiView(
-        transaksi: {},
-      ),
+      page: () => const DetailRiwayatTransaksiView(),
       binding: DetailRiwayatTransaksiBinding(),
-    ),
-    GetPage(
-      name: _Paths.RIWAYAT_HUTANG,
-      page: () => const RiwayatHutangView(),
-      binding: RiwayatHutangBinding(),
-    ),
-    GetPage(
-      name: _Paths.ENTER_PASSCODE,
-      page: () => const EnterPasscodeView(),
-      binding: EnterPasscodeBinding(),
-    ),
-    GetPage(
-      name: _Paths.PENGATURAN_TOKO,
-      page: () => const PengaturanTokoView(),
-      binding: PengaturanTokoBinding(),
-    ),
-    GetPage(
-      name: _Paths.TOTAL_PENDAPATAN,
-      page: () => const TotalPendapatanView(),
-      binding: TotalPendapatanBinding(),
     ),
   ];
 }

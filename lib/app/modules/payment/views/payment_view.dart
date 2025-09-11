@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/payment_controller.dart';
 
 class PaymentView extends StatelessWidget {
@@ -36,55 +38,61 @@ class PaymentView extends StatelessWidget {
                 color: const Color(0xFF1E293B),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "kyrie Abqory aqillah",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Saldo:",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                  Text(
-                    "RP. 3.000.000",
-                    style: TextStyle(
+              child: Obx(
+                () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      controller.name.value ?? 'user',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      "Saldo:",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    Text(
+                      formatRupiah(controller.saldo.value),
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Hutang:",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                  Text(
-                    "-RP. 20.000",
-                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      "Hutang:",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    Text(
+                      "-${formatRupiah(controller.hutang.value)}",
+                      style: TextStyle(
                         color: Colors.red,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 36),
 
             // Total
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "total:",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                Text(
-                  "RP. 30.000",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ],
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "total:",
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  Text(
+                    formatRupiah(controller.totalPembayaran.value),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 32),
 
@@ -95,29 +103,46 @@ class PaymentView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Obx(() {
+              final saldo = controller.saldo.value;
+              final hutang = controller.hutang.value;
+              final isDisableHutang = (saldo > hutang);
+
+              final isDisableSaldo =
+                  (saldo == 0 && hutang == 0) || saldo < hutang;
               return Row(
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => controller.selectMethod("Hutang"),
+                      onTap:
+                          isDisableHutang
+                              ? null
+                              : () => controller.selectMethod("Hutang"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
-                          color: controller.selectedMethod.value == "Hutang"
-                              ? const Color(0xFF4634CC)
-                              : const Color(0xFF1E293B),
+                          color:
+                              isDisableHutang
+                                  ? const Color(0xFF121821)
+                                  : controller.selectedMethod.value == "Hutang"
+                                  ? const Color(0xFF4634CC)
+                                  : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.receipt_long,
-                                color: Colors.white, size: 22),
+                            Icon(
+                              Icons.receipt_long,
+                              color: Colors.white,
+                              size: 22,
+                            ),
                             const SizedBox(height: 6),
                             const Text(
                               "Hutang",
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 14),
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
                             ),
                           ],
                         ),
@@ -127,25 +152,36 @@ class PaymentView extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => controller.selectMethod("Saldo"),
+                      onTap:
+                          isDisableSaldo
+                              ? null
+                              : () => controller.selectMethod("Saldo"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
-                          color: controller.selectedMethod.value == "Saldo"
-                              ? const Color(0xFF4634CC)
-                              : const Color(0xFF1E293B),
+                          color:
+                              isDisableSaldo
+                                  ? const Color(0xFF121821)
+                                  : controller.selectedMethod.value == "Saldo"
+                                  ? const Color(0xFF4634CC)
+                                  : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.account_balance_wallet,
-                                color: Colors.white, size: 22),
+                            Icon(
+                              Icons.account_balance_wallet,
+                              color: Colors.white,
+                              size: 22,
+                            ),
                             const SizedBox(height: 6),
                             const Text(
                               "Saldo",
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 14),
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
                             ),
                           ],
                         ),
@@ -169,8 +205,10 @@ class PaymentView extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
+                  controller.transaksi();
                   debugPrint(
-                      "Metode dipilih: ${controller.selectedMethod.value}");
+                    "Metode dipilih: ${controller.selectedMethod.value}",
+                  );
                 },
                 child: const Text(
                   "Bayar",
@@ -182,5 +220,14 @@ class PaymentView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }

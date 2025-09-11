@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sakusantri/app/core/models/kategori_model.dart';
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
   var selectedCategory = ''.obs;
   var searchKeyword = ''.obs;
   var itemsList = <Items>[].obs;
+  var kategoriList = <Kategori>[].obs;
+
   List<Items> allItems = [];
   var url = dotenv.env['base_url'];
 
@@ -18,6 +21,7 @@ class ProductController extends GetxController {
   void onInit() {
     super.onInit();
     fetchProduct();
+    // fetchKategori();
   }
 
   void fetchProduct() async {
@@ -52,6 +56,25 @@ class ProductController extends GetxController {
     }
   }
 
+  void fetchKategori() async {
+    var urlKategori = Uri.parse("${url}/kategori");
+    try {
+      final response = await http.get(urlKategori);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonresponse = json.decode(response.body);
+        final List<dynamic> data = jsonresponse['data'];
+        kategoriList.assignAll(
+          data.map((item) => Kategori.fromJson(item)).toList(),
+        );
+        print('result: $data');
+      } else {
+        print("Failed to fetch categories");
+      }
+    } catch (e) {
+      print("error: $e");
+    }
+  }
+
   void filterProducts() {
     final keyword = searchKeyword.value.toLowerCase();
     final kategori = selectedCategory.value.toLowerCase();
@@ -59,16 +82,16 @@ class ProductController extends GetxController {
     itemsList.assignAll(
       allItems.where((item) {
         // final machtkeyword = item.nama.toLowerCase().contains(keyword);
-        final machtkeyword = (item.nama).toLowerCase().contains(keyword);
-        final matchkategori =
-            kategori.isEmpty || (item.kategoriId.toString()) == kategori;
-        return machtkeyword && matchkategori;
+        final machtkeyword = (item.nama ?? '').toLowerCase().contains(keyword);
+        final matchKategori =
+            kategori.isEmpty || item.kategoriId.toString() == kategori;
+        return machtkeyword && matchKategori;
       }),
     );
   }
 
   void setCategory(String kategori) {
-    selectedCategory.value = kategori == 'Semua' ? '' : kategori;
+    selectedCategory.value = kategori;
     filterProducts();
   }
 

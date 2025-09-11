@@ -224,7 +224,7 @@ class HomeView extends GetView<HomeController> {
                 final top2 = hutangController.allSantriList.take(2).toList();
                 final totalKasbon = hutangController.allSantriList.fold<int>(
                   0,
-                  (sum, e) => sum + (e.hutang),
+                  (sum, e) => sum + (e.hutang ?? 0),
                 );
 
                 return Container(
