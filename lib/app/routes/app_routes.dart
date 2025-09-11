@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of 'app_pages.dart';
 // DO NOT EDIT. This is code generated via package:get_cli/get_cli.dart
 
@@ -10,9 +12,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const PRODUCT = _Paths.PRODUCT;
   static const CART = _Paths.CART;
-
   static const MAIN_NAVIGATION = _Paths.MAIN_NAVIGATION;
-
   static const ISI_DATA = _Paths.ISI_DATA;
   static const RIWAYAT_TRANSAKSI = _Paths.RIWAYAT_TRANSAKSI;
   static const TOP_UP = _Paths.TOP_UP;
@@ -22,6 +22,13 @@ abstract class Routes {
   static const NOTIF_PEMBAYARAN = _Paths.NOTIF_PEMBAYARAN;
   static const NOMINAL = _Paths.NOMINAL;
   static const PAYMENT = _Paths.PAYMENT;
+  static const RIWAYAT_HUTANG = _Paths.RIWAYAT_HUTANG;
+  static const ENTER_PASSCODE = _Paths.ENTER_PASSCODE;
+  static const NOTIFIKASI = _Paths.NOTIFIKASI;
+  static const DETAIL_NOTIF = _Paths.DETAIL_NOTIF;
+  static const DETAIL_RIWAYAT_TRANSAKSI = _Paths.DETAIL_RIWAYAT_TRANSAKSI;
+
+
 }
 
 abstract class _Paths {
@@ -43,4 +50,10 @@ abstract class _Paths {
   static const NOTIF_PEMBAYARAN = '/notif-pembayaran';
   static const NOMINAL = '/nominal';
   static const PAYMENT = '/payment';
+  static const RIWAYAT_HUTANG = '/riwayat-hutang';
+  static const ENTER_PASSCODE = '/enter-passcode';
+  static const NOTIFIKASI = '/notifikasi';
+  static const DETAIL_NOTIF = '/detail-notifikasi';
+  static const DETAIL_RIWAYAT_TRANSAKSI = '/detail-riwayat-transaksi';
+
 }
