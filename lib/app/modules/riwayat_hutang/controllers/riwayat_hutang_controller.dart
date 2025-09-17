@@ -20,7 +20,7 @@ class RiwayatHutangController extends GetxController {
     fetchRiwayatTransaksi();
   }
 
-  void fetchRiwayatTransaksi() async {
+  Future fetchRiwayatTransaksi() async {
     try {
       isLoading.value = true;
       var urlSantri = Uri.parse('$url/santri');

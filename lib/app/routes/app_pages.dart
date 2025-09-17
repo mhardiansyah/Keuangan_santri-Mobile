@@ -24,6 +24,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main-navigation/bindings/main_navigation_binding.dart';
 import '../modules/main-navigation/views/main_navigation_view.dart';
+import '../modules/new-password/bindings/new_password_binding.dart';
+import '../modules/new-password/views/new_password_view.dart';
 import '../modules/nominal/bindings/nominal_binding.dart';
 import '../modules/nominal/views/nominal_view.dart';
 import '../modules/notif_pembayaran/bindings/notif_pembayaran_binding.dart';
@@ -32,6 +34,8 @@ import '../modules/notifikasi/bindings/notifikasi_binding.dart';
 import '../modules/notifikasi/views/notifikasi_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
 import '../modules/payment/views/payment_view.dart';
+import '../modules/pengaturan_toko/bindings/pengaturan_toko_binding.dart';
+import '../modules/pengaturan_toko/views/pengaturan_toko_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -43,6 +47,8 @@ import '../modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/verify-otp/bindings/verify_otp_binding.dart';
+import '../modules/verify-otp/views/verify_otp_view.dart';
 import '../modules/waiting_tap/bindings/waiting_tap_binding.dart';
 import '../modules/waiting_tap/views/waiting_tap_view.dart';
 
@@ -159,6 +165,21 @@ class AppPages {
       name: _Paths.DETAIL_RIWAYAT_TRANSAKSI,
       page: () => const DetailRiwayatTransaksiView(),
       binding: DetailRiwayatTransaksiBinding(),
+    ),
+    GetPage(
+      name: _Paths.PENGATURAN_TOKO,
+      page: () => const PengaturanTokoView(),
+      binding: PengaturanTokoBinding(),
+    ),
+    GetPage(
+      name: _Paths.VERIFY_OTP,
+      page: () => const VerifyOtpView(),
+      binding: VerifyOtpBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_PASSWORD,
+      page: () => const NewPasswordView(),
+      binding: NewPasswordBinding(),
     ),
   ];
 }

@@ -2,6 +2,7 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
+import 'package:sakusantri/app/modules/payment/controllers/payment_controller.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 
 class EnterPasscodeController extends GetxController {
@@ -21,12 +22,13 @@ class EnterPasscodeController extends GetxController {
   var pajak = 0.obs;
   var totalPembayaran = 0.obs;
   final box = GetStorage();
+  final paymentController = Get.find<PaymentController>();
 
   void onInit() {
     final arguments = Get.arguments;
     if (arguments != null) {
       santriId.value = arguments['id'] ?? 0;
-      name.value = arguments['santriName'] ?? '';
+      name.value = arguments['nama'] ?? '';
       passcode.value = arguments['passcode'] ?? '';
       kelas.value = arguments['kelas'] ?? '';
       saldo.value = arguments['saldo'] ?? 0;
@@ -62,12 +64,13 @@ class EnterPasscodeController extends GetxController {
 
       if (isvalid) {
         Get.snackbar("Success", "PIN benar");
+        paymentController.transaksi();
         Get.toNamed(
           Routes.NOTIF_PEMBAYARAN,
           arguments: {
             'method': methodpayment.value,
             'total': totalPembayaran.value,
-            'santriName': name.value,
+            'nama': name.value,
             'passcode': passcode.value,
             'santriId': santriId.value,
             'type': TransaksiType.pembayaran,

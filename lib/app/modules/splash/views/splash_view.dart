@@ -12,9 +12,11 @@ class SplashView extends GetView<SplashController> {
     final box = GetStorage();
     RxString logined = "".obs;
 
+    
+
     Future.delayed(const Duration(seconds: 2), () {
-      logined.value = box.read('access_token') ?? "";
-      if (logined.value.isNotEmpty) {
+      final token = box.read('access_token');
+      if (token != null && token.isNotEmpty) {
         Get.offAllNamed(Routes.MAIN_NAVIGATION);
       } else {
         Get.offAllNamed(Routes.LOGIN);

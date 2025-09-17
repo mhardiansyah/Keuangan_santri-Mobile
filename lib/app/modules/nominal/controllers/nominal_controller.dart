@@ -18,7 +18,18 @@ class NominalController extends GetxController {
   var transaksiType = ''.obs;
 
   // final quickAmounts = [50000, 100000, 70000, 100000, 300000, 500000];
-  final quickAmounts = [50000, 100000, 150000, 200000, 250000, 300000];
+  final quickAmounts = [
+    50000,
+    100000,
+    150000,
+    200000,
+    250000,
+    300000,
+    350000,
+    400000,
+    450000,
+    500000,
+  ];
   final currencyFormatter = NumberFormat.currency(
     locale: 'id_ID',
     symbol: 'Rp',
@@ -35,7 +46,7 @@ class NominalController extends GetxController {
     final arguments = Get.arguments;
     if (arguments != null) {
       santriId.value = arguments["santriId"] ?? 0;
-      santriName.value = arguments["santriName"] ?? 'N/A';
+      santriName.value = arguments["nama"] ?? 'N/A';
       transaksiType.value = arguments["type"] ?? 'N/A';
     }
 
@@ -87,7 +98,7 @@ class NominalController extends GetxController {
         Get.toNamed(
           Routes.NOTIF_PEMBAYARAN,
           arguments: {
-            "santriName": santriName.value,
+            "nama": santriName.value,
             "total": amount,
             "type": TransaksiType.topUp,
             // sudah benar

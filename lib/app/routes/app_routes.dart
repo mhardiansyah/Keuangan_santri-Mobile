@@ -27,6 +27,9 @@ abstract class Routes {
   static const NOTIFIKASI = _Paths.NOTIFIKASI;
   static const DETAIL_NOTIF = _Paths.DETAIL_NOTIF;
   static const DETAIL_RIWAYAT_TRANSAKSI = _Paths.DETAIL_RIWAYAT_TRANSAKSI;
+  static const PENGATURAN_TOKO = _Paths.PENGATURAN_TOKO;
+  static const VERIFY_OTP = _Paths.VERIFY_OTP;
+  static const NEW_PASSWORD = _Paths.NEW_PASSWORD;
 }
 
 abstract class _Paths {
@@ -55,4 +58,7 @@ abstract class _Paths {
   static const NOTIFIKASI = '/notifikasi';
   static const DETAIL_NOTIF = '/detail-notif';
   static const DETAIL_RIWAYAT_TRANSAKSI = '/detail-riwayat-transaksi';
+  static const PENGATURAN_TOKO = '/pengaturan-toko';
+  static const VERIFY_OTP = '/verify-otp';
+  static const NEW_PASSWORD = '/new-password';
 }

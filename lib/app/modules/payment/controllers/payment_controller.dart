@@ -18,6 +18,7 @@ class PaymentController extends GetxController {
   var kelas = ''.obs;
   var saldo = 0.obs;
   var hutang = 0.obs;
+  var kartuId = 0.obs;
 
   // data dari getorage
   var totalHargaPokok = 0.obs;
@@ -36,15 +37,28 @@ class PaymentController extends GetxController {
       kelas.value = arguments['kelas'] ?? '';
       saldo.value = arguments['saldo'] ?? 0;
       hutang.value = arguments['hutang'] ?? 0;
+      kartuId.value = arguments['kartu_id'] ?? 0;
     }
     totalHargaPokok.value = box.read('totalHargaPokok') ?? 0;
     pajak.value = box.read('pajak') ?? 0;
     totalPembayaran.value = box.read('totalPembayaran') ?? 0;
     // print("passcode dari db: $passcode");
+    print('isi args: $arguments');
+    autoSelectMethod();
   }
 
   void selectMethod(String method) {
     selectedMethod.value = method;
+  }
+
+  void autoSelectMethod() {
+    if (saldo.value == 0 && hutang.value == 0) {
+      selectedMethod.value = "Hutang";
+    } else if (saldo.value >= totalPembayaran.value) {
+      selectedMethod.value = "Saldo";
+    } else {
+      selectedMethod.value = "Hutang";
+    }
   }
 
   Future transaksi() async {
@@ -76,7 +90,7 @@ class PaymentController extends GetxController {
           arguments: {
             'method': selectedMethod.value,
             'total': totalPembayaran.value,
-            'santriName': name.value,
+            'nama': name.value,
             // 'passcode': passcode.value,
             'santriId': santriId.value,
             'type': TransaksiType.pembayaran,

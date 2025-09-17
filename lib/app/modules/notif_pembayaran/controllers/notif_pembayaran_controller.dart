@@ -21,7 +21,7 @@ class NotifPembayaranController extends GetxController {
     if (args != null) {
       totalHarga.value = args['total'] ?? 0;
       selectedMethod.value = args['method'] ?? '-';
-      santriName.value = args['santriName'] ?? 'User';
+      santriName.value = args['nama'] ?? 'User';
       santriId.value = args['santriId'] ?? 0;
       transaksiType.value = args['type'] ?? '-';
     }

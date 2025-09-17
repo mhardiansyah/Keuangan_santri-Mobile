@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
@@ -58,21 +59,31 @@ class MainNavigationController extends GetxController {
         child: Focus(
           focusNode: focusNode,
           onKeyEvent: (node, event) => onKeyEvent(node, event),
-          child: Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(minHeight: 150),
-            decoration: BoxDecoration(
-              color: const Color(0xff1D2938),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Obx(() {
-              final data = santri.value;
-              return Stack(
+          child: Obx(() {
+            final data = santri.value;
+            return Container(
+              width: double.infinity,
+              constraints: BoxConstraints(
+                minHeight: 200,
+                maxWidth: Get.width * 0.6,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xff1D2938),
+                borderRadius: BorderRadius.circular(16),
+                image:
+                    data != null
+                        ? const DecorationImage(
+                          image: AssetImage("assets/images/Card santri.png"),
+                          fit: BoxFit.cover,
+                        )
+                        : null,
+              ),
+              child: Stack(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 70,
-                      vertical: 20,
+                      horizontal: 350,
+                      vertical: 50,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -80,21 +91,38 @@ class MainNavigationController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (data == null) ...[
-                          Image.asset(
-                            "assets/icons/tapKartu.png",
-                            width: 60,
-                            height: 60,
-                          ),
+                          Image.asset("assets/icons/tapKartu.png", width: 60),
                           const SizedBox(height: 16),
                           const Text(
                             "Silahkan Tap kartu anda...",
                             style: TextStyle(fontSize: 16, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
+                        ] else ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            "Saldo ${data.name} tersisa:",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            formatRupiah(data.saldo),
+                            style: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ],
                       ],
                     ),
                   ),
+
                   // Tombol close
                   Positioned(
                     top: 8,
@@ -119,17 +147,13 @@ class MainNavigationController extends GetxController {
                     ),
                   ),
                 ],
-              );
-            }),
-          ),
+              ),
+            );
+          }),
         ),
       ),
-      barrierDismissible: true,
-    ).then((_) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        resetInput();
-      });
-    });
+      barrierDismissible: false, // sama kaya kode 2
+    ).then((_) => Get.until((route) => !Get.isDialogOpen!));
 
     Future.delayed(const Duration(milliseconds: 100), () {
       focusNode.requestFocus();
@@ -208,7 +232,7 @@ class MainNavigationController extends GetxController {
               Routes.NOMINAL,
               arguments: {
                 "santriId": kartu.santri?.id,
-                "santriName": kartu.santri?.name,
+                "nama": kartu.santri?.name,
                 "type": TransaksiType.topUp,
               },
             );
@@ -232,5 +256,14 @@ class MainNavigationController extends GetxController {
 
   void changeTabIndex(int index) {
     selectedIndex.value = index;
+  }
+
+  String formatRupiah(int amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
   }
 }

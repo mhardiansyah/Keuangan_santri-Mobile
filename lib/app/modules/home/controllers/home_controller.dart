@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart' as storage;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
 
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
@@ -24,6 +26,7 @@ class HomeController extends GetxController {
   var kartu = Rxn<Kartu>();
   var isScanning = false.obs;
   var currentMode = "Tarik-tunai".obs;
+  var totalTransaksiHariIni = 0.obs;
 
   // Santri info
   var santriName = "N/A".obs;
@@ -35,12 +38,42 @@ class HomeController extends GetxController {
   final box = storage.GetStorage();
   final focusNode = FocusNode();
   final baseUrl = dotenv.env['base_url'];
+  Timer? _timer;
+  var currentTime = ''.obs;
+  var currentDate = ''.obs;
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
+  }
 
   @override
   void onInit() {
     super.onInit();
+    updateTime();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      updateTime();
+    });
     Future.delayed(Duration.zero, () => focusNode.requestFocus());
     print("focus node: $focusNode");
+    fechtTotalTransaksiHariIni();
+
+    // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   print('timer started');
+    //   print('timer: ${timer.tick}');
+    //   fechtTotalTransaksiHariIni();
+    //   print('total transaksi hari ini: ${totalTransaksiHariIni.value}');
+    // });
+  }
+
+  void updateTime() {
+    final now = DateTime.now();
+    currentTime.value = DateFormat('HH:mm:ss').format(now);
+    currentDate.value = DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(now);
+
+    // currentTime.value = formattedTime;
+    // currentDate.value = formattedDate;
   }
 
   /// Handler input kartu via keyboard
@@ -80,29 +113,37 @@ class HomeController extends GetxController {
   /// Dialog untuk cek saldo / tarik tunai
   void dialogCek() {
     santri.value = null; // reset dulu
-
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Focus(
           focusNode: focusNode,
           onKeyEvent: onKeyEvent,
-          child: Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(minHeight: 150),
-            decoration: BoxDecoration(
-              color: const Color(0xff1D2938),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Obx(() {
-              final data = santri.value;
-
-              return Stack(
+          child: Obx(() {
+            final data = santri.value;
+            return Container(
+              width: double.infinity,
+              constraints: BoxConstraints(
+                minHeight: 200,
+                maxWidth: Get.width * 0.6,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xff1D2938),
+                borderRadius: BorderRadius.circular(16),
+                image:
+                    data != null
+                        ? const DecorationImage(
+                          image: AssetImage("assets/images/Card santri.png"),
+                          fit: BoxFit.cover,
+                        )
+                        : null,
+              ),
+              child: Stack(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 70,
-                      vertical: 20,
+                      horizontal: 350,
+                      vertical: 50,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -164,9 +205,9 @@ class HomeController extends GetxController {
                     ),
                   ),
                 ],
-              );
-            }),
-          ),
+              ),
+            );
+          }),
         ),
       ),
       barrierDismissible: false,
@@ -175,6 +216,42 @@ class HomeController extends GetxController {
     Future.delayed(const Duration(milliseconds: 100), () {
       focusNode.requestFocus();
     });
+  }
+
+  Future fechtTotalTransaksiHariIni() async {
+    try {
+      final urlRiwayatTransaksi = Uri.parse("$baseUrl/history");
+      final response = await http.get(urlRiwayatTransaksi);
+
+      if (response.statusCode == 200) {
+        final data = historyFromJson(response.body);
+        print('data transaksi: ${data.historyDetail}');
+        print('jumlah data transaksi: ${data.historyDetail.length}');
+        final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+        final transaksiHariIni =
+            data.historyDetail.where((transaksi) {
+              final tglTransaksi = DateFormat(
+                'yyyy-MM-dd',
+              ).format(transaksi.createdAt.toLocal());
+
+              return tglTransaksi == today &&
+                  (transaksi.status == 'Lunas' || transaksi.status == 'Hutang');
+            }).toList();
+
+        totalTransaksiHariIni.value = transaksiHariIni.fold(
+          0,
+          (sum, t) => sum + (t.totalAmount ?? 0),
+        );
+
+        print("Total transaksi hari ini: ${totalTransaksiHariIni.value}");
+      } else {
+        Get.snackbar('Error', 'Gagal mengambil data transaksi');
+      }
+    } catch (e) {
+      print("Error: $e");
+      Get.snackbar('Error', 'Terjadi kesalahan koneksi');
+    }
   }
 
   /// Ganti mode dialog
@@ -275,7 +352,12 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       print('Error fetchSantri: $e');
-      Get.snackbar('Error', 'Terjadi kesalahan koneksi.');
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan koneksi.',
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+      );
     } finally {
       isScanning.value = false;
     }

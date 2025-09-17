@@ -23,6 +23,7 @@ class LoginController extends GetxController {
   var isPasswordHidden = true.obs;
   var url = dotenv.env['base_url'];
   final box = GetStorage();
+  var isLoading = false.obs;
 
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
@@ -61,8 +62,19 @@ class LoginController extends GetxController {
   }
 
   void login() async {
+    if (email.value.isEmpty || password.value.isEmpty) {
+      Get.snackbar(
+        'Login',
+        'Email dan password wajib diisi!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     if (validateForm()) {
       try {
+        isLoading.value = true;
         Uri urlLogin = Uri.parse('${url}/auth/login/');
         var body = jsonEncode({
           'email': email.value,
@@ -100,9 +112,11 @@ class LoginController extends GetxController {
         }
       } catch (e) {
         Get.snackbar('Login', 'Terjadi kesalahan: $e');
+      } finally {
+        isLoading.value = false;
       }
     } else {
-      Get.snackbar('Error', 'Silakan perbaiki kesalahan di login');
+      Get.snackbar('Error', 'Periksa kembali data yang diisi');
     }
   }
 }
