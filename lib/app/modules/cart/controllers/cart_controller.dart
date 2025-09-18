@@ -23,7 +23,6 @@ class CartController extends GetxController {
   final searchFocusNode = FocusNode(); // search bar
 
   @override
-
   void onInit() {
     super.onInit();
 

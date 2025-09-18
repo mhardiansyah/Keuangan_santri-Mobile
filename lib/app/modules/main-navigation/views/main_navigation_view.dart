@@ -10,11 +10,11 @@ import 'package:sakusantri/app/modules/main-navigation/controllers/main_navigati
 import 'package:sakusantri/app/modules/pengaturan_toko/views/pengaturan_toko_view.dart';
 import 'package:sakusantri/app/modules/profile/views/profile_view.dart';
 import 'package:sakusantri/app/modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class MainNavigationView extends GetView<MainNavigationController> {
   MainNavigationView({super.key});
 
-  @override
   final pages = [
     HomeView(),
     CartView(),

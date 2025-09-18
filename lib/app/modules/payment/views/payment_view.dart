@@ -107,10 +107,8 @@ class PaymentView extends StatelessWidget {
               final saldo = controller.saldo.value;
               final hutang = controller.hutang.value;
 
-              final disableHutang =
-                  (saldo > hutang) && !(saldo == 0 && hutang == 0);
-              final disableSaldo =
-                  (saldo == 0 && hutang == 0) || saldo < hutang;
+              final disableSaldo = saldo < controller.totalPembayaran.value;
+              final disableHutang = saldo >= controller.totalPembayaran.value;
 
               return Row(
                 children: [

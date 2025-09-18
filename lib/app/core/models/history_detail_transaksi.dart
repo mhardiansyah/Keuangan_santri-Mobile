@@ -10,11 +10,7 @@ class HistoryResponse {
   String msg;
   DataHistory? data;
 
-  HistoryResponse({
-    required this.status,
-    required this.msg,
-    this.data,
-  });
+  HistoryResponse({required this.status, required this.msg, this.data});
 
   factory HistoryResponse.fromJson(Map<String, dynamic> json) {
     return HistoryResponse(
@@ -25,10 +21,10 @@ class HistoryResponse {
   }
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "msg": msg,
-        "data": data?.toJson(),
-      };
+    "status": status,
+    "msg": msg,
+    "data": data?.toJson(),
+  };
 }
 
 class DataHistory {
@@ -57,7 +53,8 @@ class DataHistory {
       totalAmount: json['totalAmount'] ?? 0,
       status: json['status'] ?? '',
       santri: Santri.fromJson(json['santri'] ?? {}),
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => Item.fromJson(e))
               .toList() ??
           [],
@@ -66,14 +63,14 @@ class DataHistory {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "santriId": santriId,
-        "totalAmount": totalAmount,
-        "status": status,
-        "santri": santri.toJson(),
-        "items": items.map((e) => e.toJson()).toList(),
-        "createdAt": createdAt.toIso8601String(),
-      };
+    "id": id,
+    "santriId": santriId,
+    "totalAmount": totalAmount,
+    "status": status,
+    "santri": santri.toJson(),
+    "items": items.map((e) => e.toJson()).toList(),
+    "createdAt": createdAt.toIso8601String(),
+  };
 }
 
 class Item {
@@ -90,6 +87,7 @@ class Item {
     required this.itemId,
     required this.quantity,
     required this.priceAtPurchase,
+    this.item,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -99,16 +97,17 @@ class Item {
       itemId: json['itemId'] ?? 0,
       quantity: json['quantity'] ?? 0,
       priceAtPurchase: json['priceAtPurchase'] ?? 0,
+      item: json['items'] != null ? Items.fromJson(json['items']) : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "historyId": historyId,
-        "itemId": itemId,
-        "quantity": quantity,
-        "priceAtPurchase": priceAtPurchase,
-      };
+    "id": id,
+    "historyId": historyId,
+    "itemId": itemId,
+    "quantity": quantity,
+    "priceAtPurchase": priceAtPurchase,
+  };
 }
 
 class Santri {
@@ -146,13 +145,13 @@ class Santri {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "kelas": kelas,
-        "saldo": saldo,
-        "hutang": hutang,
-        "jurusan": jurusan,
-        "createdAt": createdAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
-      };
+    "id": id,
+    "name": name,
+    "kelas": kelas,
+    "saldo": saldo,
+    "hutang": hutang,
+    "jurusan": jurusan,
+    "createdAt": createdAt.toIso8601String(),
+    "updatedAt": updatedAt.toIso8601String(),
+  };
 }

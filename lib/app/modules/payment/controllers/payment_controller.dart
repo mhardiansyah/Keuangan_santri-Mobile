@@ -52,11 +52,11 @@ class PaymentController extends GetxController {
   }
 
   void autoSelectMethod() {
-    if (saldo.value == 0 && hutang.value == 0) {
-      selectedMethod.value = "Hutang";
-    } else if (saldo.value >= totalPembayaran.value) {
+    if (saldo.value >= totalPembayaran.value) {
+      // Saldo cukup buat bayar total
       selectedMethod.value = "Saldo";
     } else {
+      // Kalau saldo kurang, otomatis ke hutang
       selectedMethod.value = "Hutang";
     }
   }

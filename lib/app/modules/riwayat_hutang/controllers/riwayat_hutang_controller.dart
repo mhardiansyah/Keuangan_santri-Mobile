@@ -65,8 +65,13 @@ class RiwayatHutangController extends GetxController {
     }).toList();
   }
 
+  // int getRank(Santri santri) {
+  //   return allSantriList.indexWhere((s) => s.id == santri.id) + 1;
+  // }
+
   int getRank(Santri santri) {
-    return allSantriList.indexWhere((s) => s.id == santri.id) + 1;
+    final index = allSantriList.indexWhere((s) => s.id == santri.id);
+    return index == -1 ? 0 : index + 1;
   }
 
   Future<List<HistoryDetail>> fetchHistoryBySantr(int santriId) async {

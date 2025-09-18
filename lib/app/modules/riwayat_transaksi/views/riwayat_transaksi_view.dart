@@ -10,7 +10,7 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => RiwayatTransaksiController());
+    // Get.put(RiwayatTransaksiController());
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
