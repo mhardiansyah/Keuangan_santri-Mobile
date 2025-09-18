@@ -10,7 +10,6 @@ import 'package:get_storage/get_storage.dart' as storage;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
-
 import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
@@ -52,67 +51,50 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     updateTime();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       updateTime();
     });
     Future.delayed(Duration.zero, () => focusNode.requestFocus());
-    print("focus node: $focusNode");
     fechtTotalTransaksiHariIni();
-
-    // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-    //   print('timer started');
-    //   print('timer: ${timer.tick}');
-    //   fechtTotalTransaksiHariIni();
-    //   print('total transaksi hari ini: ${totalTransaksiHariIni.value}');
-    // });
   }
 
   void updateTime() {
     final now = DateTime.now();
     currentTime.value = DateFormat('HH:mm:ss').format(now);
     currentDate.value = DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(now);
-
-    // currentTime.value = formattedTime;
-    // currentDate.value = formattedDate;
   }
 
   /// Handler input kartu via keyboard
   KeyEventResult onKeyEvent(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
-      // ambil karakter asli, bukan keyLabel
       final key = event.logicalKey.keyLabel;
-      print("Key pressed: $key");
 
       if (event.logicalKey == LogicalKeyboardKey.enter) {
-        print('input mentah: ${cardInput.value}');
-        print('input mentah uid: ${cardUID.value}');
-
         final uid = cardInput.value.trim();
+
         if (isScanning.value) {
-          print("⏳ Masih scanning, abaikan kartu: $uid");
           cardInput.value = '';
           return KeyEventResult.handled;
         }
         cardUID.value = uid;
-
-        print('Input kartu selesai: $uid');
         cardInput.value = '';
+
         if (currentMode.value == 'Tarik-tunai') {
           _fetchSantri(uid, withTarikSaldo: true);
         } else {
           _fetchSantri(uid, withTarikSaldo: false);
         }
-      } else if (key != null && key.isNotEmpty) {
+      } else if (key.isNotEmpty) {
         cardInput.value += key;
-        print("Key pressed: $key (accumulated: ${cardInput.value})");
       }
     }
     return KeyEventResult.handled;
   }
 
-  /// Dialog untuk cek saldo / tarik tunai
+  /// Dialog utama → handle cekSaldo & tarikTunai
   void dialogCek() {
     santri.value = null; // reset dulu
+
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -121,34 +103,48 @@ class HomeController extends GetxController {
           onKeyEvent: onKeyEvent,
           child: Obx(() {
             final data = santri.value;
+
+            // kalau kartu ketemu + mode tarik-tunai → auto redirect
+            if (data != null && currentMode.value == 'Tarik-tunai') {
+              Future.delayed(const Duration(seconds: 2), () {
+                if (Get.isDialogOpen == true) {
+                  Get.back();
+                  Get.toNamed(
+                    Routes.NOMINAL,
+                    arguments: {
+                      "santriId": data.id,
+                      "santriName": data.name,
+                      "type": TransaksiType.tarikTunai,
+                    },
+                  );
+                }
+              });
+            }
+
             return Container(
-              width: double.infinity,
               constraints: BoxConstraints(
-                minHeight: 200,
+                minHeight: 150,
                 maxWidth: Get.width * 0.6,
+                maxHeight: 250,
               ),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xff1D2938),
                 borderRadius: BorderRadius.circular(16),
                 image:
-                    data != null
-                        ? const DecorationImage(
+                    data != null && currentMode.value == 'cekSaldo'
+                        ? DecorationImage(
                           image: AssetImage("assets/images/Card santri.png"),
                           fit: BoxFit.cover,
                         )
                         : null,
               ),
+
               child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 350,
-                      vertical: 50,
-                    ),
+                  Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (data == null) ...[
                           Image.asset("assets/icons/tapKartu.png", width: 60),
@@ -158,8 +154,7 @@ class HomeController extends GetxController {
                             style: TextStyle(fontSize: 16, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
-                        ] else ...[
-                          const SizedBox(height: 16),
+                        ] else if (currentMode.value == 'cekSaldo') ...[
                           Text(
                             "Saldo ${data.name} tersisa:",
                             style: const TextStyle(
@@ -171,11 +166,23 @@ class HomeController extends GetxController {
                           const SizedBox(height: 12),
                           Text(
                             formatRupiah(data.saldo),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ] else if (currentMode.value == 'Tarik-tunai') ...[
+                          Image.asset(
+                            "assets/icons/kartucek.png",
+                            width: 60,
+                            height: 60,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Kartu ditemukan",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -188,7 +195,7 @@ class HomeController extends GetxController {
                     top: 8,
                     right: 8,
                     child: InkWell(
-                      onTap: Get.back,
+                      onTap: () => Get.back(),
                       borderRadius: BorderRadius.circular(50),
                       child: Container(
                         padding: const EdgeInsets.all(6),
@@ -218,6 +225,18 @@ class HomeController extends GetxController {
     });
   }
 
+  /// Dipanggil tombol "Tarik Tunai"
+  void openTarikTunai() {
+    currentMode.value = 'Tarik-tunai';
+    dialogCek();
+  }
+
+  /// Dipanggil tombol "Cek Saldo"
+  void cekSaldo() {
+    currentMode.value = 'cekSaldo';
+    dialogCek();
+  }
+
   Future fechtTotalTransaksiHariIni() async {
     try {
       final urlRiwayatTransaksi = Uri.parse("$baseUrl/history");
@@ -225,8 +244,6 @@ class HomeController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = historyFromJson(response.body);
-        print('data transaksi: ${data.historyDetail}');
-        print('jumlah data transaksi: ${data.historyDetail.length}');
         final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
         final transaksiHariIni =
@@ -234,7 +251,6 @@ class HomeController extends GetxController {
               final tglTransaksi = DateFormat(
                 'yyyy-MM-dd',
               ).format(transaksi.createdAt.toLocal());
-
               return tglTransaksi == today &&
                   (transaksi.status == 'Lunas' || transaksi.status == 'Hutang');
             }).toList();
@@ -243,26 +259,12 @@ class HomeController extends GetxController {
           0,
           (sum, t) => sum + (t.totalAmount ?? 0),
         );
-
-        print("Total transaksi hari ini: ${totalTransaksiHariIni.value}");
       } else {
         Get.snackbar('Error', 'Gagal mengambil data transaksi');
       }
     } catch (e) {
-      print("Error: $e");
       Get.snackbar('Error', 'Terjadi kesalahan koneksi');
     }
-  }
-
-  /// Ganti mode dialog
-  void openTarikTunai() {
-    currentMode.value = 'Tarik-tunai';
-    dialogCek();
-  }
-
-  void cekSaldo() {
-    currentMode.value = 'cekSaldo';
-    dialogCek();
   }
 
   String formatRupiah(int amount) {
@@ -284,33 +286,15 @@ class HomeController extends GetxController {
     santriHutang.value = 0;
   }
 
-  /// Request API untuk ambil santri
   Future<void> _fetchSantri(
     String nomorKartu, {
     bool withTarikSaldo = false,
   }) async {
-    print('kartu yang di tap $nomorKartu');
-
-    santri.value = null;
-    // santri.refresh();
-    if (withTarikSaldo && currentMode.value != 'Tarik-tunai') {
-      print("❌ Abaikan fetchSantri karena bukan mode Tarik-tunai");
-      return;
-    }
-    if (!withTarikSaldo && currentMode.value != 'cekSaldo') {
-      print("❌ Abaikan fetchSantri karena bukan mode cekSaldo");
-      return;
-    }
-
     final url = Uri.parse(
       "$baseUrl/kartu",
     ).replace(queryParameters: {'noKartu': nomorKartu});
-    print("👉 Fetch dengan nomorKartu='$nomorKartu'");
 
-    if (isScanning.value) {
-      print("❌ Abaikan karena masih proses kartu lain");
-      return;
-    }
+    if (isScanning.value) return;
 
     try {
       isScanning.value = true;
@@ -321,8 +305,6 @@ class HomeController extends GetxController {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print("Response body: ${response.body}");
-        print("Data type: ${jsonResponse['data'].runtimeType}");
 
         if (jsonResponse['data'] != null) {
           final data = jsonResponse['data'];
@@ -330,81 +312,17 @@ class HomeController extends GetxController {
 
           santri.value = kartuData.santri;
           _updateSantriData(kartuData.santri);
-
-          if (withTarikSaldo == true && currentMode.value == 'Tarik-tunai') {
-            _showTarikTunaiDialog(kartuData);
-            return;
-          } else if (withTarikSaldo == false &&
-              currentMode.value == 'cekSaldo') {
-            Get.snackbar(
-              'Info',
-              'Kartu ditemukan: ${kartuData.santri?.name ?? "-"}',
-            );
-          } else {
-            Get.back();
-          }
-
-          return;
+        } else {
+          Get.snackbar('Info', 'Kartu tidak ditemukan');
         }
-        Get.snackbar('Info', 'Kartu tidak ditemukan');
       } else {
         Get.snackbar('Error', 'Gagal mengambil data.');
       }
     } catch (e) {
-      print('Error fetchSantri: $e');
-      Get.snackbar(
-        'Error',
-        'Terjadi kesalahan koneksi.',
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Error', 'Terjadi kesalahan koneksi');
     } finally {
       isScanning.value = false;
     }
-  }
-
-  void _showTarikTunaiDialog(Data kartu) {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          constraints: const BoxConstraints(minHeight: 150),
-          decoration: BoxDecoration(
-            color: const Color(0xff1D2938),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset("assets/icons/kartucek.png", width: 60),
-              const SizedBox(height: 16),
-              const Text(
-                "Kartu ditemukan",
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (Get.isDialogOpen == true) {
-        Get.until((route) => !Get.isDialogOpen!);
-      }
-
-      Get.toNamed(
-        Routes.NOMINAL,
-        arguments: {
-          "santriId": kartu.santri?.id,
-          "santriName": kartu.santri?.name,
-          "type": TransaksiType.topUp,
-        },
-      );
-    });
   }
 
   void _updateSantriData(Santri santriData) {

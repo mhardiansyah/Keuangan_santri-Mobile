@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/pengaturan_toko_controller.dart';
 
 class PengaturanTokoView extends GetView<PengaturanTokoController> {
@@ -58,9 +59,78 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
               ),
 
               // 🛒 Grid Produk
+              // 🛒 Grid Produk
               Expanded(
                 child:
-                    controller.itemsList.isEmpty
+                    controller.isLoading.value
+                        // tampil shimmer loading
+                        ? GridView.builder(
+                          padding: const EdgeInsets.all(16),
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 250,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                childAspectRatio: 0.7,
+                              ),
+                          itemCount: 6, // jumlah skeleton yang mau ditampilkan
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade800,
+                              highlightColor: Colors.grey.shade600,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade800,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade700,
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                top: Radius.circular(12),
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 12,
+                                            width: 80,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Container(
+                                            height: 10,
+                                            width: 50,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Container(
+                                            height: 12,
+                                            width: 60,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                        : controller.itemsList.isEmpty
+                        // kalau tidak ada data
                         ? const Center(
                           child: Text(
                             "Tidak ada hasil",
@@ -71,6 +141,7 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
                             ),
                           ),
                         )
+                        // tampil data produk
                         : GridView.builder(
                           padding: const EdgeInsets.all(16),
                           gridDelegate:

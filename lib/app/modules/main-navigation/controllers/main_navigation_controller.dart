@@ -51,108 +51,98 @@ class MainNavigationController extends GetxController {
   }
 
   void dialogCek() {
-    print('url dari env: $url');
     santri.value = null; // reset dulu
     Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Focus(
-          focusNode: focusNode,
-          onKeyEvent: (node, event) => onKeyEvent(node, event),
-          child: Obx(() {
-            final data = santri.value;
-            return Container(
-              width: double.infinity,
-              constraints: BoxConstraints(
-                minHeight: 200,
-                maxWidth: Get.width * 0.6,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff1D2938),
-                borderRadius: BorderRadius.circular(16),
-                image:
-                    data != null
-                        ? const DecorationImage(
-                          image: AssetImage("assets/images/Card santri.png"),
-                          fit: BoxFit.cover,
-                        )
-                        : null,
-              ),
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 350,
-                      vertical: 50,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (data == null) ...[
-                          Image.asset("assets/icons/tapKartu.png", width: 60),
-                          const SizedBox(height: 16),
-                          const Text(
-                            "Silahkan Tap kartu anda...",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                        ] else ...[
-                          const SizedBox(height: 16),
-                          Text(
-                            "Saldo ${data.name} tersisa:",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
+      Align(
+        alignment: Alignment.center,
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Focus(
+            focusNode: focusNode,
+            onKeyEvent: (node, event) => onKeyEvent(node, event),
+            child: Obx(() {
+              final data = santri.value;
+              return Container(
+                constraints: BoxConstraints(
+                  minHeight: 150,
+                  maxWidth: Get.width * 0.6,
+                  maxHeight: 250, 
+                ),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xff1D2938),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Stack(
+                  children: [
+                    // konten utama center
+                    Center(
+                      child: Column(
+                        mainAxisSize:
+                            MainAxisSize.min, // ✅ tinggi sesuai konten
+                        children: [
+                          if (data == null) ...[
+                            Image.asset("assets/icons/tapKartu.png", width: 60),
+                            const SizedBox(height: 16),
+                            const Text(
+                              "Silahkan Tap kartu anda...",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            formatRupiah(data.saldo),
-                            style: const TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          ] else ...[
+                            Image.asset(
+                              "assets/icons/kartucek.png",
+                              width: 60,
+                              height: 60,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              "Kartu ditemukan",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
 
-                  // Tombol close
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          size: 18,
-                          color: Color(0xff4F39F6),
+                    // tombol close
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: InkWell(
+                        onTap: () => Get.back(),
+                        borderRadius: BorderRadius.circular(50),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Color(0xff4F39F6),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }),
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ),
-      barrierDismissible: false, // sama kaya kode 2
+      barrierDismissible: false,
     ).then((_) => Get.until((route) => !Get.isDialogOpen!));
 
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -194,40 +184,7 @@ class MainNavigationController extends GetxController {
           final kartu = Data.fromJson(data);
           santri.value = kartu.santri;
           _updateSanriData(kartu.santri);
-          Get.dialog(
-            Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                width: double.infinity,
-                constraints: const BoxConstraints(minHeight: 150),
-                decoration: BoxDecoration(
-                  color: const Color(0xff1D2938),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      "assets/icons/kartucek.png",
-                      width: 60,
-                      height: 60,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Kartu di temukan",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            barrierDismissible: false,
-          );
           Future.delayed(const Duration(seconds: 2), () {
-            Get.back();
             Get.toNamed(
               Routes.NOMINAL,
               arguments: {

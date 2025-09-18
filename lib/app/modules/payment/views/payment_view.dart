@@ -107,12 +107,13 @@ class PaymentView extends StatelessWidget {
               final saldo = controller.saldo.value;
               final hutang = controller.hutang.value;
 
-              final disableSaldo = saldo < controller.totalPembayaran.value;
-              final disableHutang = saldo >= controller.totalPembayaran.value;
+              // Kalau hutang lebih besar dari saldo -> pakai hutang
+              final disableSaldo = hutang > saldo;
+              // Kalau saldo lebih besar atau sama dengan hutang -> pakai saldo
+              final disableHutang = saldo >= hutang;
 
               return Row(
                 children: [
-                  // Tombol Hutang
                   Expanded(
                     child: GestureDetector(
                       onTap:

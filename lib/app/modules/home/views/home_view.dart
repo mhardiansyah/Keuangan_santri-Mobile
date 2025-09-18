@@ -8,6 +8,7 @@ import 'package:sakusantri/app/core/models/santri_model.dart';
 import 'package:sakusantri/app/modules/pengaturan_toko/controllers/pengaturan_toko_controller.dart';
 import 'package:sakusantri/app/modules/riwayat_hutang/controllers/riwayat_hutang_controller.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -232,6 +233,86 @@ class HomeView extends GetView<HomeController> {
 
               // Box Total Produk
               Obx(() {
+                if (pengaturanTokoController.isLoading.value) {
+                  return Shimmer.fromColors(
+                    baseColor: Color(0xFF1D2938),
+                    highlightColor: Color(0xFF101828),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1A1F2C),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // KIRI
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 80,
+                                      height: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  width: 100,
+                                  height: 20,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  width: 120,
+                                  height: 36,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(width: 20),
+
+                          // KANAN
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                3,
+                                (index) => Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 final habisItems =
                     pengaturanTokoController.itemsList
                         .where((item) => item.jumlah == 0)
@@ -280,6 +361,85 @@ class HomeView extends GetView<HomeController> {
 
               // Box Total Kasbon
               Obx(() {
+                if (hutangController.isLoading.value) {
+                  return Shimmer.fromColors(
+                    baseColor: Color(0xFF1D2938),
+                    highlightColor: Color(0xFF101828),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1A1F2C),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        children: [
+                          // Kiri
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 100,
+                                      height: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  width: 120,
+                                  height: 22,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  width: 100,
+                                  height: 36,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(width: 20),
+
+                          // Kanan
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                2,
+                                (index) => Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 final top2 = hutangController.allSantriList.take(2).toList();
                 final totalKasbon = hutangController.allSantriList.fold<int>(
                   0,
