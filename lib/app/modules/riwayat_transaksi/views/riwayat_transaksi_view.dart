@@ -10,7 +10,6 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(RiwayatTransaksiController());
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
@@ -63,9 +62,8 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                     final isSelected = controller.selectedKelas.value == kelas;
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: InkWell(
+                      child: GestureDetector(
                         onTap: () => controller.setKelas(kelas),
-                        borderRadius: BorderRadius.circular(30),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
@@ -169,136 +167,144 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
               }
 
               if (controller.allHistoryList.isEmpty) {
-                return RefreshIndicator(
-                  onRefresh: () async => controller.fetchRiwayatTransaksi(),
-                  backgroundColor: Colors.white,
-                  color: const Color(0xFF4634CC),
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: const [
-                      SizedBox(
-                        height: 300,
-                        child: Center(
-                          child: Text(
-                            "Tidak ada data",
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async => controller.fetchRiwayatTransaksi(),
-                backgroundColor: Colors.white,
-                color: const Color(0xFF4634CC),
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.allHistoryFiltered.length,
-                  itemBuilder: (context, index) {
-                    final transaksi = controller.allHistoryFiltered[index];
-                    return InkWell(
-                      onTap:
-                          () => Get.toNamed(
-                            Routes.DETAIL_RIWAYAT_TRANSAKSI,
-                            arguments: transaksi.id,
-                          ),
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 14),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1D2938),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 28,
-                              backgroundColor: getRandomColor(
-                                transaksi.santri.id,
-                              ),
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    return RefreshIndicator(
+                      onRefresh: () async => controller.fetchRiwayatTransaksi(),
+                      backgroundColor: Colors.white,
+                      color: const Color(0xFF4634CC),
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: const [
+                          SizedBox(
+                            height: 300,
+                            child: Center(
                               child: Text(
-                                getInitials(transaksi.santri.name),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                                "Tidak ada data",
+                                style: TextStyle(color: Colors.white70),
                               ),
                             ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    transaksi.santri.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    transaksi.santri.kelas,
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  DateFormat(
-                                    "dd MMM yyyy",
-                                  ).format(transaksi.createdAt),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        transaksi.status == "Lunas"
-                                            ? Colors.green.withOpacity(0.2)
-                                            : Colors.red.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    transaksi.status,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          transaksi.status == "Lunas"
-                                              ? Colors.green
-                                              : Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   },
-                ),
+                );
+              }
+
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  return RefreshIndicator(
+                    onRefresh: () async => controller.fetchRiwayatTransaksi(),
+                    backgroundColor: Colors.white,
+                    color: const Color(0xFF4634CC),
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: controller.allHistoryFiltered.length,
+                      itemBuilder: (context, index) {
+                        final transaksi = controller.allHistoryFiltered[index];
+                        return GestureDetector(
+                          onTap:
+                              () => Get.toNamed(
+                                Routes.DETAIL_RIWAYAT_TRANSAKSI,
+                                arguments: transaksi.id,
+                              ),
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 14),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1D2938),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: getRandomColor(
+                                    transaksi.santri.id,
+                                  ),
+                                  child: Text(
+                                    getInitials(transaksi.santri.name),
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        transaksi.santri.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        transaksi.santri.kelas,
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      DateFormat(
+                                        "dd MMM yyyy",
+                                      ).format(transaksi.createdAt),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            transaksi.status == "Lunas"
+                                                ? Colors.green.withOpacity(0.2)
+                                                : Colors.red.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        transaksi.status,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              transaksi.status == "Lunas"
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               );
             }),
           ),
