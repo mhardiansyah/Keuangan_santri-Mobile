@@ -1,11 +1,6 @@
-// ignore_for_file: override_on_non_overriding_member, unnecessary_null_comparison, unused_import
+// ignore_for_file: override_on_non_overriding_member, unnecessary_null_comparison, unused_import, duplicate_import
 
 import 'dart:convert';
-import 'dart:ffi';
-
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
