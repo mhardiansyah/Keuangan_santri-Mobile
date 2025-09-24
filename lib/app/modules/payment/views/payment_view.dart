@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sakusantri/app/core/types/transaksi_type.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/payment_controller.dart';
 
@@ -105,39 +106,40 @@ class PaymentView extends StatelessWidget {
             Obx(() {
               final saldo = controller.saldo.value;
               final hutang = controller.hutang.value;
-              final isDisableHutang = (saldo > hutang);
 
-              final isDisableSaldo =
-                  (saldo == 0 && hutang == 0) || saldo < hutang;
+              // Kalau hutang lebih besar dari saldo -> pakai hutang
+              final disableSaldo = hutang > saldo;
+              // Kalau saldo lebih besar atau sama dengan hutang -> pakai saldo
+              final disableHutang = saldo >= hutang;
+
               return Row(
                 children: [
                   Expanded(
                     child: GestureDetector(
                       onTap:
-                          isDisableHutang
+                          disableHutang
                               ? null
                               : () => controller.selectMethod("Hutang"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
                           color:
-                              isDisableHutang
-                                  ? const Color(0xFF121821)
-                                  : controller.selectedMethod.value == "Hutang"
+                              controller.selectedMethod.value == "Hutang"
                                   ? const Color(0xFF4634CC)
+                                  : disableHutang
+                                  ? const Color(0xFF121821)
                                   : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: const [
                             Icon(
                               Icons.receipt_long,
                               color: Colors.white,
                               size: 22,
                             ),
-                            const SizedBox(height: 6),
-                            const Text(
+                            SizedBox(height: 6),
+                            Text(
                               "Hutang",
                               style: TextStyle(
                                 color: Colors.white,
@@ -150,33 +152,34 @@ class PaymentView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
+
+                  // Tombol Saldo
                   Expanded(
                     child: GestureDetector(
                       onTap:
-                          isDisableSaldo
+                          disableSaldo
                               ? null
                               : () => controller.selectMethod("Saldo"),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
                           color:
-                              isDisableSaldo
-                                  ? const Color(0xFF121821)
-                                  : controller.selectedMethod.value == "Saldo"
+                              controller.selectedMethod.value == "Saldo"
                                   ? const Color(0xFF4634CC)
+                                  : disableSaldo
+                                  ? const Color(0xFF121821)
                                   : const Color(0xFF1E293B),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: const [
                             Icon(
                               Icons.account_balance_wallet,
                               color: Colors.white,
                               size: 22,
                             ),
-                            const SizedBox(height: 6),
-                            const Text(
+                            SizedBox(height: 6),
+                            Text(
                               "Saldo",
                               style: TextStyle(
                                 color: Colors.white,
@@ -191,6 +194,7 @@ class PaymentView extends StatelessWidget {
                 ],
               );
             }),
+
             const Spacer(),
 
             // Tombol bayar
@@ -205,7 +209,22 @@ class PaymentView extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  controller.transaksi();
+                  if (controller.kartuId == 7) {
+                    Get.toNamed(
+                      Routes.ENTER_PASSCODE,
+                      arguments: {
+                        'method': controller.selectedMethod.value,
+                        'total': controller.totalPembayaran.value,
+                        'nama': controller.name.value,
+                        'passcode': controller.passcode.value,
+                        'santriId': controller.santriId.value,
+                        'type': TransaksiType.pembayaran,
+                      },
+                    );
+                    return;
+                  } else {
+                    controller.transaksi();
+                  }
                   debugPrint(
                     "Metode dipilih: ${controller.selectedMethod.value}",
                   );

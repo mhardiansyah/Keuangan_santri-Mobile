@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class RegisterController extends GetxController {
   var email = ''.obs;
   var password = ''.obs;
   var confirmPassword = ''.obs;
+  var url = dotenv.env['base_url'];
 
   var isPasswordHidden = true.obs;
   var isConfirmPasswordHidden = true.obs;
@@ -77,7 +79,7 @@ class RegisterController extends GetxController {
   void register() async {
     if (validateForm()) {
       // Proses register di sini
-      Uri urlRegister = Uri.parse('http://10.0.2.2:5000/auth/register/');
+      Uri urlRegister = Uri.parse('${url}/auth/register/');
       try {
         var response = await http.post(
           urlRegister,
@@ -86,6 +88,7 @@ class RegisterController extends GetxController {
             'name': name.value,
             'email': email.value,
             'password': password.value,
+            'role': 'Admin',
           }),
         );
         if (response.statusCode == 201) {

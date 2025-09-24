@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -21,7 +22,7 @@ class NotifPembayaranController extends GetxController {
     if (args != null) {
       totalHarga.value = args['total'] ?? 0;
       selectedMethod.value = args['method'] ?? '-';
-      santriName.value = args['santriName'] ?? 'User';
+      santriName.value = args['nama'] ?? 'User';
       santriId.value = args['santriId'] ?? 0;
       transaksiType.value = args['type'] ?? '-';
     }
@@ -62,7 +63,12 @@ class NotifPembayaranController extends GetxController {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        Get.snackbar('Success', 'Checkout berhasil');
+        Get.snackbar(
+          'Success',
+          'Checkout berhasil',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         box.remove('cartItem');
       } else {
         print("Checkout gagal: ${response.body}");

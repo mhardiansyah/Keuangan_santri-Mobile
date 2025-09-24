@@ -65,6 +65,7 @@ class HistoryDetail {
           DateTime.now(), // ganti created_at -> createdAt
     );
   }
+  
 }
 
 class DataItems {

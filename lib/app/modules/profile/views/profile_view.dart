@@ -15,7 +15,7 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
-          onPressed: () => HomeView(),
+          onPressed: () => Get.back(),
         ),
         title: const Text(
           'Profile',
@@ -48,7 +48,7 @@ class ProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           const SizedBox(width: 40),
-                          Expanded(flex: 2, child: buildFormSection()),
+                          Expanded(flex: 2, child: buildFormSection(context)),
                         ],
                       )
                       : Column(
@@ -56,7 +56,7 @@ class ProfileView extends GetView<ProfileController> {
                           const SizedBox(height: 20),
                           profileAvatar(),
                           const SizedBox(height: 32),
-                          buildFormSection(),
+                          buildFormSection(context),
                         ],
                       ),
             ),
@@ -100,7 +100,7 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  Widget buildFormSection() {
+  Widget buildFormSection(BuildContext context) {
     final box = GetStorage();
     final username = box.read('name') ?? "User";
     final email = box.read('email') ?? "Email";
@@ -134,7 +134,88 @@ class ProfileView extends GetView<ProfileController> {
           width: double.infinity,
           child: OutlinedButton(
             onPressed: () {
-              controller.logout();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    backgroundColor: const Color(0xFF0E1220),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.orange,
+                          size: 48,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Yakin mau keluar?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Tutup dialog
+                                controller.logout(); // Panggil fungsi logout
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                              ),
+                              child: const Text(
+                                'Yes',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Tutup dialog
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                              ),
+                              child: const Text(
+                                'No',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: Colors.red),

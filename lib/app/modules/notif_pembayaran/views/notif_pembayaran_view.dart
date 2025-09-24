@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
+import 'package:sakusantri/app/modules/home/controllers/home_controller.dart';
+import 'package:sakusantri/app/modules/pengaturan_toko/controllers/pengaturan_toko_controller.dart';
+import 'package:sakusantri/app/modules/riwayat_hutang/controllers/riwayat_hutang_controller.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/notif_pembayaran_controller.dart';
 
@@ -10,6 +13,10 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
+    final pengaturanTokoController = Get.find<PengaturanTokoController>();
+    final riwayatHutangController = Get.find<RiwayatHutangController>();
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
@@ -180,9 +187,12 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     Get.offAllNamed(Routes.MAIN_NAVIGATION);
-                    controller.checkout(controller.santriId.value);
+                    await controller.checkout(controller.santriId.value);
+                    await homeController.fechtTotalTransaksiHariIni();
+                    await pengaturanTokoController.fetchProduct();
+                    await riwayatHutangController.fetchRiwayatTransaksi();
                     Get.snackbar(
                       "Tersimpan",
                       "Data transaksi berhasil disimpan",

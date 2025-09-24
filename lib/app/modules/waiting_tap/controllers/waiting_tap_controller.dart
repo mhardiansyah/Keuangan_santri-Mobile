@@ -25,12 +25,17 @@ class WaitingTapController extends GetxController {
     super.onInit();
     Future.delayed(Duration.zero, () {
       focusNode.requestFocus();
+      print('focus node jalan di waiting tap: $focusNode');
     });
   }
 
   void onKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final key = event.logicalKey.keyLabel;
+
+      print(
+        ">>> Key pressed: ${event.logicalKey.keyLabel} | debugName: ${event.logicalKey.debugName}",
+      );
 
       if (key == 'Enter') {
         final uid = cardInput.value.trim();
@@ -44,6 +49,8 @@ class WaitingTapController extends GetxController {
   }
 
   void getSantriByUID(String nomor_kartu) async {
+    print(">>> getSantriByUID kepanggil dengan noKartu: $nomor_kartu");
+    print(">>> URL dipanggil: $url/kartu?noKartu=$nomor_kartu");
     Uri urlWaiting = Uri.parse(
       "$url/kartu",
     ).replace(queryParameters: {'noKartu': nomor_kartu});
@@ -53,25 +60,30 @@ class WaitingTapController extends GetxController {
         urlWaiting,
         headers: {"Content-Type": "application/json"},
       );
-
+      print(">>> status code: ${response.statusCode}");
+      print(">>> body: ${response.body}");
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
+        print(">>> jsonResponse: $jsonResponse");
 
         if (jsonResponse['data'] != null) {
           final data = jsonResponse['data'];
           final kartu = Data.fromJson(data);
           santri.value = kartu.santri;
           // addCartItems(kartu.santri.id);
+
+
           if (kartu.santri != null) {
-            Get.offAllNamed(
+            Get.toNamed(
               Routes.PAYMENT,
               arguments: {
                 'id': kartu.santri.id,
                 'nama': kartu.santri.name,
-                // 'passcode': kartu.passcode,
+                'passcode': kartu.passcode,
                 'kelas': kartu.santri.kelas,
                 'saldo': kartu.santri.saldo,
                 'hutang': kartu.santri.hutang,
+                'kartu_id': kartu.id,
               },
             );
             return;
@@ -86,40 +98,6 @@ class WaitingTapController extends GetxController {
     }
   }
 
-  // Future<void> addCartItems(int santriId) async {
-  //   try {
-  //     final box = storage.GetStorage();
-  //     final List<dynamic> cartItems = box.read('cartItem') ?? [];
-
-  //     if (cartItems.isEmpty) {
-  //       Get.snackbar('Error', 'Keranjang kosong');
-  //       return;
-  //     }
-
-  //     for (var item in cartItems) {
-  //       final body = {
-  //         "santriId": santriId,
-  //         "itemId": item['product']['id'],
-  //         "quantity": item['jumlah'],
-  //       };
-
-  //       final response = await http.post(
-  //         Uri.parse("$url/cart"),
-  //         headers: {"Content-Type": "application/json"},
-  //         body: jsonEncode(body),
-  //       );
-
-  //       if (response.statusCode != 201 && response.statusCode != 200) {
-  //         print("Gagal tambah cart: ${response.body}");
-  //       }
-  //     }
-
-  //     Get.snackbar('Success', 'Semua item berhasil ditambahkan ke keranjang');
-  //   } catch (e) {
-  //     print("Error fungsi addCartItems: $e");
-  //   }
-  // }
-
   @override
   void onReady() {
     super.onReady();
@@ -127,6 +105,7 @@ class WaitingTapController extends GetxController {
 
   @override
   void onClose() {
+    focusNode.dispose();
     super.onClose();
   }
 

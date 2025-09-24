@@ -7,19 +7,20 @@ import 'package:sakusantri/app/modules/cart/views/cart_view.dart';
 import 'package:sakusantri/app/modules/history/views/history_view.dart';
 import 'package:sakusantri/app/modules/home/views/home_view.dart';
 import 'package:sakusantri/app/modules/main-navigation/controllers/main_navigation_controller.dart';
+import 'package:sakusantri/app/modules/pengaturan_toko/views/pengaturan_toko_view.dart';
 import 'package:sakusantri/app/modules/profile/views/profile_view.dart';
 import 'package:sakusantri/app/modules/riwayat_transaksi/views/riwayat_transaksi_view.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class MainNavigationView extends GetView<MainNavigationController> {
   MainNavigationView({super.key});
 
-  @override
   final pages = [
     HomeView(),
     CartView(),
     SizedBox(), // Placeholder for Top up
     RiwayatTransaksiView(),
-    ProfileView(),
+    PengaturanTokoView(),
   ];
 
   @override
@@ -83,8 +84,8 @@ class MainNavigationView extends GetView<MainNavigationController> {
                       isLandscape: isLandscape,
                     ),
                     _buildNavItem(
-                      Icons.person,
-                      "Profile",
+                      Icons.settings,
+                      "Pengaturan Toko",
                       4,
                       isLandscape: isLandscape,
                     ),

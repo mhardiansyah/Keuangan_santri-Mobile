@@ -1,5 +1,3 @@
-// ignore_for_file: override_on_non_overriding_member, unnecessary_null_comparison, unused_import, duplicate_import
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakusantri/app/core/models/cart_models.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
-import 'package:sakusantri/app/core/models/santri_model.dart';
 
 class CartController extends GetxController {
-  //TODO: Implement CartController
-
   final count = 0.obs;
   var cartItems = <CartModels>[].obs;
   final box = GetStorage();
@@ -22,91 +17,108 @@ class CartController extends GetxController {
   List<Items> allItems = [];
   var itemsList = <Items>[].obs;
   var barcode = ''.obs;
-  final focusNode = FocusNode();
+  final searchController = TextEditingController();
+
+  final focusNode = FocusNode(); // scanner
+  final searchFocusNode = FocusNode(); // search bar
 
   @override
   void onInit() {
     super.onInit();
-    Future.delayed(Duration.zero, () => focusNode.requestFocus());
-    print('focusNode: $focusNode');
+
+    // Auto refocus ke scanner kalau search kosong
+    focusNode.addListener(() {
+      if (!focusNode.hasFocus && searchKeyword.value.isEmpty) {
+        Future.delayed(const Duration(milliseconds: 50), () {
+          focusNode.requestFocus();
+        });
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.requestFocus();
+    });
+
     fetchProduct();
   }
 
-  KeyEventResult onkeyEvent(FocusNode node, KeyEvent event) {
+  /// Event dari KeyboardListener (scanner)
+  void onKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final char = event.character ?? event.logicalKey.keyLabel;
-      print("Key pressed: '$char' | logicalKey: ${event.logicalKey.debugName}");
 
       if (event.logicalKey == LogicalKeyboardKey.enter) {
-        print("Full barcode scanned: '${barcode.value}'");
         scanBarcode(barcode.value.trim());
         barcode.value = '';
       } else if (char.isNotEmpty && char.length == 1) {
         barcode.value += char;
       }
     }
-    return KeyEventResult.handled;
   }
 
-  void scanBarcode(String barcode) {
-    final product = allItems.firstWhereOrNull(
-      (item) => item.barcode == barcode,
-    );
-    if (product != null) {
-      addCart(product);
+  /// Akhiri search dan kembalikan fokus ke scanner
+  void endSearch() {
+    searchKeyword.value = '';
+    itemsList.clear();
+    Future.delayed(const Duration(milliseconds: 50), () {
+      focusNode.requestFocus();
+    });
+  }
 
+  void scanBarcode(String code) {
+    final product = allItems.firstWhereOrNull((item) => item.barcode == code);
+
+    if (product == null) {
+      Get.snackbar(
+        'Error',
+        'Produk dengan barcode $code tidak ditemukan',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } else if (product.jumlah == 0) {
+      Get.snackbar(
+        'Produk Habis',
+        '${product.nama} sudah habis stoknya',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } else {
+      addCart(product);
       Get.snackbar(
         'Success',
         'Added ${product.nama} ke keranjang',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-    } else {
-      Get.snackbar(
-        'Error',
-        'Produk dengan barcode $barcode tidak ditemukan',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      print("Product not found: $barcode");
     }
   }
 
   void fetchProduct() async {
     try {
-      var urlItems = Uri.parse("${url}/items");
+      var urlItems = Uri.parse("$url/items");
       final response = await http.get(urlItems);
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonresponse = json.decode(response.body);
-        print(json.decode(response.body));
-
         final List<dynamic> data = jsonresponse['data'];
-        print('data mentah : $data');
-
         allItems = data.map((item) => Items.fromJson(item)).toList();
         filterProducts();
       } else {
-        print("Failed with status code: ${response.statusCode}");
         Get.snackbar('Error', 'Failed to fetch products');
       }
     } catch (e) {
-      print(e);
       Get.snackbar(
         "Error",
         "Failed to fetch products $e",
         backgroundColor: Colors.red,
       );
-    } finally {}
+    }
   }
 
   void filterProducts() {
     final keyword = searchKeyword.value.toLowerCase();
     itemsList.assignAll(
       allItems.where((item) {
-        final machtkeyword = (item.nama).toLowerCase().contains(keyword);
-
-        return machtkeyword;
+        return item.jumlah > 0 && (item.nama).toLowerCase().contains(keyword);
       }),
     );
   }
@@ -126,16 +138,25 @@ class CartController extends GetxController {
   }
 
   void incjumlah(CartModels item) {
-    item.jumlah += 1;
-    cartItems.refresh();
+    final maxStock = item.product.jumlah;
+
+    if (item.jumlah < maxStock) {
+      item.jumlah += 1;
+      cartItems.refresh();
+    } else {
+      Get.snackbar(
+        'Stok Habis',
+        '${item.product.nama} stok maksimal ${item.product.jumlah}',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+    }
   }
 
   void decjumlah(CartModels item) {
     if (item.jumlah > 1) {
       item.jumlah -= 1;
       cartItems.refresh();
-    } else {
-      // removeCart(item.product);
     }
   }
 
@@ -155,10 +176,6 @@ class CartController extends GetxController {
   int get totalPembayaran => totalHargaPokok + pajak;
 
   void saveDataPayment() {
-    // Implement save data logic here
-    if (cartItems == null) {
-      Get.snackbar('Error', 'Keranjang kosong');
-    }
     box.write('totalPembayaran', totalPembayaran);
     box.write(
       'cartItem',
@@ -171,7 +188,16 @@ class CartController extends GetxController {
           )
           .toList(),
     );
+  }
 
-    print('isi dari cart (disimpan ke storage): ${box.read('cartItem')}');
+  @override
+  void onClose() {
+    focusNode.dispose();
+    searchFocusNode.dispose();
+    print('Dispose focus node');
+    print('Dispose search focus node');
+    print("di pause $focusNode");
+
+    super.onClose();
   }
 }

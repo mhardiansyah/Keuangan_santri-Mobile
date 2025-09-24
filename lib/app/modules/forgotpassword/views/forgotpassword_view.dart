@@ -26,7 +26,10 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
             // Form di tengah
             Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 32,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 400),
                   child: Column(
@@ -36,10 +39,7 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
                       const SizedBox(height: 40),
 
                       // Logo
-                      Image.asset(
-                        'assets/icons/mysakudark.png',
-                        height: 60,
-                      ),
+                      Image.asset('assets/icons/mysakudark.png', height: 60),
                       const SizedBox(height: 32),
 
                       // Title (lowercase sesuai desain)
@@ -56,10 +56,7 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
                       // Subtitle
                       Text(
                         "Selamat datang di MySaku",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[400],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[400]),
                       ),
                       const SizedBox(height: 32),
 
@@ -103,20 +100,38 @@ class ForgotpasswordView extends GetView<ForgotpasswordController> {
                       const SizedBox(height: 32),
 
                       // Submit Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: controller.submitEmail,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4C3FE4),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                      Obx(
+                        () => SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed:
+                                controller.isLoading.value
+                                    ? null
+                                    : () async {
+                                      controller.isLoading.value = true;
+                                      await controller.forrgotPassword();
+                                      controller.isLoading.value = false;
+                                    },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF4C3FE4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              disabledBackgroundColor: const Color(0xFF24198D),
                             ),
-                          ),
-                          child: const Text(
-                            "kirim",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            child:
+                                controller.isLoading.value
+                                    ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                    : const Text(
+                                      "kirim",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                           ),
                         ),
                       ),

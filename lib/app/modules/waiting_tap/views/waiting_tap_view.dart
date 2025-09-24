@@ -81,4 +81,6 @@ class WaitingTapView extends GetView<WaitingTapController> {
       ),
     );
   }
+
+  
 }

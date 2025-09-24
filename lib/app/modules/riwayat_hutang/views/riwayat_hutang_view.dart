@@ -329,14 +329,25 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
     );
   }
 
+  // String getInitials(String name) {
+  //   if (name.isEmpty) return "";
+  //   List<String> parts = name.split(" ");
+  //   if (parts.length == 1) {
+  //     return parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
+  //   } else {
+  //     return (parts[0][0] + parts[1][0]).toUpperCase();
+  //   }
+  // }
+
   String getInitials(String name) {
     if (name.isEmpty) return "";
-    List<String> parts = name.split(" ");
+    List<String> parts = name.trim().split(" ");
     if (parts.length == 1) {
       return parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
-    } else {
+    } else if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
+    return "";
   }
 
   Color getRandomColor(int seed) {
