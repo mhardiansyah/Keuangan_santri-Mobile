@@ -13,13 +13,17 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0E1220),
-        elevation: 0,
         title: const Text(
-          "Pengaturan Toko",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          'Pengaturan Toko',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
+        backgroundColor: const Color(0xFF0E1220),
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle, color: Colors.amber, size: 30),
@@ -36,24 +40,33 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
           backgroundColor: Colors.white,
           color: Colors.amber,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔍 Search Field
+              // 🔍 Search Bar
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
                 ),
-                child: TextField(
-                  onChanged: (val) {
-                    controller.searchKeyword.value = val;
-                    controller.filterProducts();
-                  },
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search, color: Colors.white),
-                    hintText: 'Masukkan nama produk',
-                    hintStyle: TextStyle(color: Colors.white54),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: TextField(
+                    onChanged: (val) {
+                      controller.searchKeyword.value = val;
+                      controller.filterProducts();
+                    },
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search, color: Colors.grey),
+                      hintText: 'Masukkan nama produk',
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
                   ),
                 ),
               ),

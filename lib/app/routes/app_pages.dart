@@ -59,7 +59,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.ISI_DATA;
+  static const INITIAL = Routes.MAIN_NAVIGATION;
 
   static final routes = [
     GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
