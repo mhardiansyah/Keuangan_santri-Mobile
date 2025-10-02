@@ -177,32 +177,68 @@ class NotifPembayaranView extends GetView<NotifPembayaranController> {
                 ),
               ),
               const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5B3FFF),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5B3FFF),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      disabledBackgroundColor: const Color(0xFF4b30e6),
                     ),
-                  ),
-                  onPressed: () async {
-                    Get.offAllNamed(Routes.MAIN_NAVIGATION);
-                    await controller.checkout(controller.santriId.value);
-                    await homeController.fechtTotalTransaksiHariIni();
-                    await pengaturanTokoController.fetchProduct();
-                    await riwayatHutangController.fetchRiwayatTransaksi();
-                    Get.snackbar(
-                      "Tersimpan",
-                      "Data transaksi berhasil disimpan",
-                      backgroundColor: Colors.green,
-                      colorText: Colors.white,
-                    );
-                  },
-                  child: const Text(
-                    "Selesai",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    onPressed:
+                        controller.isLoading.value
+                            ? null
+                            : () async {
+                              controller.isLoading.value = true;
+
+                              try {
+                                await controller.checkout(
+                                  controller.santriId.value,
+                                );
+                                await homeController
+                                    .fechtTotalTransaksiHariIni();
+                                await pengaturanTokoController.fetchProduct();
+                                await riwayatHutangController
+                                    .fetchRiwayatTransaksi();
+
+                                Get.snackbar(
+                                  "Tersimpan",
+                                  "Data transaksi berhasil disimpan",
+                                  backgroundColor: Colors.green,
+                                  colorText: Colors.white,
+                                );
+
+                                Get.offAllNamed(Routes.MAIN_NAVIGATION);
+                              } catch (e) {
+                                Get.snackbar(
+                                  "Error",
+                                  "Gagal menyimpan transaksi",
+                                );
+                              } finally {
+                                controller.isLoading.value = false;
+                              }
+                            },
+                    child:
+                        controller.isLoading.value
+                            ? const SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : const Text(
+                              "Selesai",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                   ),
                 ),
               ),

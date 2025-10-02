@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakusantri/app/core/models/cart_models.dart';
 import 'package:sakusantri/app/core/models/items_model.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 
 class CartController extends GetxController {
   final count = 0.obs;
@@ -160,8 +161,9 @@ class CartController extends GetxController {
     }
   }
 
-  void clear() {
-    saveDataPayment();
+  void goToWaitingTap() {
+    final paymentData = saveDataPayment();
+    Get.offAllNamed(Routes.WAITING_TAP, arguments: paymentData);
     cartItems.clear();
   }
 
@@ -175,19 +177,23 @@ class CartController extends GetxController {
 
   int get totalPembayaran => totalHargaPokok + pajak;
 
-  void saveDataPayment() {
-    box.write('totalPembayaran', totalPembayaran);
-    box.write(
-      'cartItem',
-      cartItems
-          .map(
-            (e) => {
-              "product": {"id": e.product.id, "nama": e.product.nama},
-              "jumlah": e.jumlah,
-            },
-          )
-          .toList(),
-    );
+  Map<String, dynamic> saveDataPayment() {
+    return {
+      'totalHargaPokok': totalHargaPokok,
+      'pajak': pajak,
+      'totalPembayaran': totalPembayaran,
+      'cartItems':
+          cartItems
+              .map(
+                (element) => {
+                  'itemId': element.product.id,
+                  'namaProduk': element.product.nama,
+                  'quantity': element.jumlah.toInt(),
+                  'harga': element.product.harga,
+                },
+              )
+              .toList(),
+    };
   }
 
   @override
@@ -197,7 +203,7 @@ class CartController extends GetxController {
     print('Dispose focus node');
     print('Dispose search focus node');
     print("di pause $focusNode");
-
+    print("di pause $searchFocusNode");
     super.onClose();
   }
 }

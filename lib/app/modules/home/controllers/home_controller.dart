@@ -255,15 +255,31 @@ class HomeController extends GetxController {
                   (transaksi.status == 'Lunas' || transaksi.status == 'Hutang');
             }).toList();
 
-        totalTransaksiHariIni.value = transaksiHariIni.fold(
-          0,
-          (sum, t) => sum + (t.totalAmount ?? 0),
-        );
+        totalTransaksiHariIni.value = transaksiHariIni.fold(0, (sum, t) {
+          final totalItem = t.dataitems.fold(
+            0,
+            (s, item) => s + (item.quantity ?? 0),
+          );
+          final pajak = totalItem * 500;
+          return sum + (t.totalAmount ?? 0) + pajak;
+        });
+
+        print('Total transaksi hari ini: ${totalTransaksiHariIni.value}');
       } else {
-        Get.snackbar('Error', 'Gagal mengambil data transaksi');
+        Get.snackbar(
+          'Error',
+          'Gagal mengambil data transaksi',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan koneksi');
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan koneksi',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

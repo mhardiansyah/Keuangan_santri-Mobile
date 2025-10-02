@@ -69,6 +69,7 @@ class ProfileView extends GetView<ProfileController> {
   Widget profileAvatar() {
     final box = GetStorage();
     final username = box.read('name') ?? "User";
+    
     return Stack(
       alignment: Alignment.bottomRight,
       children: [

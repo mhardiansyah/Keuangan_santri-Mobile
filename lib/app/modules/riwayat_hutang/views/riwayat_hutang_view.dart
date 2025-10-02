@@ -303,24 +303,24 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
                 ),
               ),
               const SizedBox(height: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.red[200],
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Text(
-                  "Bayar",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 12,
+              //     vertical: 6,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: Colors.red[200],
+              //     borderRadius: BorderRadius.circular(14),
+              //   ),
+              //   child: const Text(
+              //     "Bayar",
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //       color: Colors.white,
+              //       fontSize: 12,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(width: 12),

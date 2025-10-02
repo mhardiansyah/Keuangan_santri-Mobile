@@ -17,7 +17,6 @@ class NominalController extends GetxController {
   var santriName = ''.obs;
   var transaksiType = ''.obs;
 
-  // final quickAmounts = [50000, 100000, 70000, 100000, 300000, 500000];
   final quickAmounts = [
     50000,
     100000,
@@ -154,7 +153,7 @@ class NominalController extends GetxController {
         );
       } else {
         final error = jsonDecode(response.body);
-        Get.snackbar("Error", "Pembayaran Gagal");
+        Get.snackbar("Error", "Pembayaran Gagal atau uang tidak mencukupi", backgroundColor: Colors.red, colorText: Colors.white);
         print('status: ${response.statusCode}');
         print('Error: ${error['msg']}');
       }

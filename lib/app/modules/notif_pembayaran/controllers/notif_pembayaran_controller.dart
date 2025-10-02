@@ -13,6 +13,14 @@ class NotifPembayaranController extends GetxController {
   var santriId = 0.obs;
   var transaksiType = ''.obs;
   var url = dotenv.env['base_url'];
+  var isLoading = false.obs;
+
+
+  // data dariarguments cart
+  var cartItems = [].obs;
+  var totalHargaPokok = 0.obs;
+  var pajak = 0.obs;
+  var totalPembayaran = 0.obs;
 
   @override
   void onInit() {
@@ -25,17 +33,25 @@ class NotifPembayaranController extends GetxController {
       santriName.value = args['nama'] ?? 'User';
       santriId.value = args['santriId'] ?? 0;
       transaksiType.value = args['type'] ?? '-';
+      // cart
+      cartItems.assignAll(args['cartItems'] ?? []);
+      totalHargaPokok.value = args['totalHargaPokok'] ?? 0;
+      pajak.value = args['pajak'] ?? 0;
+      totalPembayaran.value = args['totalPembayaran'] ?? 0;
     }
   }
 
   Future<void> checkout(int santriId) async {
     try {
-      final box = GetStorage();
-      final List<dynamic> cartItems = box.read('cartItem') ?? [];
       print("Items di cart: $cartItems");
 
       if (cartItems.isEmpty) {
-        Get.snackbar('Error', 'Keranjang kosong');
+        Get.snackbar(
+          'Error',
+          'Keranjang kosong',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
         return;
       }
 
@@ -45,8 +61,8 @@ class NotifPembayaranController extends GetxController {
             cartItems
                 .map(
                   (item) => {
-                    "itemId": item['product']['id'],
-                    "quantity": item['jumlah'],
+                    "itemId": item['itemId'],
+                    "quantity": item['quantity'],
                   },
                 )
                 .toList(),
@@ -69,10 +85,14 @@ class NotifPembayaranController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        box.remove('cartItem');
       } else {
         print("Checkout gagal: ${response.body}");
-        Get.snackbar('Error', 'Checkout gagal');
+        Get.snackbar(
+          'Error',
+          'Checkout gagal',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
       print("Error fungsi checkout: $e");

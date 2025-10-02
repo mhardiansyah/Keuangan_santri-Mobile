@@ -49,8 +49,8 @@ class CartView extends GetView<CartController> {
                   iscartEmpty
                       ? null
                       : () {
-                        Get.offAllNamed(Routes.WAITING_TAP);
-                        controller.saveDataPayment();
+                        controller.goToWaitingTap();
+                        // controller.saveDataPayment();
                       },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -225,9 +225,7 @@ class CartView extends GetView<CartController> {
                                                                 ),
                                                         isDisabled:
                                                             item.jumlah >=
-                                                            item
-                                                                .product
-                                                                .jumlah, 
+                                                            item.product.jumlah,
                                                       ),
 
                                                       Padding(
