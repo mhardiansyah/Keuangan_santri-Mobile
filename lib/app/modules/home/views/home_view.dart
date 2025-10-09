@@ -326,35 +326,42 @@ class HomeView extends GetView<HomeController> {
                         .toList();
 
                 // kalau ada produk habis -> tampilkan list
-                if (habisItems.isNotEmpty) {
-                  return _buildInfoBox(
-                    iconBg: const Color(0xFFCDF6F4),
-                    title: "Total Produk",
-                    value: pengaturanTokoController.itemsList.length.toString(),
-                    items: habisItems,
-                    iconPath: 'assets/icons/kasbon.png',
-                  );
-                }
+                // if (habisItems.isNotEmpty) {
+                //   return _buildInfoBox(
+                //     iconBg: const Color(0xFFCDF6F4),
+                //     title: "Total Produk",
+                //     value: pengaturanTokoController.itemsList.length.toString(),
+                //     items: habisItems,
+                //     iconPath: 'assets/icons/kasbon.png',
+                //   );
+                // }
+                return _buildInfoBox(
+                  iconBg: const Color(0xFFCDF6F4),
+                  title: "Total Produk",
+                  value: pengaturanTokoController.itemsList.length.toString(),
+                  items: habisItems,
+                  iconPath: 'assets/icons/kasbon.png',
+                );
 
                 // kalau kosong -> tampilkan teks center
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A1F2C),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Tidak ada produk kosong ✅",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                );
+                // return Container(
+                //   margin: const EdgeInsets.only(bottom: 16),
+                //   padding: const EdgeInsets.all(20),
+                //   decoration: BoxDecoration(
+                //     color: const Color(0xFF1A1F2C),
+                //     borderRadius: BorderRadius.circular(16),
+                //   ),
+                //   child: const Center(
+                //     child: Text(
+                //       "Tidak ada produk kosong ✅",
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.w600,
+                //       ),
+                //     ),
+                //   ),
+                // );
               }),
 
               const SizedBox(height: 16),
@@ -635,6 +642,25 @@ class HomeView extends GetView<HomeController> {
           ),
 
           const SizedBox(width: 20),
+          if (items != null && items.isEmpty)
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 55),
+                    child: Text(
+                      "Tidak ada produk kosong di toko ini.",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
           // --- KANAN (Barang Yang Habis)
           if (items != null && items.isNotEmpty)

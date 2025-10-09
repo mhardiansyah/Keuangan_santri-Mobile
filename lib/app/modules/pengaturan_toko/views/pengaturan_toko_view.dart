@@ -59,7 +59,6 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
               ),
 
               // 🛒 Grid Produk
-              // 🛒 Grid Produk
               Expanded(
                 child:
                     controller.isLoading.value
@@ -154,6 +153,11 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
                           itemCount: controller.itemsList.length,
                           itemBuilder: (context, index) {
                             final product = controller.itemsList[index];
+                            final restockData = controller.getRestockHistory(
+                              product.id,
+                            );
+                            final plusBadge =
+                                restockData != null ? restockData['jumlah'] : 0;
 
                             return Stack(
                               children: [
@@ -207,20 +211,59 @@ class PengaturanTokoView extends GetView<PengaturanTokoController> {
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
-                                              Text(
-                                                "Stok: ${product.jumlah}",
-                                                style: TextStyle(
-                                                  color:
-                                                      product.jumlah == 0
-                                                          ? Colors.grey
-                                                          : product.jumlah <= 10
-                                                          ? Colors.red
-                                                          : product.jumlah <= 20
-                                                          ? Colors.orange
-                                                          : Colors.green,
-                                                  fontSize: 12,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Stok: ${product.jumlah}",
+                                                    style: TextStyle(
+                                                      color:
+                                                          product.jumlah == 0
+                                                              ? Colors.grey
+                                                              : product
+                                                                      .jumlah <=
+                                                                  10
+                                                              ? Colors.red
+                                                              : product
+                                                                      .jumlah <=
+                                                                  20
+                                                              ? Colors.orange
+                                                              : Colors.green,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  if (plusBadge > 0) ...[
+                                                    const SizedBox(width: 4),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 6,
+                                                            vertical: 2,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .greenAccent
+                                                            .withOpacity(0.2),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      child: Text(
+                                                        "+$plusBadge",
+                                                        style: const TextStyle(
+                                                          color:
+                                                              Colors
+                                                                  .greenAccent,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 11,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ],
                                               ),
+
                                               const SizedBox(height: 4),
                                               Text(
                                                 formatRupiah(product.harga),

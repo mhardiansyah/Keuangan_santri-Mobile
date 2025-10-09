@@ -6,6 +6,7 @@ class Items {
   int jumlah;
   String gambar;
   String? barcode;
+  int? jumlahRestock;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -17,6 +18,7 @@ class Items {
     required this.jumlah,
     required this.gambar,
     required this.barcode,
+    required this.jumlahRestock,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -25,10 +27,11 @@ class Items {
     id: json["id"] ?? 0,
     nama: json["nama"] ?? '',
     harga: json["harga"] ?? 0,
-    kategoriId: json["kategori_id"],
+    kategoriId: json["kategoriId"] ?? json["kategori_id"],
     jumlah: json["jumlah"] ?? 0,
     gambar: json["gambar"] ?? '',
     barcode: json["barcode"] ?? '',
+    jumlahRestock: json["jumlahRestock"] ?? 0,
     createdAt: DateTime.tryParse(json["created_at"] ?? '') ?? DateTime.now(),
     updatedAt: DateTime.tryParse(json["updated_at"] ?? '') ?? DateTime.now(),
   );

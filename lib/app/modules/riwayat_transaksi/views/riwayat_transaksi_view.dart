@@ -100,6 +100,7 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
             child: Obx(() {
               if (controller.isLoading.value) {
                 return ListView.builder(
+                  key: ValueKey(controller.selectedKelas.value),
                   itemCount: 6,
                   itemBuilder: (context, index) {
                     return Shimmer.fromColors(
@@ -193,22 +194,32 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
                 backgroundColor: Colors.white,
                 color: const Color(0xFF4634CC),
                 child: ListView.builder(
+                  key: ValueKey(controller.selectedKelas.value),
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: controller.allHistoryFiltered.length,
                   itemBuilder: (context, index) {
-                    // 🔥 Guard biar gak RangeError
                     if (index >= controller.allHistoryFiltered.length) {
                       return const SizedBox.shrink();
                     }
 
                     final transaksi = controller.allHistoryFiltered[index];
-                    return GestureDetector(
-                      onTap:
-                          () => Get.toNamed(
+                    return InkWell(
+                      onTap: () async {
+                        FocusScope.of(context).unfocus();
+
+                        await Future.delayed(
+                          const Duration(milliseconds: 50),
+                        ); // kasih jeda dikit
+
+                        if (context.mounted) {
+                          Get.toNamed(
                             Routes.DETAIL_RIWAYAT_TRANSAKSI,
                             arguments: transaksi.id,
-                          ),
+                          );
+                        }
+                      },
+
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 14),
                         padding: const EdgeInsets.all(12),
