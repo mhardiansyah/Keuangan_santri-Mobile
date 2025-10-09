@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:sakusantri/app/core/models/history_transaksi_model.dart';
 
 class RiwayatTransaksiController extends GetxController {
-  var selectedKelas = 'All'.obs;
+  var selectedKelas = 'Semua'.obs;
   var searchQuery = ''.obs;
   var url = dotenv.env['base_url'];
   var allHistoryList = <HistoryDetail>[].obs;
@@ -49,7 +49,7 @@ class RiwayatTransaksiController extends GetxController {
     allHistoryFiltered.assignAll(
       allHistoryList.where((item) {
         final matchKelas =
-            (kelas == 'All') ? true : convertKelas(item.santri.kelas) == kelas;
+            (kelas == 'Semua') ? true : convertKelas(item.santri.kelas) == kelas;
 
         final matchQuery = item.santri.name.toLowerCase().contains(query);
 

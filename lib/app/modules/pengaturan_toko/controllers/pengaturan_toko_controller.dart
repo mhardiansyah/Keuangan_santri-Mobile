@@ -371,4 +371,34 @@ class PengaturanTokoController extends GetxController {
       Get.snackbar("Error", "Fetch kategori gagal: $e");
     }
   }
+  Future<void> tambahStok(Items product) async {
+  try {
+    final newStock = product.jumlah + 1;
+
+    final uri = Uri.parse("${url}/items/update/${product.id}");
+    final response = await http.put(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "nama": product.nama,
+        "harga": product.harga,
+        "jumlah": newStock,
+        "barcode": product.barcode,
+        "kategoriId": product.kategoriId,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      product.jumlah = newStock; // update lokal
+      itemsList.refresh(); // refresh UI
+      Get.snackbar("Berhasil", "Stok ${product.nama} ditambah 1",
+          backgroundColor: Colors.green, colorText: Colors.white);
+    } else {
+      Get.snackbar("Error", "Gagal update stok", backgroundColor: Colors.red);
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Gagal menambah stok: $e", backgroundColor: Colors.red);
+  }
+}
+
 }

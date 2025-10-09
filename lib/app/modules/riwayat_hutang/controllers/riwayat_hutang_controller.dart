@@ -8,7 +8,7 @@ import 'package:sakusantri/app/core/models/santri_model.dart';
 
 class RiwayatHutangController extends GetxController {
   var searchQuery = "".obs;
-  var selectedKelas = "ALL".obs;
+  var selectedKelas = "Semua".obs;
   var isLoading = false.obs;
   var allSantriList = <Santri>[].obs;
   var allSantriFiltered = <Santri>[].obs;
@@ -60,7 +60,7 @@ class RiwayatHutangController extends GetxController {
     return allSantriList.where((e) {
       final matchesQuery = e.name.toLowerCase().contains(query);
       final kelasSantri = convertKelas(e.kelas);
-      final matchesKelas = (kelasFilter == "ALL" || kelasSantri == kelasFilter);
+      final matchesKelas = (kelasFilter == "Semua" || kelasSantri == kelasFilter);
       return matchesQuery && matchesKelas;
     }).toList();
   }
