@@ -41,7 +41,10 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
             children: [
               // 🔍 Search Bar
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   height: 46,
@@ -68,264 +71,273 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
               Obx(
                 () => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: ['Semua', 'X', 'XI', 'XII'].map((kelas) {
-                    final isSelected = controller.selectedKelas.value == kelas;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: GestureDetector(
-                        onTap: () => controller.setKelas(kelas),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFF4634CC)
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Text(
-                            kelas,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? Colors.white
-                                  : const Color(0xFF4634CC),
-                              fontWeight: FontWeight.bold,
+                  children:
+                      ['Semua', 'X', 'XI', 'XII'].map((kelas) {
+                        final isSelected =
+                            controller.selectedKelas.value == kelas;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: GestureDetector(
+                            onTap: () => controller.setKelas(kelas),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSelected
+                                        ? const Color(0xFF4634CC)
+                                        : Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Text(
+                                kelas,
+                                style: TextStyle(
+                                  color:
+                                      isSelected
+                                          ? Colors.white
+                                          : const Color(0xFF4634CC),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      }).toList(),
                 ),
               ),
 
               const SizedBox(height: 16),
 
-          // 📋 List Riwayat
-          Expanded(
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return ListView.builder(
-                  key: ValueKey(controller.selectedKelas.value),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return Shimmer.fromColors(
-                      baseColor: const Color(0xFF1D2938),
-                      highlightColor: const Color(0xFF101828),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          height: 14,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Container(
-                                          width: 100,
-                                          height: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Container(
-                                width: double.infinity,
-                                height: 12,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-
-              if (controller.allHistoryFiltered.isEmpty) {
-                return RefreshIndicator(
-                  onRefresh: () async => controller.fetchRiwayatTransaksi(),
-                  backgroundColor: Colors.white,
-                  color: const Color(0xFF4634CC),
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: const [
-                      SizedBox(
-                        height: 300,
-                        child: Center(
-                          child: Text(
-                            "Tidak ada data",
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async => controller.fetchRiwayatTransaksi(),
-                backgroundColor: Colors.white,
-                color: const Color(0xFF4634CC),
-                child: ListView.builder(
-                  key: ValueKey(controller.selectedKelas.value),
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.allHistoryFiltered.length,
-                  itemBuilder: (context, index) {
-                    if (index >= controller.allHistoryFiltered.length) {
-                      return const SizedBox.shrink();
-                    }
-
-                    final transaksi = controller.allHistoryFiltered[index];
-                    return InkWell(
-                      onTap: () async {
-                        FocusScope.of(context).unfocus();
-
-                        await Future.delayed(
-                          const Duration(milliseconds: 50),
-                        ); // kasih jeda dikit
-
-                        if (context.mounted) {
-                          Get.toNamed(
-                            Routes.DETAIL_RIWAYAT_TRANSAKSI,
-                            arguments: transaksi.id,
-                          );
-                        }
-                      },
-
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 14),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1D2938),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 28,
-                              backgroundColor: getRandomColor(
-                                transaksi.santri.id,
-                              ),
-                              child: Text(
-                                getInitials(transaksi.santri.name),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
+              // 📋 List Riwayat
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return ListView.builder(
+                      key: ValueKey(controller.selectedKelas.value),
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          baseColor: const Color(0xFF1D2938),
+                          highlightColor: const Color(0xFF101828),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                            const SizedBox(width: 14),
-                            Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    transaksi.santri.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: double.infinity,
+                                              height: 14,
+                                              color: Colors.white,
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Container(
+                                              width: 100,
+                                              height: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    controller.convertKelas(
-                                      transaksi.santri.kelas,
-                                    ),
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                    ),
+                                  const SizedBox(height: 12),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 12,
+                                    color: Colors.white,
                                   ),
                                 ],
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  if (controller.allHistoryFiltered.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async => controller.fetchRiwayatTransaksi(),
+                      backgroundColor: Colors.white,
+                      color: const Color(0xFF4634CC),
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: const [
+                          SizedBox(
+                            height: 300,
+                            child: Center(
+                              child: Text(
+                                "Tidak ada data",
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async => controller.fetchRiwayatTransaksi(),
+                    backgroundColor: Colors.white,
+                    color: const Color(0xFF4634CC),
+                    child: ListView.builder(
+                      key: ValueKey(controller.selectedKelas.value),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: controller.allHistoryFiltered.length,
+                      itemBuilder: (context, index) {
+                        if (index >= controller.allHistoryFiltered.length) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final transaksi = controller.allHistoryFiltered[index];
+                        return InkWell(
+                          onTap: () async {
+                            FocusScope.of(context).unfocus();
+
+                            await Future.delayed(
+                              const Duration(milliseconds: 50),
+                            ); // kasih jeda dikit
+
+                            if (context.mounted) {
+                              Get.toNamed(
+                                Routes.DETAIL_RIWAYAT_TRANSAKSI,
+                                arguments: transaksi.id,
+                              );
+                            }
+                          },
+
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 14),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1D2938),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
                               children: [
-                                Text(
-                                  DateFormat(
-                                    "dd MMM yyyy",
-                                  ).format(transaksi.createdAt),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        transaksi.status == "Lunas"
-                                            ? Colors.green.withOpacity(0.2)
-                                            : Colors.red.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(12),
+                                CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: getRandomColor(
+                                    transaksi.santri.id,
                                   ),
                                   child: Text(
-                                    transaksi.status,
-                                    style: TextStyle(
-                                      fontSize: 12,
+                                    getInitials(transaksi.santri.name),
+                                    style: const TextStyle(
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color:
-                                          transaksi.status == "Lunas"
-                                              ? Colors.green
-                                              : Colors.red,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        transaksi.santri.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        controller.convertKelas(
+                                          transaksi.santri.kelas,
+                                        ),
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      DateFormat(
+                                        "dd MMM yyyy",
+                                      ).format(transaksi.createdAt),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            transaksi.status == "Lunas"
+                                                ? Colors.green.withOpacity(0.2)
+                                                : Colors.red.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        transaksi.status,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              transaksi.status == "Lunas"
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -364,5 +376,4 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
     final seedValue = seed.hashCode.abs();
     return colors[seedValue % colors.length];
   }
-
 }

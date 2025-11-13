@@ -211,40 +211,31 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
                               ),
                             ),
 
-          // Nominal + Button
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                formatRupiah(data.hutang),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                            // Nominal + Button
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatRupiah(santri.hutang),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                              ],
+                            ),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
               ),
-              const SizedBox(height: 6),
-              // Container(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 12,
-              //     vertical: 6,
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: Colors.red[200],
-              //     borderRadius: BorderRadius.circular(14),
-              //   ),
-              //   child: const Text(
-              //     "Bayar",
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       color: Colors.white,
-              //       fontSize: 12,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
-          const SizedBox(width: 12),
-        ],
+        ),
       ),
     );
   }
