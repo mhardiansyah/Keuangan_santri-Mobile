@@ -56,6 +56,10 @@ class RiwayatTransaksiController extends GetxController {
         return matchKelas && matchQuery;
       }),
     );
+    allHistoryFiltered.refresh();
+    print(
+      "Kelas: $kelas, Query: $query, Filtered: ${allHistoryFiltered.length}",
+    );
   }
 
   void fetchRiwayatTransaksi() async {

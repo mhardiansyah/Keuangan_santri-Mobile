@@ -211,52 +211,40 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
                               ),
                             ),
 
-                            // 💰 Jumlah dan tombol bayar
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16, top: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    formatRupiah(santri.hutang),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFFFA7A7),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Text(
-                                      "Bayar",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }),
+          // Nominal + Button
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                formatRupiah(data.hutang),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              const SizedBox(height: 6),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 12,
+              //     vertical: 6,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: Colors.red[200],
+              //     borderRadius: BorderRadius.circular(14),
+              //   ),
+              //   child: const Text(
+              //     "Bayar",
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //       color: Colors.white,
+              //       fontSize: 12,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
-        ),
+          const SizedBox(width: 12),
+        ],
       ),
     );
   }

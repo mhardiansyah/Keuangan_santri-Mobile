@@ -10,8 +10,10 @@ class DetailRiwayatTransaksiController extends GetxController {
 
   var url = dotenv.env['base_url'];
   var isLoading = false.obs;
-  var historydetail = Rxn<DataHistory>(); // list transaksi santri
+  var historydetail = Rxn<DataHistory>(); 
   var santriId = 0;
+  final box = Get.arguments;
+  
 
   @override
   void onInit() {

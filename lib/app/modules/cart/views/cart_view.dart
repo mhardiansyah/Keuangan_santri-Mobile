@@ -27,10 +27,53 @@ class CartView extends GetView<CartController> {
         centerTitle: true,
       ),
 
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 750),
-          child: SafeArea(
+      bottomNavigationBar: Obx(() {
+        final iscartEmpty = controller.cartItems.isEmpty;
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Color(0xFF0F172A),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, -1),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed:
+                  iscartEmpty
+                      ? null
+                      : () {
+                        Get.offAllNamed(Routes.WAITING_TAP);
+                        controller.saveDataPayment();
+                      },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    iscartEmpty ? Colors.grey : const Color(0xFF4634CC),
+                disabledBackgroundColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text(
+                'Bayar',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+
+      body: SafeArea(
         child: Obx(() {
           final iscartEmpty = controller.cartItems.isEmpty;
 
@@ -141,74 +184,78 @@ class CartView extends GetView<CartController> {
                       ),
                       const SizedBox(width: 16),
 
-                      // Nama dan harga
-                      Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                      item.product.nama,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight:
-                        FontWeight.w600,
-                      ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                      formatRupiah(
-                        item.product.harga,
-                      ),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                        ),
-                        const SizedBox(height: 12),
-                        // Tombol qty
-                        Row(
-                      children: [
-                        _buildQtyButton(
-                          icon: Icons.add,
-                          onTap: () => controller
-                          .incjumlah(
-                            item,
-                          ),
-                          isDisabled:
-                          item.jumlah >=
-                          item.product
-                              .jumlah,
-                        ),
-                        Padding(
-                          padding:
-                          const EdgeInsets
-                          .symmetric(
-                        horizontal: 12,
-                          ),
-                          child: Text(
-                        '${item.jumlah}',
-                        style:
-                            const TextStyle(
-                          fontSize: 16,
-                          color:
-                          Colors.white,
-                        ),
-                          ),
-                        ),
-                        _buildQtyButton(
-                          icon: Icons.remove,
-                          onTap: () => controller
-                          .decjumlah(
-                            item,
-                          ),
-                        ),
-                      ],
-                        ),
-                      ],
-                    ),
-                      ),
+                                            // Nama dan harga
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    item.product.nama,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    formatRupiah(
+                                                      item.product.harga,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white70,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  // Tombol qty
+                                                  Row(
+                                                    children: [
+                                                      _buildQtyButton(
+                                                        icon: Icons.add,
+                                                        onTap:
+                                                            () => controller
+                                                                .incjumlah(
+                                                                  item,
+                                                                ),
+                                                        isDisabled:
+                                                            item.jumlah >=
+                                                            item
+                                                                .product
+                                                                .jumlah, 
+                                                      ),
+
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 12,
+                                                            ),
+                                                        child: Text(
+                                                          '${item.jumlah}',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 16,
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      _buildQtyButton(
+                                                        icon: Icons.remove,
+                                                        onTap:
+                                                            () => controller
+                                                                .decjumlah(
+                                                                  item,
+                                                                ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
 
                       // Tombol hapus
                       IconButton(

@@ -21,7 +21,8 @@ class PaymentController extends GetxController {
   var hutang = 0.obs;
   var kartuId = 0.obs;
 
-  // data dari getorage
+  // data dariarguments cart
+  var cartItems = [].obs;
   var totalHargaPokok = 0.obs;
   var pajak = 0.obs;
   var totalPembayaran = 0.obs;
@@ -39,10 +40,13 @@ class PaymentController extends GetxController {
       saldo.value = arguments['saldo'] ?? 0;
       hutang.value = arguments['hutang'] ?? 0;
       kartuId.value = arguments['kartu_id'] ?? 0;
+
+      // cart
+      cartItems.assignAll(arguments['cartItems'] ?? []);
+      totalHargaPokok.value = arguments['totalHargaPokok'] ?? 0;
+      pajak.value = arguments['pajak'] ?? 0;
+      totalPembayaran.value = arguments['totalPembayaran'] ?? 0;
     }
-    totalHargaPokok.value = box.read('totalHargaPokok') ?? 0;
-    pajak.value = box.read('pajak') ?? 0;
-    totalPembayaran.value = box.read('totalPembayaran') ?? 0;
     // print("passcode dari db: $passcode");
     print('isi args: $arguments');
     autoSelectMethod();
@@ -143,6 +147,12 @@ class PaymentController extends GetxController {
             // 'passcode': passcode.value,
             'santriId': santriId.value,
             'type': TransaksiType.pembayaran,
+            'cartItems': cartItems,
+            'totalHargaPokok': totalHargaPokok.value,
+            'pajak': pajak.value,
+            'totalPembayaran': totalPembayaran.value,
+            'saldo': saldo.value,
+            'hutang': hutang.value,
           },
         );
       } else {

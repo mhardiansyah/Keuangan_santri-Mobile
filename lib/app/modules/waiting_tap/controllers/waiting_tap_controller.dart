@@ -17,6 +17,11 @@ class WaitingTapController extends GetxController {
   var cardUID = ''.obs;
   var santri = Rxn<Santri>();
   var url = dotenv.env['base_url'];
+  var cartItems = [].obs;
+
+  var totalHargaPokok = 0.obs;
+  var pajak = 0.obs;
+  var totalPembayaran = 0.obs;
 
   FocusNode focusNode = FocusNode();
 
@@ -26,6 +31,16 @@ class WaitingTapController extends GetxController {
     Future.delayed(Duration.zero, () {
       focusNode.requestFocus();
       print('focus node jalan di waiting tap: $focusNode');
+      final arguments = Get.arguments;
+      if (arguments != null) {
+        cartItems.assignAll(arguments['cartItems'] ?? []);
+        totalHargaPokok.value = arguments['totalHargaPokok'] ?? 0;
+        pajak.value = arguments['pajak'] ?? 0;
+        totalPembayaran.value = arguments['totalPembayaran'] ?? 0;
+
+        print('arguments di waiting tap: $arguments');
+
+      }
     });
   }
 
@@ -72,7 +87,6 @@ class WaitingTapController extends GetxController {
           santri.value = kartu.santri;
           // addCartItems(kartu.santri.id);
 
-
           if (kartu.santri != null) {
             Get.toNamed(
               Routes.PAYMENT,
@@ -84,6 +98,10 @@ class WaitingTapController extends GetxController {
                 'saldo': kartu.santri.saldo,
                 'hutang': kartu.santri.hutang,
                 'kartu_id': kartu.id,
+                'totalHargaPokok': totalHargaPokok.value,
+                'pajak': pajak.value,
+                'totalPembayaran': totalPembayaran.value,
+                'cartItems': cartItems,
               },
             );
             return;

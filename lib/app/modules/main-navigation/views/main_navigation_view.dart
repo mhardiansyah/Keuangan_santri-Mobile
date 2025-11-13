@@ -55,7 +55,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
 
         // Bottom Navbar
         bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
+          shape: CircularNotchedRectangle(),
           notchMargin: 8,
           color: const Color(0xFF4634CC),
           child: Container(
@@ -120,17 +120,14 @@ class MainNavigationView extends GetView<MainNavigationController> {
           shape: BoxShape.circle,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 8,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
                 color: isSelected ? const Color(0xFF4634CC) : Colors.white,
-                size: isDesktop ? 26 : (isLandscape ? 20 : 22),
+                size: isDesktop ? 27 : (isLandscape ? 20 : 22),
               ),
               const SizedBox(height: 3),
               Flexible(
@@ -144,7 +141,7 @@ class MainNavigationView extends GetView<MainNavigationController> {
                     style: TextStyle(
                       color:
                           isSelected ? const Color(0xFF4634CC) : Colors.white,
-                      fontSize: isDesktop ? 12 : (isLandscape ? 9 : 10),
+                      fontSize: isDesktop ? 25 : (isLandscape ? 9 : 10),
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
