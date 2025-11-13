@@ -204,7 +204,7 @@ class HomeView extends GetView<HomeController> {
                                 controller.currentTime.value,
                                 style: GoogleFonts.robotoMono(
                                   color: Colors.white,
-                                  fontSize: 55,
+                                  fontSize: 32,
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: 2,
                                 ),
@@ -217,7 +217,7 @@ class HomeView extends GetView<HomeController> {
 
                                 style: GoogleFonts.poppins(
                                   color: Colors.white70,
-                                  fontSize: 25,
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
