@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sakusantri/app/routes/app_pages.dart';
 import '../controllers/waiting_tap_controller.dart';
 
 class WaitingTapView extends GetView<WaitingTapController> {
@@ -61,7 +62,7 @@ class WaitingTapView extends GetView<WaitingTapController> {
                     ),
                   ),
                   onPressed: () {
-                    Get.back(); // Atau fungsi lain sesuai alur kamu
+                    Get.toNamed(Routes.CART);
                   },
                   child: const Text(
                     'batalkan',
@@ -81,6 +82,4 @@ class WaitingTapView extends GetView<WaitingTapController> {
       ),
     );
   }
-
-  
 }
