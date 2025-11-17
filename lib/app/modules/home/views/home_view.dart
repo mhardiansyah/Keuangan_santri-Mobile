@@ -188,47 +188,52 @@ class HomeView extends GetView<HomeController> {
                   // Kartu Jam & Tanggal
                   Expanded(
                     flex: 2,
-                    child: SizedBox(
-                      height: 160,
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1A1F2C),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Obx(
-                              () => Text(
-                                controller.currentTime.value,
-                                style: GoogleFonts.robotoMono(
-                                  color: Colors.white,
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Obx(
-                              () => Text(
-                                controller.currentDate.value,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        double boxWidth = constraints.maxWidth;
 
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white70,
-                                  fontSize: 16,
+                        double timeFontSize = boxWidth * 0.18;
+                        double dateFontSize = boxWidth * 0.065;
+
+                        return Container(
+                          height: 160,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1F2C),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Obx(
+                                () => Text(
+                                  controller.currentTime.value,
+                                  style: GoogleFonts.robotoMono(
+                                    color: Colors.white,
+                                    fontSize: timeFontSize.clamp(20, 60),
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 2,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                              const SizedBox(height: 6),
+                              Obx(
+                                () => Text(
+                                  controller.currentDate.value,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white70,
+                                    fontSize: dateFontSize.clamp(12, 18),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
 
               // Box Total Produk

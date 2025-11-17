@@ -10,7 +10,7 @@ import 'package:sakusantri/app/routes/app_pages.dart';
 
 class PaymentController extends GetxController {
   var selectedMethod = ''.obs;
-  final box = GetStorage();
+  // final box = GetStorage();
 
   //data arguments
   var santriId = 0.obs;

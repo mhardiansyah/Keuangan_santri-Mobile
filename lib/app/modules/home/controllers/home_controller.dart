@@ -134,8 +134,8 @@ class HomeController extends GetxController {
                 image:
                     data != null && currentMode.value == 'cekSaldo'
                         ? DecorationImage(
-                          image: AssetImage("assets/images/Card santri.png"),
-                          fit: BoxFit.cover,
+                          image: AssetImage("assets/icons/card.png"),
+                          fit: BoxFit.fill,
                         )
                         : null,
               ),
@@ -158,7 +158,7 @@ class HomeController extends GetxController {
                           Text(
                             "Saldo ${data.name} tersisa:",
                             style: const TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
@@ -167,7 +167,7 @@ class HomeController extends GetxController {
                           Text(
                             formatRupiah(data.saldo),
                             style: const TextStyle(
-                              fontSize: 26,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),

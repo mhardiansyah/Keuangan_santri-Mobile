@@ -26,221 +26,222 @@ class PaymentView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 750),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Card saldo
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E293B),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Obx(
-                    () => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          controller.name.value ?? 'user',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          "Saldo:",
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          formatRupiah(controller.saldo.value),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          "Hutang:",
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          "-${formatRupiah(controller.hutang.value)}",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card saldo
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Obx(
+                () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      controller.name.value ?? 'user',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 36),
-          
-                // Total
-                Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "total:",
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
-                      ),
-                      Text(
-                        formatRupiah(controller.totalPembayaran.value),
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-          
-                // Metode pembayaran
-                const Text(
-                  "Metode Pembayaran:",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                const SizedBox(height: 20),
-                Obx(() {
-                  final saldo = controller.saldo.value;
-                  final hutang = controller.hutang.value;
-          
-                  // Kalau hutang lebih besar dari saldo -> pakai hutang
-                  final disableSaldo = hutang > saldo;
-                  // Kalau saldo lebih besar atau sama dengan hutang -> pakai saldo
-                  final disableHutang = saldo >= hutang;
-          
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap:
-                              disableHutang
-                                  ? null
-                                  : () => controller.selectMethod("Hutang"),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            decoration: BoxDecoration(
-                              color:
-                                  controller.selectedMethod.value == "Hutang"
-                                      ? const Color(0xFF4634CC)
-                                      : disableHutang
-                                      ? const Color(0xFF121821)
-                                      : const Color(0xFF1E293B),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: const [
-                                Icon(
-                                  Icons.receipt_long,
-                                  color: Colors.white,
-                                  size: 22,
-                                ),
-                                SizedBox(height: 6),
-                                Text(
-                                  "Hutang",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-          
-                      // Tombol Saldo
-                      Expanded(
-                        child: GestureDetector(
-                          onTap:
-                              disableSaldo
-                                  ? null
-                                  : () => controller.selectMethod("Saldo"),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            decoration: BoxDecoration(
-                              color:
-                                  controller.selectedMethod.value == "Saldo"
-                                      ? const Color(0xFF4634CC)
-                                      : disableSaldo
-                                      ? const Color(0xFF121821)
-                                      : const Color(0xFF1E293B),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: const [
-                                Icon(
-                                  Icons.account_balance_wallet,
-                                  color: Colors.white,
-                                  size: 22,
-                                ),
-                                SizedBox(height: 6),
-                                Text(
-                                  "Saldo",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-          
-                const Spacer(),
-          
-                // Tombol bayar
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4634CC),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                    SizedBox(height: 12),
+                    Text(
+                      "Saldo:",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    Text(
+                      formatRupiah(controller.saldo.value),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {
-                      if (controller.kartuId == 7) {
-                        Get.toNamed(
-                          Routes.ENTER_PASSCODE,
-                          arguments: {
-                            'method': controller.selectedMethod.value,
-                            'total': controller.totalPembayaran.value,
-                            'nama': controller.name.value,
-                            'passcode': controller.passcode.value,
-                            'santriId': controller.santriId.value,
-                            'type': TransaksiType.pembayaran,
-                          },
-                        );
-                        return;
-                      } else {
-                        controller.transaksi();
-                      }
-                      debugPrint(
-                        "Metode dipilih: ${controller.selectedMethod.value}",
-                      );
-                    },
-                    child: const Text(
-                      "Bayar",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    SizedBox(height: 12),
+                    Text(
+                      "Hutang:",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
-                  ),
+                    Text(
+                      "-${formatRupiah(controller.hutang.value)}",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            const SizedBox(height: 36),
+
+            // Total
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "total:",
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  Text(
+                    formatRupiah(controller.totalPembayaran.value),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Metode pembayaran
+            const Text(
+              "Metode Pembayaran:",
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            const SizedBox(height: 20),
+            Obx(() {
+              final saldo = controller.saldo.value;
+              final hutang = controller.hutang.value;
+
+              // Kalau hutang lebih besar dari saldo -> pakai hutang
+              final disableSaldo = hutang > saldo;
+              // Kalau saldo lebih besar atau sama dengan hutang -> pakai saldo
+              final disableHutang = saldo >= hutang;
+
+              return Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap:
+                          disableHutang
+                              ? null
+                              : () => controller.selectMethod("Hutang"),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: BoxDecoration(
+                          color:
+                              controller.selectedMethod.value == "Hutang"
+                                  ? const Color(0xFF4634CC)
+                                  : disableHutang
+                                  ? const Color(0xFF121821)
+                                  : const Color(0xFF1E293B),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.receipt_long,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                            SizedBox(height: 6),
+                            Text(
+                              "Hutang",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Tombol Saldo
+                  Expanded(
+                    child: GestureDetector(
+                      onTap:
+                          disableSaldo
+                              ? null
+                              : () => controller.selectMethod("Saldo"),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: BoxDecoration(
+                          color:
+                              controller.selectedMethod.value == "Saldo"
+                                  ? const Color(0xFF4634CC)
+                                  : disableSaldo
+                                  ? const Color(0xFF121821)
+                                  : const Color(0xFF1E293B),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.account_balance_wallet,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                            SizedBox(height: 6),
+                            Text(
+                              "Saldo",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+
+            const Spacer(),
+
+            // Tombol bayar
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4634CC),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onPressed: () {
+                  if (controller.kartuId == 7) {
+                    Get.toNamed(
+                      Routes.ENTER_PASSCODE,
+                      arguments: {
+                        'method': controller.selectedMethod.value,
+                        'total': controller.totalPembayaran.value,
+                        'nama': controller.name.value,
+                        'passcode': controller.passcode.value,
+                        'santriId': controller.santriId.value,
+                        'type': TransaksiType.pembayaran,
+                        'cartItems': controller.cartItems,
+                        'totalHargaPokok': controller.totalHargaPokok.value,
+                        'pajak': controller.pajak.value,
+                        'totalPembayaran': controller.totalPembayaran.value,
+                        'saldo': controller.saldo.value,
+                        'hutang': controller.hutang.value,
+                      },
+                    );
+                    return;
+                  } else {
+                    controller.transaksi();
+                  }
+                  debugPrint(
+                    "Metode dipilih: ${controller.selectedMethod.value}",
+                  );
+                },
+                child: const Text(
+                  "Bayar",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

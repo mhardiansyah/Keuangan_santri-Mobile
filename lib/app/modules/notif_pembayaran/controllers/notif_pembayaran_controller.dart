@@ -15,7 +15,6 @@ class NotifPembayaranController extends GetxController {
   var url = dotenv.env['base_url'];
   var isLoading = false.obs;
 
-
   // data dariarguments cart
   var cartItems = [].obs;
   var totalHargaPokok = 0.obs;
