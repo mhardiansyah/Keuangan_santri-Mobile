@@ -62,7 +62,7 @@ class WaitingTapView extends GetView<WaitingTapController> {
                     ),
                   ),
                   onPressed: () {
-                    Get.toNamed(Routes.CART);
+                    Get.toNamed(Routes.MAIN_NAVIGATION);
                   },
                   child: const Text(
                     'batalkan',
