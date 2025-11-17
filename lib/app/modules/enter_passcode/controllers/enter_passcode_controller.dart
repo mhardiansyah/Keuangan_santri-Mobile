@@ -1,14 +1,21 @@
 import 'package:bcrypt/bcrypt.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:sakusantri/app/core/types/transaksi_type.dart';
-import 'package:sakusantri/app/modules/payment/controllers/payment_controller.dart';
 import 'package:sakusantri/app/routes/app_pages.dart';
 
 class EnterPasscodeController extends GetxController {
   var pin = ''.obs;
 
-  //data arguments
+  // controller buat Pinput
+  final pinController = TextEditingController();
+
+  // state animasi
+  var borderColor = const Color(0xFF1E293B).obs;
+  var shakeTrigger = false.obs;
+  var opacity = 1.0.obs; // untuk fade-out
+
+  // arguments
   var santriId = 0.obs;
   var name = ''.obs;
   var passcode = ''.obs;
@@ -16,68 +23,74 @@ class EnterPasscodeController extends GetxController {
   var saldo = 0.obs;
   var hutang = 0.obs;
   var methodpayment = ''.obs;
-
-  // data dari getorage
   var totalHargaPokok = 0.obs;
   var pajak = 0.obs;
   var totalPembayaran = 0.obs;
-  final box = GetStorage();
-  final paymentController = Get.find<PaymentController>();
-
-  void onInit() {
-    final arguments = Get.arguments;
-    if (arguments != null) {
-      santriId.value = arguments['id'] ?? 0;
-      name.value = arguments['nama'] ?? '';
-      passcode.value = arguments['passcode'] ?? '';
-      kelas.value = arguments['kelas'] ?? '';
-      saldo.value = arguments['saldo'] ?? 0;
-      hutang.value = arguments['hutang'] ?? 0;
-      methodpayment.value = arguments['method'] ?? '';
-    }
-    totalPembayaran.value = box.read('totalPembayaran') ?? 0;
-    super.onInit();
-  }
+  var cartItems = [].obs;
 
   @override
-  void addDigit(String digit) {
-    if (pin.value.length < 6) {
-      pin.value += digit;
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments;
+    if (args != null) {
+      santriId.value = args['santriId'] ?? 0;
+      name.value = args['nama'] ?? '';
+      passcode.value = args['passcode'] ?? '';
+      kelas.value = args['kelas'] ?? '';
+      saldo.value = args['saldo'] ?? 0;
+      hutang.value = args['hutang'] ?? 0;
+      methodpayment.value = args['method'] ?? '';
+      totalHargaPokok.value = args['totalHargaPokok'] ?? 0;
+      pajak.value = args['pajak'] ?? 0;
+      totalPembayaran.value = args['totalPembayaran'] ?? 0;
+      cartItems.assignAll(args['cartItems'] ?? []);
     }
   }
 
-  void deleteDigit() {
-    if (pin.value.isNotEmpty) {
-      pin.value = pin.value.substring(0, pin.value.length - 1);
-    }
+  void resetPin() {
+    pin.value = '';
+    pinController.clear();
   }
 
-  void submit() {
+  Future<void> submit() async {
     if (pin.value.length == 6) {
-      // TODO: proses PIN validasi
-      print("PIN dimasukkan: ${pin.value}");
-
-      print("passcode dari db: $passcode");
-
+      await Future.delayed(Duration(milliseconds: 500));
       final isvalid = BCrypt.checkpw(pin.value, passcode.value);
-      print("hasil dari compare: $isvalid");
 
       if (isvalid) {
-        Get.snackbar("Success", "PIN benar");
-        paymentController.transaksi();
+        borderColor.value = const Color(0xFF22C55E);
+        await Future.delayed(const Duration(milliseconds: 400));
         Get.toNamed(
           Routes.NOTIF_PEMBAYARAN,
           arguments: {
             'method': methodpayment.value,
             'total': totalPembayaran.value,
             'nama': name.value,
-            'passcode': passcode.value,
             'santriId': santriId.value,
             'type': TransaksiType.pembayaran,
+            'cartItems': cartItems,
+            'totalHargaPokok': totalHargaPokok.value,
+            'pajak': pajak.value,
+            'totalPembayaran': totalPembayaran.value,
+            'saldo': saldo.value,
+            'hutang': hutang.value,
           },
         );
       } else {
-        Get.snackbar("Error", "PIN salah");
+        borderColor.value = const Color(0xFFDC2626);
+        shakeTrigger.value = true;
+
+        // Fade-out animasi
+        opacity.value = 0.0;
+        await Future.delayed(const Duration(milliseconds: 300));
+        resetPin();
+
+        // balikin opacity
+        opacity.value = 1.0;
+
+        await Future.delayed(const Duration(milliseconds: 500));
+        borderColor.value = const Color(0xFF1E293B);
+        shakeTrigger.value = false;
       }
     }
   }

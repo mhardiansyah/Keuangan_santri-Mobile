@@ -13,7 +13,6 @@ class DetailRiwayatTransaksiController extends GetxController {
   var historydetail = Rxn<DataHistory>(); 
   var santriId = 0;
   final box = Get.arguments;
-  
 
   @override
   void onInit() {

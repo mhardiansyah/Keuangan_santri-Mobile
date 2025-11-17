@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pinput/pinput.dart';
 import '../controllers/enter_passcode_controller.dart';
 
 class EnterPasscodeView extends GetView<EnterPasscodeController> {
@@ -8,6 +9,7 @@ class EnterPasscodeView extends GetView<EnterPasscodeController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(EnterPasscodeController());
+    // final pinController = TextEditingController();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
@@ -24,70 +26,71 @@ class EnterPasscodeView extends GetView<EnterPasscodeController> {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  const Text(
-                    "Masukan PIN kartu",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+            const Text(
+              "Masukan PIN kartu",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 30),
+
+            Obx(
+              () => AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: controller.opacity.value,
+                child: Pinput(
+                  controller: controller.pinController,
+                  length: 6,
+                  obscureText: true,
+                  obscuringWidget: const Icon(
+                    Icons.circle,
+                    size: 14,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 40),
-
-                  // PIN Indicator
-                  Obx(() => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(6, (index) {
-                          bool filled = index < controller.pin.value.length;
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 12),
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1E293B),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: filled
-                                  ? const Icon(Icons.circle,
-                                      size: 14, color: Colors.white)
-                                  : null,
-                            ),
-                          );
-                        }),
-                      )),
-                  const SizedBox(height: 50),
-
-                  // Keypad
-                  _buildKeypad(controller),
-                ],
+                  defaultPinTheme: PinTheme(
+                    width: 50,
+                    height: 50,
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E293B),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: controller.borderColor.value),
+                    ),
+                  ),
+                  onChanged: (value) => controller.pin.value = value,
+                  onCompleted: (value) {
+                    controller.pin.value = value;
+                    controller.submit();
+                  },
+                ),
               ),
             ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: GestureDetector(
-                  onTap: controller.submit,
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4634CC),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Text(
-                      "Bayar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
+
+            const SizedBox(height: 40),
+
+            GestureDetector(
+              onTap: controller.submit,
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4634CC),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Text(
+                  "Bayar",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -95,53 +98,6 @@ class EnterPasscodeView extends GetView<EnterPasscodeController> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildKeypad(EnterPasscodeController controller) {
-    final keys = [
-      ["1", "2", "3"],
-      ["4", "5", "6"],
-      ["7", "8", "9"],
-      [".", "0", "del"],
-    ];
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: keys.map((row) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: row.map((key) {
-            return GestureDetector(
-              onTap: () {
-                if (key == "del") {
-                  controller.deleteDigit();
-                } else if (key != ".") {
-                  controller.addDigit(key);
-                }
-              },
-              child: Container(
-                margin: const EdgeInsets.all(14),
-                width: 80,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: key == "del"
-                      ? const Icon(Icons.backspace, color: Colors.white)
-                      : Text(
-                          key,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 24),
-                        ),
-                ),
-              ),
-            );
-          }).toList(),
-        );
-      }).toList(),
     );
   }
 }

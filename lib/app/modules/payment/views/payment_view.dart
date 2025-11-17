@@ -219,6 +219,12 @@ class PaymentView extends StatelessWidget {
                         'passcode': controller.passcode.value,
                         'santriId': controller.santriId.value,
                         'type': TransaksiType.pembayaran,
+                        'cartItems': controller.cartItems,
+                        'totalHargaPokok': controller.totalHargaPokok.value,
+                        'pajak': controller.pajak.value,
+                        'totalPembayaran': controller.totalPembayaran.value,
+                        'saldo': controller.saldo.value,
+                        'hutang': controller.hutang.value,
                       },
                     );
                     return;

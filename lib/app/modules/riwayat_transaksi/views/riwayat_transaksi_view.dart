@@ -205,19 +205,16 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
 
                     final transaksi = controller.allHistoryFiltered[index];
                     return InkWell(
-                      onTap: () async {
+                      onTap: () {
                         FocusScope.of(context).unfocus();
-
-                        await Future.delayed(
-                          const Duration(milliseconds: 50),
-                        ); // kasih jeda dikit
-
-                        if (context.mounted) {
-                          Get.toNamed(
-                            Routes.DETAIL_RIWAYAT_TRANSAKSI,
-                            arguments: transaksi.id,
-                          );
-                        }
+                        Future.delayed(Duration(milliseconds: 50), () {
+                          if (context.mounted) {
+                            Get.toNamed(
+                              Routes.DETAIL_RIWAYAT_TRANSAKSI,
+                              arguments: transaksi.id,
+                            );
+                          }
+                        });
                       },
 
                       child: Container(
