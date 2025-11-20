@@ -91,7 +91,21 @@ class PaymentController extends GetxController {
       if (response.statusCode == 201) {
         saldo.value -= jumlahBayar;
         hutang.value -= jumlahBayar;
-        Get.snackbar("Success", "Hutang berkurang $jumlahBayar");
+        if (hutang.value > 0) {
+          Get.snackbar(
+            "Saldo",
+            "Saldo anda habis setelah membayar hutang otomatis sebesar Rp $jumlahBayar",
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          // Get.snackbar(
+          //   "Saldo",
+          //   "Berhasil membayar hutang otomatis sebesar Rp $jumlahBayar",
+          //   backgroundColor: Colors.green,
+          //   colorText: Colors.white,
+          // );
+        }
       } else {
         final error = jsonDecode(response.body);
         Get.snackbar("Error", 'Gagal bayar hutang otomatis');
