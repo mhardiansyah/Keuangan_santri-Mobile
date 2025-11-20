@@ -122,11 +122,11 @@ class HomeController extends GetxController {
             }
 
             return Container(
-              constraints: BoxConstraints(
-                minHeight: 150,
-                maxWidth: Get.width * 0.6,
-                maxHeight: 250,
-              ),
+                constraints: BoxConstraints(
+                  minHeight: 100,
+                  maxWidth: Get.width * 0.4,
+                  maxHeight: Get.height * 0.3,
+                ),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xff1D2938),
@@ -151,14 +151,14 @@ class HomeController extends GetxController {
                           const SizedBox(height: 16),
                           const Text(
                             "Silahkan Tap kartu anda...",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ] else if (currentMode.value == 'cekSaldo') ...[
                           Text(
                             "Saldo ${data.name} tersisa:",
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 24,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
@@ -167,7 +167,7 @@ class HomeController extends GetxController {
                           Text(
                             formatRupiah(data.saldo),
                             style: const TextStyle(
-                              fontSize: 28,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -182,7 +182,7 @@ class HomeController extends GetxController {
                           const SizedBox(height: 16),
                           const Text(
                             "Kartu ditemukan",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ],
