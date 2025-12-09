@@ -17,6 +17,9 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
     return Scaffold(
       backgroundColor: const Color(0xFF0E1220),
       appBar: AppBar(
+        backgroundColor: const Color(0xFF0E1220),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Riwayat',
           style: TextStyle(
@@ -24,13 +27,6 @@ class RiwayatTransaksiView extends GetView<RiwayatTransaksiController> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF0E1220),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          onPressed: () => Get.back(),
         ),
       ),
       body: Center(

@@ -66,9 +66,9 @@ class MainNavigationController extends GetxController {
               final data = santri.value;
               return Container(
                 constraints: BoxConstraints(
-                  minHeight: 150,
-                  maxWidth: Get.width * 0.6,
-                  maxHeight: 250, 
+                  minHeight: 100,
+                  maxWidth: Get.width * 0.4,
+                  maxHeight: Get.height * 0.3, 
                 ),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(

@@ -83,9 +83,46 @@ class WaitingTapController extends GetxController {
 
         if (jsonResponse['data'] != null) {
           final data = jsonResponse['data'];
-          final kartu = Data.fromJson(data);
+
+          // Support untuk kedua format: List atau Map
+          Map<String, dynamic>? kartuJson;
+
+          if (data is List) {
+            final list = data.cast<Map<String, dynamic>>();
+
+            // Jika nomor_kartu diberikan, cari yang cocok
+            try {
+              if (nomor_kartu.isNotEmpty) {
+                kartuJson = list.firstWhere(
+                  (e) => (e['nomorKartu']?.toString() ?? '') == nomor_kartu,
+                );
+              }
+            } catch (_) {
+              kartuJson = null;
+            }
+
+            // Jika belum ditemukan, ambil elemen yang punya santri (fallback)
+            if (kartuJson == null) {
+              try {
+                kartuJson = list.firstWhere((e) => e['santri'] != null);
+              } catch (_) {
+                kartuJson = null;
+              }
+            }
+          } else if (data is Map<String, dynamic>) {
+            kartuJson = data;
+          } else {
+            Get.snackbar('Error', 'Format data tidak dikenali dari server.');
+            return;
+          }
+
+          if (kartuJson == null) {
+            Get.snackbar('Info', 'kartu tidak ditemukan');
+            return;
+          }
+
+          final kartu = Data.fromJson(kartuJson);
           santri.value = kartu.santri;
-          // addCartItems(kartu.santri.id);
 
           if (kartu.santri != null) {
             Get.toNamed(
@@ -106,10 +143,12 @@ class WaitingTapController extends GetxController {
             );
             return;
           }
-          Get.snackbar('Info', 'kartu  tidak ditemukan');
+          Get.snackbar('Info', 'kartu tidak ditemukan');
         } else {
           Get.snackbar('Error', 'Gagal mengambil data.');
         }
+      } else {
+        Get.snackbar('Error', 'Response error: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fungsi getSantribyUID: $e');

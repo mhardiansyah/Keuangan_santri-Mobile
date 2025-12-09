@@ -112,200 +112,203 @@ class PengaturanTokoController extends GetxController {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       backgroundColor: const Color(0xFF1E293B),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
-                    onPressed: () => Get.back(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              const Text(
-                "Nama Barang",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              _buildTextField("Nama barang", nama),
-              const SizedBox(height: 16),
-
-              const Text(
-                "Harga Barang",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              _buildPriceField(harga),
-              const SizedBox(height: 16),
-              const Text(
-                "Kategori Produk",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              Obx(() {
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF334155),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.white24),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<int>(
-                      value:
-                          kategoriList.any((k) => k.id == kategoriId.value)
-                              ? kategoriId.value
-                              : null,
-                      dropdownColor: const Color(0xFF1E293B),
-                      iconEnabledColor: Colors.white70,
-                      items:
-                          kategoriList.map((kategori) {
-                            return DropdownMenuItem<int>(
-                              value: kategori.id,
-                              child: Text(
-                                kategori.nama,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            );
-                          }).toList(),
-                      hint: const Text(
-                        "Pilih Kategori",
-                        style: TextStyle(color: Colors.white54),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 600),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onChanged: (val) {
-                        kategoriId.value = val;
-                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white70),
+                      onPressed: () => Get.back(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Nama Barang",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                _buildTextField("Nama barang", nama),
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Harga Barang",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                _buildPriceField(harga),
+                const SizedBox(height: 16),
+                const Text(
+                  "Kategori Produk",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                Obx(() {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF334155),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<int>(
+                        value:
+                            kategoriList.any((k) => k.id == kategoriId.value)
+                                ? kategoriId.value
+                                : null,
+                        dropdownColor: const Color(0xFF1E293B),
+                        iconEnabledColor: Colors.white70,
+                        items:
+                            kategoriList.map((kategori) {
+                              return DropdownMenuItem<int>(
+                                value: kategori.id,
+                                child: Text(
+                                  kategori.nama,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }).toList(),
+                        hint: const Text(
+                          "Pilih Kategori",
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        onChanged: (val) {
+                          kategoriId.value = val;
+                        },
+                      ),
+                    ),
+                  );
+                }),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Jumlah Restock (batch)",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                _buildRestockField(),
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Upload Foto Produk",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: pickImage,
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF334155),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "Upload png/jpg",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Icon(Icons.upload, color: Colors.white70),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              }),
+                ),
+                const SizedBox(height: 10),
 
-              const SizedBox(height: 16),
+                Obx(() {
+                  if (selectedImage.value != null) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        selectedImage.value!,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else if (existingImageUrl.value.isNotEmpty) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        existingImageUrl.value,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                }),
+                const SizedBox(height: 20),
 
-              const Text(
-                "Jumlah Restock (batch)",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              _buildRestockField(),
-              const SizedBox(height: 16),
-
-              const Text(
-                "Upload Foto Produk",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: pickImage,
-                child: Container(
-                  height: 50,
+                SizedBox(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF334155),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.white24),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          "Upload png/jpg",
-                          style: TextStyle(color: Colors.white70),
+                  height: 50,
+                  child: Obx(
+                    () => ElevatedButton(
+                      onPressed: isLoading.value ? null : saveProduct,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4634CC),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        disabledBackgroundColor: Colors.grey,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 14,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Icon(Icons.upload, color: Colors.white70),
-                      ),
-                    ],
+                      child:
+                          isLoading.value
+                              ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                "Simpan",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-
-              Obx(() {
-                if (selectedImage.value != null) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      selectedImage.value!,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                } else if (existingImageUrl.value.isNotEmpty) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      existingImageUrl.value,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              }),
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: Obx(
-                  () => ElevatedButton(
-                    onPressed: isLoading.value ? null : saveProduct,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4634CC),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      disabledBackgroundColor: Colors.grey,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 50,
-                        vertical: 14,
-                      ),
-                    ),
-                    child:
-                        isLoading.value
-                            ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : const Text(
-                              "Simpan",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

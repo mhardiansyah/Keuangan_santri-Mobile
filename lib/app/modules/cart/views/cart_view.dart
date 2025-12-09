@@ -29,38 +29,6 @@ class CartView extends GetView<CartController> {
         ),
       ),
 
-      bottomNavigationBar: Obx(() {
-        final isCartEmpty = controller.cartItems.isEmpty;
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 18),
-          color: const Color(0xFF0F172A),
-          child: SizedBox(
-            width: 100,
-            height: 54,
-            child: ElevatedButton(
-              onPressed: isCartEmpty ? null : () => controller.goToWaitingTap(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    isCartEmpty ? Colors.grey : const Color(0xFF4F46E5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                disabledBackgroundColor: Colors.grey,
-                elevation: 0,
-              ),
-              child: const Text(
-                'Checkout',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        );
-      }),
-
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -77,7 +45,7 @@ class CartView extends GetView<CartController> {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
-                      ), // 🔼 Lebih luas
+                      ),
                       child: Column(
                         children: [
                           const SizedBox(height: 24),
@@ -130,8 +98,7 @@ class CartView extends GetView<CartController> {
                                           const SizedBox(height: 100),
                                           Image.asset(
                                             "assets/icons/empty-box.png",
-                                            width:
-                                                220, // 🔼 Sedikit lebih besar
+                                            width: 220,
                                           ),
                                           const SizedBox(height: 30),
                                           const Text(
@@ -195,8 +162,7 @@ class CartView extends GetView<CartController> {
                                                                 color:
                                                                     Colors
                                                                         .white,
-                                                                fontSize:
-                                                                    18, // 🔼 lebih besar
+                                                                fontSize: 18,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w600,
@@ -324,7 +290,46 @@ class CartView extends GetView<CartController> {
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 100),
+
+                                          // 🔘 Tombol Checkout
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 24,
+                                            ),
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              height: 54,
+                                              child: ElevatedButton(
+                                                onPressed: isCartEmpty
+                                                    ? null
+                                                    : () => controller
+                                                        .goToWaitingTap(),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: isCartEmpty
+                                                      ? Colors.grey
+                                                      : const Color(0xFF4F46E5),
+                                                  shape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          40,
+                                                        ),
+                                                  ),
+                                                  disabledBackgroundColor:
+                                                      Colors.grey,
+                                                  elevation: 0,
+                                                ),
+                                                child: const Text(
+                                                  'Checkout',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 17,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                             ),
@@ -424,7 +429,6 @@ class CartView extends GetView<CartController> {
     );
   }
 
-  // 🔘 Tombol tambah/kurang qty
   Widget _buildQtyButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -444,7 +448,6 @@ class CartView extends GetView<CartController> {
     );
   }
 
-  // 💰 Ringkasan baris
   Widget _buildSummaryRow(String label, int value, {bool bold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

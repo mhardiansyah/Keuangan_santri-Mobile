@@ -18,10 +18,6 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
         backgroundColor: const Color(0xFF0E1220),
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
         title: const Text(
           "Riwayat Hutang",
           style: TextStyle(
@@ -29,6 +25,10 @@ class RiwayatHutangView extends GetView<RiwayatHutangController> {
             fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF4634CC)),
+          onPressed: () => Get.back(),
         ),
       ),
       body: Center(
