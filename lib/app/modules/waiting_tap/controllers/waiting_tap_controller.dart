@@ -20,7 +20,7 @@ class WaitingTapController extends GetxController {
   var cartItems = [].obs;
 
   var totalHargaPokok = 0.obs;
-  var pajak = 0.obs;
+  // var pajak = 0.obs;
   var totalPembayaran = 0.obs;
 
   FocusNode focusNode = FocusNode();
@@ -35,7 +35,7 @@ class WaitingTapController extends GetxController {
       if (arguments != null) {
         cartItems.assignAll(arguments['cartItems'] ?? []);
         totalHargaPokok.value = arguments['totalHargaPokok'] ?? 0;
-        pajak.value = arguments['pajak'] ?? 0;
+        // pajak.value = arguments['pajak'] ?? 0;
         totalPembayaran.value = arguments['totalPembayaran'] ?? 0;
 
         print('arguments di waiting tap: $arguments');
@@ -136,7 +136,7 @@ class WaitingTapController extends GetxController {
                 'hutang': kartu.santri.hutang,
                 'kartu_id': kartu.id,
                 'totalHargaPokok': totalHargaPokok.value,
-                'pajak': pajak.value,
+                // 'pajak': pajak.value,
                 'totalPembayaran': totalPembayaran.value,
                 'cartItems': cartItems,
               },

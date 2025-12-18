@@ -18,8 +18,9 @@ class NotifPembayaranController extends GetxController {
   // data dariarguments cart
   var cartItems = [].obs;
   var totalHargaPokok = 0.obs;
-  var pajak = 0.obs;
+  // var pajak = 0.obs;
   var totalPembayaran = 0.obs;
+  var processed = false.obs; // if true, server transaction already executed
 
   @override
   void onInit() {
@@ -35,8 +36,9 @@ class NotifPembayaranController extends GetxController {
       // cart
       cartItems.assignAll(args['cartItems'] ?? []);
       totalHargaPokok.value = args['totalHargaPokok'] ?? 0;
-      pajak.value = args['pajak'] ?? 0;
+      // pajak.value = args['pajak'] ?? 0;
       totalPembayaran.value = args['totalPembayaran'] ?? 0;
+        processed.value = args['processed'] ?? false;
     }
   }
 
@@ -66,6 +68,19 @@ class NotifPembayaranController extends GetxController {
                 )
                 .toList(),
       };
+
+      // Jika transaksi sudah diproses di langkah sebelumnya, skip pemanggilan API
+      if (processed.value == true) {
+        // backend sudah menerima request pengurangan saldo/hutang,
+        // kita hanya perlu menyelesaikan UI tanpa memanggil ulang.
+        Get.snackbar(
+          'Success',
+          'Transaksi sudah diproses',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        return;
+      }
 
       final response = await http.post(
         Uri.parse(

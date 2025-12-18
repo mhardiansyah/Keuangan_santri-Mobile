@@ -274,10 +274,10 @@ class CartView extends GetView<CartController> {
                                                   'Harga pokok:',
                                                   controller.totalHargaPokok,
                                                 ),
-                                                _buildSummaryRow(
-                                                  'Pajak:',
-                                                  controller.pajak,
-                                                ),
+                                                // _buildSummaryRow(
+                                                //   'Pajak:',
+                                                //   controller.pajak,
+                                                // ),
                                                 const Divider(
                                                   color: Colors.white24,
                                                   height: 28,

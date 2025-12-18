@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -24,7 +26,7 @@ class PaymentController extends GetxController {
   // data dariarguments cart
   var cartItems = [].obs;
   var totalHargaPokok = 0.obs;
-  var pajak = 0.obs;
+  // var pajak = 0.obs;
   var totalPembayaran = 0.obs;
   var url = dotenv.env['base_url'];
 
@@ -44,7 +46,7 @@ class PaymentController extends GetxController {
       // cart
       cartItems.assignAll(arguments['cartItems'] ?? []);
       totalHargaPokok.value = arguments['totalHargaPokok'] ?? 0;
-      pajak.value = arguments['pajak'] ?? 0;
+      // pajak.value = arguments['pajak'] ?? 0;
       totalPembayaran.value = arguments['totalPembayaran'] ?? 0;
     }
     // print("passcode dari db: $passcode");
@@ -163,10 +165,11 @@ class PaymentController extends GetxController {
             'type': TransaksiType.pembayaran,
             'cartItems': cartItems,
             'totalHargaPokok': totalHargaPokok.value,
-            'pajak': pajak.value,
+            // 'pajak': pajak.value,
             'totalPembayaran': totalPembayaran.value,
             'saldo': saldo.value,
             'hutang': hutang.value,
+            'processed': true, // flag to indicate server-side transaction already done
           },
         );
       } else {

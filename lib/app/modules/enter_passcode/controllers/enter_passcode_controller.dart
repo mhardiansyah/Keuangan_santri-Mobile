@@ -24,7 +24,7 @@ class EnterPasscodeController extends GetxController {
   var hutang = 0.obs;
   var methodpayment = ''.obs;
   var totalHargaPokok = 0.obs;
-  var pajak = 0.obs;
+  // var pajak = 0.obs;
   var totalPembayaran = 0.obs;
   var cartItems = [].obs;
 
@@ -41,7 +41,7 @@ class EnterPasscodeController extends GetxController {
       hutang.value = args['hutang'] ?? 0;
       methodpayment.value = args['method'] ?? '';
       totalHargaPokok.value = args['totalHargaPokok'] ?? 0;
-      pajak.value = args['pajak'] ?? 0;
+      // pajak.value = args['pajak'] ?? 0;
       totalPembayaran.value = args['totalPembayaran'] ?? 0;
       cartItems.assignAll(args['cartItems'] ?? []);
     }
@@ -70,10 +70,11 @@ class EnterPasscodeController extends GetxController {
             'type': TransaksiType.pembayaran,
             'cartItems': cartItems,
             'totalHargaPokok': totalHargaPokok.value,
-            'pajak': pajak.value,
+            // 'pajak': pajak.value,
             'totalPembayaran': totalPembayaran.value,
             'saldo': saldo.value,
             'hutang': hutang.value,
+            'processed': true, // flag to indicate server-side transaction already done
           },
         );
       } else {

@@ -170,17 +170,17 @@ class CartController extends GetxController {
   int get totalHargaPokok =>
       cartItems.fold(0, (sum, item) => sum + item.jumlah * item.product.harga);
 
-  int get pajak {
-    int totalitem = cartItems.fold(0, (sum, item) => sum + item.jumlah);
-    return totalitem * 500;
-  }
+  // int get pajak {
+  //   int totalitem = cartItems.fold(0, (sum, item) => sum + item.jumlah);
+  //   return totalitem * 500;
+  // }
 
-  int get totalPembayaran => totalHargaPokok + pajak;
+  int get totalPembayaran => totalHargaPokok; //+ pajak;
 
   Map<String, dynamic> saveDataPayment() {
     return {
       'totalHargaPokok': totalHargaPokok,
-      'pajak': pajak,
+      // 'pajak': pajak,
       'totalPembayaran': totalPembayaran,
       'cartItems':
           cartItems

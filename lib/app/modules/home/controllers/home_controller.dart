@@ -260,8 +260,9 @@ class HomeController extends GetxController {
             0,
             (s, item) => s + (item.quantity ?? 0),
           );
-          final pajak = totalItem * 500;
-          return sum + (t.totalAmount ?? 0) + pajak;
+          // final pajak = totalItem * 500; // Pajak dimatikan (dikomentari)
+          return sum + (t.totalAmount ?? 0); // pajak tidak ditambahkan
+          return sum + (t.totalAmount ?? 0);
         });
 
         print('Total transaksi hari ini: ${totalTransaksiHariIni.value}');
