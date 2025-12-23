@@ -26,6 +26,11 @@ class PengaturanTokoController extends GetxController {
   var barcode = ''.obs;
 
   var restockInput = ''.obs;
+  var jumlahPerBatch = ''.obs;
+  var jumlahDus = ''.obs;
+  var dusTersisa = ''.obs;
+  var manualStock = ''.obs;
+  var tambahDus = ''.obs;
 
   var editingProduct = Rx<Items?>(null);
   var isLoading = false.obs;
@@ -80,7 +85,12 @@ class PengaturanTokoController extends GetxController {
     stok.value = "";
     barcode.value = "";
     restockInput.value = "";
+    jumlahPerBatch.value = "";
+    jumlahDus.value = "";
+    manualStock.value = "";
+    tambahDus.value = "";
     editingProduct.value = null;
+    dusTersisa.value = "";
     kategoriId.value = null;
     selectedImage.value = null;
     existingImageUrl.value = '';
@@ -104,6 +114,10 @@ class PengaturanTokoController extends GetxController {
 
     selectedImage.value = null;
     existingImageUrl.value = product.gambar ?? '';
+    jumlahPerBatch.value = "";
+    jumlahDus.value = "";
+    tambahDus.value = "";
+    manualStock.value = "";
 
     Get.dialog(_buildDialog("Edit Produk"));
   }
@@ -199,12 +213,6 @@ class PengaturanTokoController extends GetxController {
                 }),
 
                 const SizedBox(height: 16),
-
-                const Text(
-                  "Jumlah Restock (batch)",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                const SizedBox(height: 8),
                 _buildRestockField(),
                 const SizedBox(height: 16),
 
@@ -337,8 +345,8 @@ class PengaturanTokoController extends GetxController {
       // kalau lagi edit produk
       if (editingProduct.value != null) {
         final currentStock = editingProduct.value?.jumlah ?? 0;
-        final restockPerBatch = editingProduct.value?.jumlahRestock ?? 0;
-        int batch = int.tryParse(restockInput.value) ?? 1;
+        final restockPerBatch = int.tryParse(jumlahPerBatch.value) ?? editingProduct.value?.jumlahRestock ?? 1;
+        final dusToAdd = int.tryParse(jumlahDus.value) ?? 0;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,89 +357,60 @@ class PengaturanTokoController extends GetxController {
             ),
             const SizedBox(height: 8),
 
+            const Text(
+              "Jumlah dus (berapa dus yang akan ditambahkan)",
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 8),
+            _buildTextField("Misal: 2", jumlahDus, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
+
+            const Text(
+              "Isi per dus (jumlah item per dus)",
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 8),
+            _buildTextField("Isi per dus", jumlahPerBatch, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
+
+            // show current total stock before manual edit
             Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    if (batch > 1) restockInput.value = (batch - 1).toString();
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white30),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      "-",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                Container(
-                  width: 60,
-                  height: 45,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white30),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    restockInput.value.isEmpty ? "1" : restockInput.value,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                InkWell(
-                  onTap: () => restockInput.value = (batch + 1).toString(),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white30),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      "+",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
-
-                const Spacer(),
-                Text(
+                const Text(
                   "Stok saat ini: ",
                   style: TextStyle(color: Colors.white70),
                 ),
                 Text(
                   "$currentStock",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              "Isi per batch: $restockPerBatch",
+            const SizedBox(height: 8),
+            const Text(
+              "Atau ubah stok manual",
               style: TextStyle(color: Colors.white70),
             ),
+            const SizedBox(height: 8),
+            _buildTextField("Stok manual (misal: 24)", manualStock, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
+
             Text(
-              " Stok baru (preview): ${currentStock + (batch * restockPerBatch)}",
+              "Stok baru (preview): ${manualStock.value.isNotEmpty ? (int.tryParse(manualStock.value) ?? currentStock) : (dusToAdd > 0 && restockPerBatch > 0 ? (currentStock + (dusToAdd * restockPerBatch)) : currentStock)}",
               style: TextStyle(color: Colors.greenAccent),
             ),
           ],
         );
       } else {
         // kalau lagi tambah produk
+        // Create product: allow user to either enter a manual stock value
+        // or specify `isi per dus` and `jumlah dus` — if both provided,
+        // total stock = isi_per_dus * jumlah_dus. Show preview so it's clear.
+        final isiCreate = int.tryParse(jumlahPerBatch.value) ?? 0;
+        final dusCreate = int.tryParse(jumlahDus.value) ?? 0;
+        final manualCreate = int.tryParse(stok.value) ?? 0;
+        final previewCreate = (dusCreate > 0 && isiCreate > 0) ? dusCreate * isiCreate : manualCreate;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -440,17 +419,30 @@ class PengaturanTokoController extends GetxController {
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             const SizedBox(height: 8),
-            _buildTextField("0", stok, keyboardType: TextInputType.number),
-            const SizedBox(height: 16),
+            _buildTextField("Isi manual (contoh: 24)", stok, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
             const Text(
-              "Jumlah per Batch Restock",
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              "Atau: masukkan jumlah per dus dan jumlah dus",
+              style: TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 8),
-            _buildTextField(
-              "Misal: 12",
-              restockInput,
-              keyboardType: TextInputType.number,
+            const Text(
+              "Isi per dus (jumlah item per dus)",
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 8),
+            _buildTextField("Misal: 12", jumlahPerBatch, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
+            const Text(
+              "Jumlah dus",
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 8),
+            _buildTextField("Misal: 5", jumlahDus, keyboardType: TextInputType.number),
+            const SizedBox(height: 12),
+            Text(
+              "Preview stok yang akan disimpan: $previewCreate ${dusCreate > 0 && isiCreate > 0 ? '(menggunakan dus × isi per dus)' : '(menggunakan isi manual)'}",
+              style: TextStyle(color: Colors.greenAccent),
             ),
           ],
         );
@@ -510,10 +502,8 @@ class PengaturanTokoController extends GetxController {
     final name = nama.value.trim();
     final price = harga.value.trim();
     final brcode = barcode.value.trim();
-    final restockBatch = int.tryParse(restockInput.value) ?? 0;
-    final currentStock = editingProduct.value?.jumlah ?? 0;
-    final restockValue = editingProduct.value?.jumlahRestock ?? 0;
-    final newStock = currentStock + (restockBatch * restockValue);
+    // use jumlahDus as the number of dus to add when restocking
+    final restockBatch = int.tryParse(jumlahDus.value) ?? 0;
 
     if (name.isEmpty || price.isEmpty) {
       Get.snackbar('Error', 'Nama & Harga tidak boleh kosong');
@@ -523,90 +513,101 @@ class PengaturanTokoController extends GetxController {
     try {
       isLoading.value = true;
 
-      var uri =
-          editingProduct.value == null
-              ? Uri.parse("${url}/items/create")
-              : Uri.parse("${url}/items/update/${editingProduct.value!.id}");
+      final uri = editingProduct.value == null
+          ? Uri.parse("${url}/items/create")
+          : Uri.parse("${url}/items/update/${editingProduct.value!.id}");
 
+      // CREATE flow
       if (editingProduct.value == null) {
-        // CREATE produk baru
-        var request = http.MultipartRequest("POST", uri);
+        bool dusJumlahPositive(int isi, int dus) => isi > 0 && dus > 0;
+
+        int computeInitialStock() {
+          final isiPerDus = int.tryParse(jumlahPerBatch.value) ?? 0;
+          final jumlahDusVal = int.tryParse(jumlahDus.value) ?? 0;
+          final manualStok = int.tryParse(stok.value) ?? 0;
+          if (dusJumlahPositive(isiPerDus, jumlahDusVal)) {
+            return isiPerDus * jumlahDusVal;
+          }
+          return manualStok;
+        }
+
+        final jumlahToCreate = computeInitialStock();
+
+        final request = http.MultipartRequest('POST', uri);
         request.fields['nama'] = name;
         request.fields['harga'] = price;
-        request.fields['jumlah'] = stok.value;
+        request.fields['jumlah'] = jumlahToCreate.toString();
         request.fields['barcode'] = brcode;
-        request.fields['kategoriId'] = kategoriId.value.toString();
-        request.fields['jumlahRestock'] =
-            restockInput.value.isEmpty ? "1" : restockInput.value;
+        request.fields['kategoriId'] = kategoriId.value?.toString() ?? '';
+        request.fields['jumlahRestock'] = jumlahPerBatch.value.isEmpty ? '1' : jumlahPerBatch.value;
 
         if (selectedImage.value != null) {
           request.files.add(
-            await http.MultipartFile.fromPath(
-              'gambar',
-              selectedImage.value!.path,
-            ),
+            await http.MultipartFile.fromPath('gambar', selectedImage.value!.path),
           );
         }
 
-        var response = await request.send();
-        var resBody = await response.stream.bytesToString();
+        final response = await request.send();
+        final resBody = await response.stream.bytesToString();
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           fetchProduct();
           Get.back();
           Get.snackbar(
-            "Sukses",
-            "Produk berhasil ditambahkan (stok awal: ${stok.value})",
+            'Sukses',
+            'Produk berhasil ditambahkan (stok awal: $jumlahToCreate)',
             backgroundColor: Colors.green,
           );
         } else {
-          Get.snackbar(
-            "Error",
-            "Gagal simpan produk: $resBody",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          Get.snackbar('Error', 'Gagal simpan produk: $resBody', backgroundColor: Colors.red, colorText: Colors.white);
           print('Gagal simpan produk: $resBody');
         }
+
+      // EDIT flow
       } else {
-        var response = await http.put(
-          uri,
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode({
-            "nama": name,
-            "harga": price,
-            "jumlah": newStock,
-            "barcode": brcode,
-            "kategoriId": kategoriId.value,
-          }),
-        );
+        final currentStock = editingProduct.value?.jumlah ?? 0;
+        final restockPerBatch = int.tryParse(jumlahPerBatch.value) ?? editingProduct.value?.jumlahRestock ?? 1;
+
+        int computeFinalStock() {
+          if (manualStock.value.isNotEmpty) {
+            return int.tryParse(manualStock.value) ?? currentStock;
+          }
+          if (tambahDus.value.isNotEmpty) {
+            final dusToAdd = int.tryParse(tambahDus.value) ?? 0;
+            return currentStock + (dusToAdd * restockPerBatch);
+          }
+          // default: use restock input (batches * isi per batch)
+          final batch = restockBatch;
+          return currentStock + (batch * restockPerBatch);
+        }
+
+        final finalStock = computeFinalStock();
+
+        final body = jsonEncode({
+          'nama': name,
+          'harga': price,
+          'jumlah': finalStock,
+          'barcode': brcode,
+          'kategoriId': kategoriId.value,
+          'jumlahRestock': restockPerBatch,
+        });
+
+        final response = await http.put(uri, headers: {'Content-Type': 'application/json'}, body: body);
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          if (editingProduct.value != null && restockBatch > 0) {
-            saveRestockHistory(
-              editingProduct.value!.id,
-              restockValue * restockBatch,
-            );
+          if (restockBatch > 0 && restockPerBatch > 0) {
+            saveRestockHistory(editingProduct.value!.id, restockPerBatch * restockBatch);
           }
           fetchProduct();
           Get.back();
-          Get.snackbar(
-            "Sukses",
-            "Restock berhasil! Stok sekarang: $newStock",
-            backgroundColor: Colors.green,
-          );
+          Get.snackbar('Sukses', 'Produk berhasil disimpan! Stok sekarang: $finalStock', backgroundColor: Colors.green);
         } else {
-          Get.snackbar(
-            "Error",
-            "Gagal update produk: ${response.body}",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          Get.snackbar('Error', 'Gagal update produk: ${response.body}', backgroundColor: Colors.red, colorText: Colors.white);
           print('Gagal update produk: ${response.body}');
         }
       }
     } catch (e) {
-      Get.snackbar("Error", "Request gagal: $e", backgroundColor: Colors.red);
+      Get.snackbar('Error', 'Request gagal: $e', backgroundColor: Colors.red);
     } finally {
       isLoading.value = false;
     }
